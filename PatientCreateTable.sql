@@ -8,8 +8,20 @@ CREATE TABLE Patients (
     DateOfBirth DATE,
     Gender VARCHAR(10),
     Address VARCHAR(255),
-    PhoneNumber VARCHAR(20),
+    PhoneNum VARCHAR(20),
     Email VARCHAR(100),
     Allergies TEXT,
     UNIQUE (Email)
+);
+
+CREATE TABLE TreatmentHistory (
+    TreatmentID INT AUTO_INCREMENT PRIMARY KEY,
+    PatientID INT,
+    DoctorID INT,
+    StartDate DATE,
+    Allergy VARCHAR(100),
+    TreatmentType VARCHAR(100),
+    Details TEXT,
+    FOREIGN KEY (PatientID) REFERENCES Patients(PatientID),
+    FOREIGN KEY (DoctorID) REFERENCES Staff(StaffID)
 );
