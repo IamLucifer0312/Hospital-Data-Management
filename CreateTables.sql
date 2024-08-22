@@ -44,7 +44,6 @@ CREATE TABLE TreatmentHistory (
     PatientID INT,
     DoctorID INT,
     StartDate DATE,
-    Allergy VARCHAR(100),
     TreatmentType VARCHAR(100),
     Status VARCHAR(50),
     Details TEXT,
