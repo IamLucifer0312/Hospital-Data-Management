@@ -23,9 +23,9 @@ CREATE TABLE Staff (
     FirstName VARCHAR(50) NOT NULL,
     LastName VARCHAR(50) NOT NULL,
     JobType VARCHAR(50) NOT NULL,
-	Salary DECIMAL(10,2),
+	Salary INT,
     Qualification VARCHAR(100),
-    DepartmentID INT,
+    DepartmentID INT NOT NULL,
     ManagerID INT,
     FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID),
     FOREIGN KEY (ManagerID) REFERENCES Staff(StaffID)
