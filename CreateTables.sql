@@ -33,7 +33,7 @@ CREATE TABLE Staff (
 CREATE TABLE Staff_Schedule (
     ScheduleID INT PRIMARY KEY AUTO_INCREMENT,
     StaffID INT NOT NULL,
-    WorkingDate DATE NOT NULL,
+    DayOfWeek ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday') NOT NULL,
     StartTime TIME NOT NULL,
     EndTime TIME NOT NULL,
     FOREIGN KEY (StaffID) REFERENCES Staff(StaffID)
