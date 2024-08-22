@@ -1,65 +1,51 @@
 INSERT INTO Appointments (AppointmentDate, AppointmentStartTime, AppointmentEndTime, AppointmentStatus, Purpose, PatientID, StaffID)
 VALUES
--- Completed Appointments before 2024-09-01 for StaffID 1
-('2024-08-30', '08:30:00', '09:00:00', 'Completed', 'Routine check-up', 1, 1),
-('2024-08-28', '09:00:00', '09:30:00', 'Completed', 'Follow-up consultation', 2, 1),
-('2024-08-26', '10:00:00', '10:30:00', 'Completed', 'Cardiology consultation', 3, 1),
-
--- Canceled and Scheduled Appointments for StaffID 1 (Working on Monday, Wednesday, Friday from 08:00 to 16:00)
-('2024-09-02', '08:30:00', '09:00:00', 'Canceled', 'Routine check-up', 1, 1),
-('2024-09-04', '09:00:00', '09:30:00', 'Scheduled', 'Follow-up consultation', 2, 1),
-('2024-09-06', '10:00:00', '10:30:00', 'Scheduled', 'Cardiology consultation', 3, 1),
-
--- Completed Appointments before 2024-09-01 for StaffID 2
-('2024-08-29', '10:30:00', '11:00:00', 'Completed', 'Blood pressure monitoring', 4, 2),
-('2024-08-28', '08:30:00', '09:00:00', 'Completed', 'Post-surgery care', 5, 2),
-
--- Canceled and Scheduled Appointments for StaffID 2 (Working on Monday, Tuesday, Thursday from 08:00 to 16:00)
-('2024-09-02', '11:00:00', '11:30:00', 'Canceled', 'Health check-up', 6, 2),
-('2024-09-03', '10:30:00', '11:00:00', 'Scheduled', 'Post-surgery care', 5, 2),
-('2024-09-05', '11:00:00', '11:30:00', 'Scheduled', 'Health check-up', 6, 2),
-
--- Completed Appointments before 2024-09-01 for StaffID 3
-('2024-08-27', '10:00:00', '10:30:00', 'Completed', 'General examination', 7, 3),
-('2024-08-29', '14:00:00', '14:30:00', 'Completed', 'Routine check-up', 8, 3),
-
--- Canceled and Scheduled Appointments for StaffID 3 (Working on Tuesday, Wednesday, Thursday from 09:00 to 17:00)
-('2024-09-03', '10:00:00', '10:30:00', 'Canceled', 'Consultation', 9, 3),
-('2024-09-04', '11:00:00', '11:30:00', 'Scheduled', 'Routine check-up', 8, 3),
-('2024-09-05', '14:00:00', '14:30:00', 'Scheduled', 'Consultation', 9, 3),
-
--- Completed Appointments before 2024-09-01 for StaffID 4
-('2024-08-26', '08:00:00', '08:30:00', 'Completed', 'Neurology consultation', 10, 4),
-('2024-08-28', '09:30:00', '10:00:00', 'Completed', 'Headache treatment', 11, 4),
-
--- Canceled and Scheduled Appointments for StaffID 4 (Working on Monday, Wednesday, Friday from 08:00 to 16:00)
-('2024-09-02', '08:00:00', '08:30:00', 'Canceled', 'Neurology consultation', 10, 4),
-('2024-09-04', '09:30:00', '10:00:00', 'Scheduled', 'Headache treatment', 11, 4),
-('2024-09-06', '10:00:00', '10:30:00', 'Scheduled', 'Follow-up appointment', 12, 4),
-
--- Completed Appointments before 2024-09-01 for StaffID 5
-('2024-08-29', '12:00:00', '12:30:00', 'Completed', 'Lab test', 13, 5),
-('2024-08-27', '10:30:00', '11:00:00', 'Completed', 'X-ray follow-up', 14, 5),
-
--- Canceled and Scheduled Appointments for StaffID 5 (Working on Tuesday, Thursday, Saturday from 10:00 to 18:00)
-('2024-09-03', '12:30:00', '13:00:00', 'Canceled', 'Blood work analysis', 14, 5),
-('2024-09-05', '14:00:00', '14:30:00', 'Scheduled', 'X-ray follow-up', 15, 5),
-('2024-09-07', '15:00:00', '15:30:00', 'Scheduled', 'Blood work analysis', 15, 5),
-
--- Completed Appointments before 2024-09-01 for StaffID 6
-('2024-08-30', '08:30:00', '09:00:00', 'Completed', 'Lab check-up', 16, 6),
-('2024-08-28', '10:00:00', '10:30:00', 'Completed', 'Routine lab test', 17, 6),
-
--- Canceled and Scheduled Appointments for StaffID 6 (Working on Monday, Wednesday, Friday from 08:00 to 16:00)
-('2024-09-02', '13:00:00', '13:30:00', 'Canceled', 'Blood test', 18, 6),
-('2024-09-04', '08:30:00', '09:00:00', 'Scheduled', 'Lab check-up', 16, 6),
-('2024-09-06', '13:00:00', '13:30:00', 'Scheduled', 'Blood test', 18, 6),
-
--- Completed Appointments before 2024-09-01 for StaffID 7
-('2024-08-29', '15:00:00', '15:30:00', 'Completed', 'Pre-surgery consultation', 19, 7),
-('2024-08-27', '09:30:00', '10:00:00', 'Completed', 'Post-surgery care', 20, 7),
-
--- Canceled and Scheduled Appointments for StaffID 7 (Working on Tuesday, Thursday, Saturday from 08:00 to 16:00)
-('2024-09-03', '15:00:00', '15:30:00', 'Canceled', 'Physical therapy session', 21, 7),
-('2024-09-05', '10:00:00', '10:30:00', 'Scheduled', 'Pre-surgery consultation', 19, 7),
-('2024-09-07', '11:30:00', '12:00:00', 'Scheduled', 'Physical therapy session', 21, 7);
+('2024-01-10', '08:00:00', '09:00:00', 'Completed', 'Bypass surgery consultation and procedure.', 1, 1),
+('2024-02-15', '09:00:00', '10:00:00', 'Completed', 'Assessment for headache and migraine.', 2, 4),
+('2024-03-12', '10:00:00', '11:00:00', 'Completed', 'Consultation and knee replacement surgery.', 3, 7),
+('2024-04-22', '11:00:00', '12:00:00', 'Scheduled', 'Consultation for ongoing lung cancer treatment.', 4, 8),
+('2024-05-02', '12:00:00', '13:00:00', 'Completed', 'Cardiac health check-up and follow-up.', 5, 11),
+('2024-06-05', '13:00:00', '14:00:00', 'Completed', 'Post-surgery follow-up for brain tumor removal.', 6, 14),
+('2024-06-18', '14:00:00', '15:00:00', 'Cancelled', 'Surgical follow-up for breast cancer.', 7, 17),
+('2024-07-01', '15:00:00', '16:00:00', 'Completed', 'Routine cardiac evaluation and lifestyle counseling.', 8, 21),
+('2024-07-10', '16:00:00', '17:00:00', 'Completed', 'Evaluation for dizziness and memory issues.', 9, 24),
+('2024-07-15', '17:00:00', '18:00:00', 'Completed', 'Initial assessment for lymphoma treatment.', 10, 27),
+('2024-08-03', '08:00:00', '09:00:00', 'Completed', 'Consultation for shoulder arthritis and therapy.', 11, 28),
+('2024-08-10', '09:00:00', '10:00:00', 'Completed', 'Post-surgery consultation for colon cancer.', 12, 18),
+('2024-08-15', '10:00:00', '11:00:00', 'Completed', 'Consultation for epilepsy and surgical intervention.', 13, 4),
+('2024-08-20', '11:00:00', '12:00:00', 'Scheduled', 'Ongoing chemotherapy and consultation for ovarian cancer.', 14, 17),
+('2024-08-25', '12:00:00', '13:00:00', 'Scheduled', 'Follow-up for valve replacement surgery.', 15, 11),
+('2024-08-28', '13:00:00', '14:00:00', 'Scheduled', 'Routine cardiac follow-up post-surgery.', 16, 21),
+('2024-09-01', '14:00:00', '15:00:00', 'Scheduled', 'Pre-surgery consultation for triple bypass.', 17, 1),
+('2024-09-05', '15:00:00', '16:00:00', 'Cancelled', 'Initial consultation and treatment for Parkinson\'s disease.', 18, 14),
+('2024-09-10', '16:00:00', '17:00:00', 'Scheduled', 'Hip replacement surgery consultation and scheduling.', 19, 7),
+('2024-09-12', '17:00:00', '18:00:00', 'Cancelled', 'Stress test and evaluation for angina.', 20, 11),
+('2024-09-15', '08:00:00', '09:00:00', 'Scheduled', 'Skin cancer surgical consultation and procedure.', 21, 8),
+('2024-09-20', '09:00:00', '10:00:00', 'Scheduled', 'Follow-up for stroke rehabilitation therapy.', 22, 24),
+('2024-09-25', '10:00:00', '11:00:00', 'Cancelled', 'Post-operative care for liver cancer surgery.', 23, 27),
+('2024-10-01', '11:00:00', '12:00:00', 'Scheduled', 'Consultation and monitoring after chemotherapy.', 24, 17),
+('2024-10-05', '12:00:00', '13:00:00', 'Cancelled', 'Pacemaker installation consultation and follow-up.', 25, 21),
+('2024-10-08', '13:00:00', '14:00:00', 'Scheduled', 'Seizure management and medication adjustment.', 26, 14),
+('2024-10-12', '14:00:00', '15:00:00', 'Cancelled', 'Consultation for fracture treatment and bone healing.', 27, 7),
+('2024-10-18', '15:00:00', '16:00:00', 'Scheduled', 'Thyroid cancer surgical consultation and follow-up.', 28, 18),
+('2024-10-22', '16:00:00', '17:00:00', 'Cancelled', 'High blood pressure management consultation.', 29, 11),
+('2024-10-30', '17:00:00', '18:00:00', 'Scheduled', 'Pre-procedure consultation for angioplasty.', 30, 1),
+('2024-11-02', '08:00:00', '09:00:00', 'Scheduled', 'Preparation for spinal cord surgery.', 31, 4),
+('2024-11-08', '09:00:00', '10:00:00', 'Scheduled', 'Post-shoulder surgery consultation and physiotherapy.', 32, 7),
+('2024-11-12', '10:00:00', '11:00:00', 'Scheduled', 'Consultation for Alzheimer\'s disease progression.', 33, 14),
+('2024-11-18', '11:00:00', '12:00:00', 'Scheduled', 'Follow-up for breast cancer surgical results.', 34, 8),
+('2024-11-22', '12:00:00', '13:00:00', 'Scheduled', 'Cholesterol management and dietary consultation.', 35, 21),
+('2024-11-25', '13:00:00', '14:00:00', 'Scheduled', 'Post-surgery monitoring for breast cancer.', 36, 17),
+('2024-11-28', '14:00:00', '15:00:00', 'Scheduled', 'Aortic valve repair consultation and follow-up.', 37, 11),
+('2024-12-02', '15:00:00', '16:00:00', 'Scheduled', 'Routine follow-up after radiation therapy.', 38, 18),
+('2024-12-05', '16:00:00', '17:00:00', 'Scheduled', 'Consultation for upcoming heart transplant.', 39, 1),
+('2024-12-10', '17:00:00', '18:00:00', 'Scheduled', 'Spinal fusion surgery follow-up.', 40, 7),
+('2024-12-15', '08:00:00', '09:00:00', 'Cancelled', 'Observation following cranial trauma surgery.', 41, 4),
+('2024-12-20', '09:00:00', '10:00:00', 'Scheduled', 'Assessment for post-surgery improvement.', 42, 14),
+('2024-12-22', '10:00:00', '11:00:00', 'Scheduled', 'Bladder cancer surgery follow-up.', 43, 27),
+('2024-12-28', '11:00:00', '12:00:00', 'Scheduled', 'Cardiac stress test follow-up.', 44, 11),
+('2024-12-30', '12:00:00', '13:00:00', 'Scheduled', 'Chemotherapy follow-up and response assessment.', 45, 8),
+('2025-01-02', '13:00:00', '14:00:00', 'Scheduled', 'Continuous monitoring for leukemia treatment.', 46, 17),
+('2025-01-05', '14:00:00', '15:00:00', 'Scheduled', 'Post-shoulder surgery physiotherapy follow-up.', 47, 7),
+('2025-01-10', '15:00:00', '16:00:00', 'Scheduled', 'Heart valve replacement recovery check.', 48, 1),
+('2025-01-15', '16:00:00', '17:00:00', 'Scheduled', 'Brain tumor removal surgery follow-up.', 49, 4);
