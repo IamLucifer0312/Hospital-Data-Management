@@ -11,7 +11,7 @@ INSERT INTO Patients (FirstName, LastName, DateOfBirth, Gender, Address, PhoneNu
 ('Ngoc Que', 'Doan', '1989-08-23', 'Female', '321 Hung Vuong Street, Dong Nai', '0937890123', 'quynhphan@dongnaimail.vn', 'Nuts'),
 ('Van Thang', 'Ngo', '1990-02-11', 'Male', '234 Hoang Dieu Street, Hue', '0902233445', 'thangngo@huemail.vn', 'Dairy'),
 ('Thanh Ngoc', 'Vu', '1987-03-13', 'Female', '678 Phan Boi Chau Street, Vung Tau', '0911345678', 'hongly@vungtaumail.vn', 'Pollen'),
-('Thanh Lam', 'Vu', '1992-04-22', 'Male', '123 Nguyen Thai Hoc Street, Quang Nam', '0932223344', 'namha@quangnam.vn', ''),
+('Thanh Lam', 'Vu', '1992-04-22', 'Male', '123 Nguyen Thai Hoc Street, Quang Nam', '0932223344', 'namha@quangnam.vn', 'None'),
 ('Phuong Vy', 'Mac', '1994-05-09', 'Female', '456 Phan Chu Trinh Street, Hanoi', '0903344556', 'thanhnguyen@vietmail.com', 'Dog fur'),
 ('My Le', 'Pham', '1989-06-17', 'Female', '789 Trung Trac Street, Bien Hoa', '0914455667', 'binhle@bienhoamail.vn', 'Dairy'),
 ('My Hue', 'Nguyen', '1985-07-29', 'Female', '321 Le Van Luong Street, Can Tho', '0945566778', 'tamtran@canthomail.vn', 'Aspirin'),
@@ -49,3 +49,5 @@ INSERT INTO Patients (FirstName, LastName, DateOfBirth, Gender, Address, PhoneNu
 ('Van Tu', 'Vo', '1990-05-25', 'Male', '123 Tran Quang Khai Street, Dong Thap', '0934455667', 'tuvo@dongthapmail.vn', 'None'),
 ('Thi Kim', 'Dang', '1992-07-19', 'Female', '456 Nguyen Trai Street, Lang Son', '0905566778', 'kimdang@langsonmail.vn', 'Pollen'),
 ('Van An', 'Nguyen', '1988-09-30', 'Male', '789 Le Loi Street, Phu Tho', '0916677889', 'annguyen@phuthomail.vn', 'Aspirin');
+
+select * from patients;
