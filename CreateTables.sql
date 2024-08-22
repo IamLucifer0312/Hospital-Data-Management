@@ -112,6 +112,3 @@ CREATE TABLE BillingReport (
     FOREIGN KEY (PatientID) REFERENCES Patients(PatientID),
     FOREIGN KEY (TreatmentID) REFERENCES TreatmentHistory(TreatmentID)
 );
-
-
-
