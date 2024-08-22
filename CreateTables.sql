@@ -44,6 +44,7 @@ CREATE TABLE TreatmentHistory (
     PatientID INT,
     DoctorID INT,
     StartDate DATE,
+    EndDate DATE,
     TreatmentType VARCHAR(100),
     BillingAmount INT,
     Status VARCHAR(50),
