@@ -45,6 +45,7 @@ CREATE TABLE TreatmentHistory (
     DoctorID INT,
     StartDate DATE,
     TreatmentType VARCHAR(100),
+    BillingAmount INT,
     Status VARCHAR(50),
     Details TEXT,
     FOREIGN KEY (PatientID) REFERENCES Patients(PatientID),
@@ -98,15 +99,4 @@ CREATE TABLE StaffPerformanceReport (
     TreatmentsPerHour DECIMAL(5, 2), 
     ReportDate DATE,
     FOREIGN KEY (StaffID) REFERENCES Staff(StaffID)
-);
-
--- BillingReport
-CREATE TABLE BillingReport (
-    BillingID INT PRIMARY KEY AUTO_INCREMENT,
-    PatientID INT,
-    TreatmentID INT,
-    BillingAmount DECIMAL(10, 2),
-    PaymentStatus VARCHAR(20), -- Paid, Pending, Overdue    
-    FOREIGN KEY (PatientID) REFERENCES Patients(PatientID),
-    FOREIGN KEY (TreatmentID) REFERENCES TreatmentHistory(TreatmentID)
 );
