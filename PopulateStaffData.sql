@@ -40,3 +40,5 @@ VALUES
     ('Bui', 'Minh Tuan', 'Doctor', 114000, 'MD Oncology', 4, 27),
     ('Do', 'Quoc Khanh', 'Admin', 52400, 'MBA Healthcare', 5, 27),
     ('Ngo', 'Thien Thanh', 'Nurse', 58400, 'BSN', 5, 28);
+    
+    select * from staff;

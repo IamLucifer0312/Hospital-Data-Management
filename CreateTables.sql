@@ -46,6 +46,7 @@ CREATE TABLE TreatmentHistory (
     StartDate DATE,
     Allergy VARCHAR(100),
     TreatmentType VARCHAR(100),
+    Status VARCHAR(50),
     Details TEXT,
     FOREIGN KEY (PatientID) REFERENCES Patients(PatientID),
     FOREIGN KEY (DoctorID) REFERENCES Staff(StaffID)
@@ -54,14 +55,12 @@ CREATE TABLE TreatmentHistory (
 CREATE TABLE Appointments (
     AppointmentID INT PRIMARY KEY AUTO_INCREMENT,
     AppointmentDate DATE NOT NULL,
-    AppointmentTime TIME NOT NULL,
+    AppointmentStartTime TIME NOT NULL,
+	AppointmentEndTime TIME NOT NULL,
     AppointmentStatus VARCHAR(50) DEFAULT 'Scheduled', -- Example statuses: Scheduled, Completed, Canceled
     Purpose VARCHAR(255) NOT NULL,
     PatientID INT NOT NULL,
     StaffID INT NOT NULL,
-    Notes TEXT,
-    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     
     FOREIGN KEY (PatientID) REFERENCES Patients(PatientID),
     FOREIGN KEY (StaffID) REFERENCES Staff(StaffID)
