@@ -38,19 +38,33 @@ BEGIN
 END $$
 
 -- add new staff schedule
-CREATE PROCEDURE sp_add_new_staff_schedule(IN StaffID INT,
-	IN DayOfWeek ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'),
-	IN StartTime TIME, IN EndTime TIME)
+CREATE PROCEDURE sp_add_new_staff_schedule(
+	IN p_StaffID INT,
+	IN p_DayOfWeek ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'),
+	IN p_StartTime TIME, 
+	IN p_EndTime TIME)
 BEGIN
-	-- Check if Staff ID exists in Staff table
-	if not exists(SELECT * FROM Staff s WHERE s.StaffID = StaffID) then
-		select "Error: Staff ID not found in Staff table" as output_msg;
-	else
-        -- insert staff schedule
-        insert into Staff_Schedule (StaffID, DayOfWeek, StartTime, EndTime)
-        values (StaffID, DayOfWeek, StartTime, EndTime);
-        select concat("Staff_Schedule added for Staff with id `",StaffID,"`") as output_msg;
-	end if;
+    START TRANSACTION;
+
+    -- Check if Staff ID exists in Staff table
+    IF NOT EXISTS(SELECT * FROM Staff s WHERE s.StaffID = p_StaffID) THEN
+        ROLLBACK;
+        SELECT "Error: Staff ID not found in Staff table" AS output_msg;
+
+    ELSE
+        -- Insert staff schedule
+        INSERT INTO Staff_Schedule (StaffID, DayOfWeek, StartTime, EndTime)
+        VALUES (p_StaffID, p_DayOfWeek, p_StartTime, p_EndTime);
+
+        -- Check if insert was successful
+        IF ROW_COUNT() > 0 THEN
+            COMMIT;
+            SELECT CONCAT("Staff schedule added for Staff with id `", p_StaffID, "`") AS output_msg;
+        ELSE
+            ROLLBACK;
+            SELECT "Error: Failed to add staff schedule" AS output_msg;
+        END IF;
+    END IF;
 END $$
 
 -- add a new treatment history
@@ -71,39 +85,114 @@ BEGIN
 END $$
 
 -- book an appointment
-CREATE PROCEDURE sp_add_new_appointment(IN AppointmentDate DATE, IN AppointmentStartTime TIME, 
-IN AppointmentEndTime TIME, IN AppointmentStatus VARCHAR(50), IN Purpose VARCHAR(255), IN PatientID INT, IN StaffID INT)
+CREATE PROCEDURE sp_add_new_appointment(
+	IN p_AppointmentDate DATE, 
+	IN p_AppointmentStartTime TIME, 
+	IN p_AppointmentEndTime TIME, 
+	IN p_AppointmentStatus VARCHAR(50), 
+	IN p_Purpose VARCHAR(255), 
+	IN p_PatientID INT, 
+	IN p_StaffID INT
+)
 BEGIN
+	DECLARE overlap_count INT DEFAULT 0;
+
+	-- Start transaction
+	START TRANSACTION;
+
     -- Check if Patient ID exists in the Patient table
-	if not exists(SELECT * FROM Patients p WHERE p.PatientID = PatientID) then
-		select "Error: Patient ID not found" as output_msg;
+	IF NOT EXISTS(SELECT * FROM Patients p WHERE p.PatientID = p_PatientID) THEN
+		ROLLBACK; -- Rollback transaction if Patient ID does not exist
+		SELECT "Error: Patient ID not found" AS output_msg;
+
     -- Check if Staff ID exists in the Staff table
-	elseif not exists(SELECT * FROM Staff s WHERE s.StaffID = StaffID) then
-		select "Error: Staff ID not found" as output_msg;
-	else
-		insert into Appointments (AppointmentDate,AppointmentStartTime,AppointmentEndTime,AppointmentStatus,Purpose,PatientID,StaffID)
-		values (AppointmentDate,AppointmentStartTime,AppointmentEndTime,AppointmentStatus,Purpose,PatientID,StaffID);
-        select concat("Treatment with id `",LAST_INSERT_ID(),"` added successfully") as output_msg;
-	end if;
+	ELSEIF NOT EXISTS(SELECT * FROM Staff s WHERE s.StaffID = p_StaffID) THEN
+		ROLLBACK; -- Rollback transaction if Staff ID does not exist
+		SELECT "Error: Staff ID not found" AS output_msg;
+
+	-- Check for overlapping appointments
+	ELSE
+		SELECT COUNT(*) INTO overlap_count
+		FROM Appointments
+		WHERE StaffID = p_StaffID
+			AND AppointmentDate = p_AppointmentDate
+			AND ((p_AppointmentStartTime BETWEEN AppointmentStartTime AND AppointmentEndTime)
+				OR (p_AppointmentEndTime BETWEEN AppointmentStartTime AND AppointmentEndTime)
+				OR (AppointmentStartTime BETWEEN p_AppointmentStartTime AND p_AppointmentEndTime)
+				OR (AppointmentEndTime BETWEEN p_AppointmentStartTime AND p_AppointmentEndTime));
+
+		-- If no overlap, insert the appointment
+		IF overlap_count = 0 THEN
+			INSERT INTO Appointments (AppointmentDate, AppointmentStartTime, AppointmentEndTime, AppointmentStatus, Purpose, PatientID, StaffID)
+			VALUES (p_AppointmentDate, p_AppointmentStartTime, p_AppointmentEndTime, 'Scheduled', p_Purpose, p_PatientID, p_StaffID);
+			COMMIT; -- Commit transaction
+			SELECT concat("Treatment with id `",LAST_INSERT_ID(),"` added successfully") AS output_msg;
+
+		-- If there is no overlap, rollback
+		ELSE	
+			ROLLBACK; -- Rollback transaction if there is an overlap
+			SELECT "Error: Appointment overlaps with existing appointment" AS output_msg;
+		END IF;	
+	END IF;
 END $$
 
 -- update staff schedule
-CREATE PROCEDURE sp_update_staff_schedule(IN ScheduleID INT, IN StaffID INT,
-	IN DayOfWeek ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'),
-	IN StartTime TIME, IN EndTime TIME)
+CREATE PROCEDURE sp_update_staff_schedule(
+	IN p_ScheduleID INT, 
+	IN p_StaffID INT,
+	IN p_DayOfWeek ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'),
+	IN p_StartTime TIME, 
+	IN p_EndTime TIME)
 BEGIN
+	DECLARE conflict_count INT DEFAULT 0;
+
+	-- Start transaction
+	START TRANSACTION;
+
 	-- Check if Schedule ID exists in Staff_Schedule table
-	if not exists(SELECT * FROM Staff_Schedule ss WHERE ss.ScheduleID = ScheduleID) then
-		select "Error: Schedule ID not found in Staff_Schedule table" as output_msg;
+	IF NOT EXISTS(SELECT * FROM Staff_Schedule ss WHERE ss.ScheduleID = p_ScheduleID) THEN
+		ROLLBACK;
+		SELECT "Error: Schedule ID not found in Staff_Schedule table" AS output_msg;
+
 	-- Check if Staff ID exists in Staff table
-	elseif not exists(SELECT * FROM Staff s WHERE s.StaffID = StaffID) then
-		select "Error: Staff ID not found in Staff table" as output_msg;
-	else
-		update Staff_Schedule ss
-		set ss.StaffID=StaffID, ss.DayOfWeek=DayOfWeek, ss.StartTime=StartTime, ss.EndTime=EndTime
-        where ss.ScheduleID = ScheduleID;
-        select concat("Staff Schedule with id `",ScheduleID,"` updated successfully") as output_msg;
-	end if;
+	ELSEIF NOT EXISTS(SELECT * FROM Staff s WHERE s.StaffID = p_StaffID) THEN
+		ROLLBACK;
+		SELECT "Error: Staff ID not found in Staff table" AS output_msg;
+
+	-- Check for confliects with exisiting appointments
+	ELSE
+		SELECT COUNT(*) INTO conflict_count
+		FROM Appointment a
+		WHERE a.StaffID = p_StaffID
+			AND a.AppointmentStatus = 'Scheduled'
+			AND a.AppointmentDate = (SELECT CURDATE() + INTERVAL (
+					CASE p_DayOfWeek
+						WHEN 'Monday' THEN 0
+						WHEN 'Tuesday' THEN 1
+						WHEN 'Wednesday' THEN 2
+						WHEN 'Thursday' THEN 3
+						WHEN 'Friday' THEN 4
+						WHEN 'Saturday' THEN 5
+						WHEN 'Sunday' THEN 6	
+					END		
+				) DAY)
+			AND ((a.AppointmentStartTime BETWEEN p_StartTime AND p_EndTime)
+				OR (a.AppointmentEndTime BETWEEN p_StartTime AND p_EndTime)
+				OR (a.AppointmentStartTime <= p_StartTime AND a.AppointmentEndTime >= p_EndTime));
+
+		-- If there are no conflicts, update the schedule
+		IF conflict_count = 0  THEN
+			UPDATE Staff_Schedule ss
+			SET ss.StaffID = p_StaffID, ss.DayOfWeek = p_DayOfWeek, ss.StartTime = p_StartTime, ss.EndTime = p_EndTime
+			WHERE ss.ScheduleID = p_ScheduleID;
+			COMMIT;
+			SELECT CONCAT("Staff Schedule with id `",p_ScheduleID,"` updated successfully") as output_msg;
+		-- If there is a conflict, rollback
+		ELSE	
+			ROLLBACK;
+			SELECT "Error: The new schedule conflicts with existing scheduled appointments" AS output_msg;
+        END IF;	
+	END IF;
 END $$
 
 -- update staff info
@@ -150,27 +239,63 @@ BEGIN
 END $$
 
 -- update appointment info
-CREATE PROCEDURE sp_update_appointment(IN AppointmentID INT, IN AppointmentDate DATE, 
-IN AppointmentStartTime TIME, IN AppointmentEndTime TIME, IN AppointmentStatus VARCHAR(50), 
-IN Purpose VARCHAR(255), IN PatientID INT, IN StaffID INT)
+CREATE PROCEDURE sp_update_appointment(
+	IN p_AppointmentID INT, 
+	IN p_AppointmentDate DATE, 
+	IN p_AppointmentStartTime TIME, 
+	IN p_AppointmentEndTime TIME, 
+	IN p_AppointmentStatus VARCHAR(50), 
+	IN p_Purpose VARCHAR(255), 
+	IN p_PatientID INT, 
+	IN p_StaffID INT)
 BEGIN
-	-- Check if Appointment ID exists
-	if not exists(SELECT * FROM Appointments a WHERE a.AppointmentID = AppointmentID) then
-		select "Error: Appointment ID not found" as output_msg;
-	-- Check if Patient ID exists in the Patient table
-	elseif not exists(SELECT * FROM Patients p WHERE p.PatientID = PatientID) then
-		select "Error: Patient ID not found" as output_msg;
+    DECLARE conflict_count INT DEFAULT 0;
+    START TRANSACTION;
+    
+    -- Check if Appointment ID exists
+    IF NOT EXISTS (SELECT * FROM Appointments a WHERE a.AppointmentID = p_AppointmentID) THEN
+        ROLLBACK; 
+        SELECT "Error: Appointment ID not found" AS output_msg;
+
+    -- Check if Patient ID exists in the Patients table
+    ELSEIF NOT EXISTS (SELECT * FROM Patients p WHERE p.PatientID = p_PatientID) THEN
+        ROLLBACK; 
+        SELECT "Error: Patient ID not found" AS output_msg;
+
     -- Check if Staff ID exists in the Staff table
-	elseif not exists(SELECT * FROM Staff s WHERE s.StaffID = StaffID) then
-		select "Error: Staff ID not found" as output_msg;
-	else
-		update Appointments a
-		set a.AppointmentDate=AppointmentDate, a.AppointmentStartTime=AppointmentStartTime, 
-        a.AppointmentEndTime=AppointmentEndTime, a.AppointmentStatus=AppointmentStatus, 
-        a.Purpose=Purpose, a.PatientID=PatientID, a.StaffID=StaffID
-        where a.AppointmentID = AppointmentID;
-        select concat("Appointment with id `",AppointmentID,"` updated successfully") as output_msg;
-	end if;
+    ELSEIF NOT EXISTS (SELECT * FROM Staff s WHERE s.StaffID = p_StaffID) THEN
+        ROLLBACK;
+        SELECT "Error: Staff ID not found" AS output_msg;
+
+    -- Check for appointment conflicts for the same doctor
+    ELSE
+        SELECT COUNT(*) INTO conflict_count
+        FROM Appointments a
+        WHERE a.StaffID = p_StaffID
+          AND a.AppointmentDate = p_AppointmentDate
+          AND a.AppointmentID != p_AppointmentID  -- Exclude the appointment being updated
+          AND ((a.AppointmentStartTime < p_AppointmentEndTime AND a.AppointmentEndTime > p_AppointmentStartTime));
+
+        -- If no conflicts, update the appointment
+        IF conflict_count = 0 THEN
+            UPDATE Appointments a
+            SET a.AppointmentDate = p_AppointmentDate, 
+                a.AppointmentStartTime = p_AppointmentStartTime, 
+                a.AppointmentEndTime = p_AppointmentEndTime, 
+                a.AppointmentStatus = p_AppointmentStatus, 
+                a.Purpose = p_Purpose, 
+                a.PatientID = p_PatientID, 
+                a.StaffID = p_StaffID
+            WHERE a.AppointmentID = p_AppointmentID;
+            COMMIT;
+            SELECT CONCAT("Appointment with id `", p_AppointmentID, "` updated successfully") AS output_msg;
+
+        -- If there is a conflict, rollback
+        ELSE
+            ROLLBACK; 
+            SELECT "Error: The updated appointment time conflicts with another appointment for the same staff member" AS output_msg;
+        END IF;
+    END IF;
 END $$
 
 -- cancel an appointment
