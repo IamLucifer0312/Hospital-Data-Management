@@ -71,33 +71,76 @@ CREATE TABLE Appointments (
 
 
 -- PatientTreatmentReport
-CREATE TABLE PatientTreatmentReport (
-    ReportID INT PRIMARY KEY AUTO_INCREMENT,
-    PatientID INT,
-    TreatmentID INT,
-    DoctorID INT,
-    FOREIGN KEY (PatientID) REFERENCES Patients(PatientID),
-    FOREIGN KEY (DoctorID) REFERENCES Staff(StaffID),
-    FOREIGN KEY (TreatmentID) REFERENCES TreatmentHistory(TreatmentID)
-);
+-- CREATE TABLE PatientTreatmentReport (
+--     ReportID INT PRIMARY KEY AUTO_INCREMENT,
+--     PatientID INT,
+--     TreatmentID INT,
+--     DoctorID INT,
+--     FOREIGN KEY (PatientID) REFERENCES Patients(PatientID),
+--     FOREIGN KEY (DoctorID) REFERENCES Staff(StaffID),
+--     FOREIGN KEY (TreatmentID) REFERENCES TreatmentHistory(TreatmentID)
+-- );
+
+CREATE TABLE PatientTreatmentReport AS
+SELECT 
+    t.PatientID, 
+    t.TreatmentID, 
+    t.DoctorID
+FROM 
+    TreatmentHistory t
+WHERE 
+    t.StartDate >= '2024-01-01' AND t.EndDate <= '2024-12-31';
+
+ALTER TABLE PatientTreatmentReport ADD PRIMARY KEY (ReportID);
 
 -- StaffWorkloadReport
-CREATE TABLE StaffWorkloadReport (
-    ReportID INT PRIMARY KEY AUTO_INCREMENT,
-    StaffID INT,
-    TotalTreatments INT, 
-    TotalWorkloadHours DECIMAL(5, 2), 
-    ReportDate DATE,
-    FOREIGN KEY (StaffID) REFERENCES Staff(StaffID)
-);
+-- CREATE TABLE StaffWorkloadReport (
+--     ReportID INT PRIMARY KEY AUTO_INCREMENT,
+--     StaffID INT,
+--     TotalTreatments INT, 
+--     TotalWorkloadHours DECIMAL(5, 2), 
+--     ReportDate DATE,
+--     FOREIGN KEY (StaffID) REFERENCES Staff(StaffID)
+-- );
+
+CREATE TABLE StaffWorkloadReport AS
+SELECT 
+    s.StaffID, 
+    COUNT(t.TreatmentID) AS TotalTreatments, 
+    SUM(TIMESTAMPDIFF(HOUR, t.StartDate, t.EndDate)) AS TotalWorkloadHours, 
+    CURDATE() AS ReportDate
+FROM 
+    Staff s
+JOIN 
+    TreatmentHistory t ON s.StaffID = t.DoctorID
+GROUP BY 
+    s.StaffID;
+
+ALTER TABLE CREATE TABLE StaffWorkloadReport AS ADD PRIMARY KEY (ReportID);
 
 -- StaffPerformanceReport
-CREATE TABLE StaffPerformanceReport (
-    ReportID INT PRIMARY KEY AUTO_INCREMENT,
-    StaffID INT,
-    TotalTreatments INT,
-    AverageSatisfactionScore DECIMAL(3, 2),
-    TreatmentsPerHour DECIMAL(5, 2), 
-    ReportDate DATE,
-    FOREIGN KEY (StaffID) REFERENCES Staff(StaffID)
-);
+-- CREATE TABLE StaffPerformanceReport (
+--     ReportID INT PRIMARY KEY AUTO_INCREMENT,
+--     StaffID INT,
+--     TotalTreatments INT,
+--     AverageSatisfactionScore DECIMAL(3, 2),
+--     TreatmentsPerHour DECIMAL(5, 2), 
+--     ReportDate DATE,
+--     FOREIGN KEY (StaffID) REFERENCES Staff(StaffID)
+-- );
+
+CREATE TABLE StaffPerformanceReport AS
+SELECT 
+    s.StaffID, 
+    COUNT(t.TreatmentID) AS TotalTreatments, 
+    AVG(t.SatisfactionScore) AS AverageSatisfactionScore, 
+    COUNT(t.TreatmentID) / SUM(TIMESTAMPDIFF(HOUR, t.StartDate, t.EndDate)) AS TreatmentsPerHour, 
+    CURDATE() AS ReportDate
+FROM 
+    Staff s
+JOIN 
+    TreatmentHistory t ON s.StaffID = t.DoctorID
+GROUP BY 
+    s.StaffID;
+
+ALTER TABLE CREATE TABLE StaffPerformanceReport AS ADD PRIMARY KEY (ReportID);
