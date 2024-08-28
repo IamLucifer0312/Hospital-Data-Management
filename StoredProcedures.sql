@@ -11,11 +11,11 @@ CREATE PROCEDURE sp_add_new_patient(IN first_name VARCHAR(50), IN last_name VARC
 BEGIN
 	-- Check if email unique
 	if exists(SELECT * FROM Patients p WHERE p.Email = Email) then
-		select "Error: Email is not unique" as output_msg;
+        signal sqlstate '45000' set message_text = "Email is not unique";
 	else
 		insert into Patients (FirstName, LastName, DateOfBirth, Gender, Address, PhoneNum, Email, Allergies)
 		values (first_name, last_name, DateOfBirth, Gender, Address, PhoneNum, Email, Allergies);
-        select concat("Patient with id `",LAST_INSERT_ID(),"` added successfully") as output_msg;
+        select * from Patients where PatientID = LAST_INSERT_ID();
 	end if;
 END $$
 
@@ -25,15 +25,15 @@ CREATE PROCEDURE sp_add_new_staff(IN first_name VARCHAR(50), IN last_name VARCHA
 BEGIN
     -- Check if DepartmentID exists in the Department table
 	if not exists(SELECT * FROM Department d WHERE d.DepartmentID = DepartmentID) then
-		select "Error: Department ID not found" as output_msg;
+		signal sqlstate '45000' set message_text = "Department ID not found";
 	-- Check if ManagerID exists in the Staff table
 	elseif (not exists(SELECT * FROM Staff s WHERE s.StaffID = ManagerID) and ManagerID is not null) then
-		select "Error: Manager ID not found" as output_msg;
+		signal sqlstate '45000' set message_text = "Manager ID not found";
 	else
 		-- insert staff info
 		insert into Staff (FirstName, LastName, JobType, Salary, Qualification, DepartmentID, ManagerID)
 		values (first_name, last_name, JobType, Salary, Qualification, DepartmentID, ManagerID);
-        select concat("Staff with id `",LAST_INSERT_ID(),"` added successfully") as output_msg;
+        select * from staff where StaffID = LAST_INSERT_ID();
 	end if;
 END $$
 
@@ -49,7 +49,7 @@ BEGIN
     -- Check if Staff ID exists in Staff table
     IF NOT EXISTS(SELECT * FROM Staff s WHERE s.StaffID = p_StaffID) THEN
         ROLLBACK;
-        SELECT "Error: Staff ID not found in Staff table" AS output_msg;
+        signal sqlstate '45000' set message_text = "Staff ID not found";
 
     ELSE
         -- Insert staff schedule
@@ -59,10 +59,10 @@ BEGIN
         -- Check if insert was successful
         IF ROW_COUNT() > 0 THEN
             COMMIT;
-            SELECT CONCAT("Staff schedule added for Staff with id `", p_StaffID, "`") AS output_msg;
+			select * from Staff_Schedule where ScheduleID = LAST_INSERT_ID();
         ELSE
             ROLLBACK;
-            SELECT "Error: Failed to add staff schedule" AS output_msg;
+            signal sqlstate '45000' set message_text = "Failed to add staff schedule";
         END IF;
     END IF;
 END $$
@@ -73,14 +73,15 @@ CREATE PROCEDURE sp_add_new_treatment(IN PatientID INT, IN DoctorID INT, IN Star
 BEGIN
     -- Check if Patient ID exists in the Patient table
 	if not exists(SELECT * FROM Patients p WHERE p.PatientID = PatientID) then
-		select "Error: Patient ID not found" as output_msg;
+        signal sqlstate '45000' set message_text = "Patient ID not found";
     -- Check if Doctor ID exists in the Staff table
 	elseif not exists(SELECT * FROM Staff WHERE StaffID = DoctorID AND lower(JobType) = 'doctor') then
-		select "Error: Staff ID not found or Staff is not doctor" as output_msg;
+        -- STAFF DOCTOR CHECK SHOULD BE DONE IN TRIGGER
+		signal sqlstate '45000' set message_text = "Staff ID not found or Staff is not doctor"; 
 	else
 		insert into TreatmentHistory (PatientID,DoctorID,StartDate,EndDate,TreatmentType,BillingAmount,Status,Details)
 		values (PatientID,DoctorID,StartDate,EndDate,TreatmentType,BillingAmount,Status,Details);
-        select concat("Treatment with id `",LAST_INSERT_ID(),"` added successfully") as output_msg;
+        select * from TreatmentHistory where TreatmentID = LAST_INSERT_ID();
 	end if;
 END $$
 
@@ -103,12 +104,11 @@ BEGIN
     -- Check if Patient ID exists in the Patient table
 	IF NOT EXISTS(SELECT * FROM Patients p WHERE p.PatientID = p_PatientID) THEN
 		ROLLBACK; -- Rollback transaction if Patient ID does not exist
-		SELECT "Error: Patient ID not found" AS output_msg;
-
+		signal sqlstate '45000' set message_text = "Patient ID not found";
     -- Check if Staff ID exists in the Staff table
 	ELSEIF NOT EXISTS(SELECT * FROM Staff s WHERE s.StaffID = p_StaffID) THEN
 		ROLLBACK; -- Rollback transaction if Staff ID does not exist
-		SELECT "Error: Staff ID not found" AS output_msg;
+		signal sqlstate '45000' set message_text = "Staff ID not found";
 
 	-- Check for overlapping appointments
 	ELSE
@@ -126,12 +126,12 @@ BEGIN
 			INSERT INTO Appointments (AppointmentDate, AppointmentStartTime, AppointmentEndTime, AppointmentStatus, Purpose, PatientID, StaffID)
 			VALUES (p_AppointmentDate, p_AppointmentStartTime, p_AppointmentEndTime, 'Scheduled', p_Purpose, p_PatientID, p_StaffID);
 			COMMIT; -- Commit transaction
-			SELECT concat("Treatment with id `",LAST_INSERT_ID(),"` added successfully") AS output_msg;
+			select * from Appointments where AppointmentID = LAST_INSERT_ID();
 
 		-- If there is no overlap, rollback
 		ELSE	
 			ROLLBACK; -- Rollback transaction if there is an overlap
-			SELECT "Error: Appointment overlaps with existing appointment" AS output_msg;
+			signal sqlstate '45000' set message_text = "Appointment overlaps with existing appointment";
 		END IF;	
 	END IF;
 END $$
@@ -152,12 +152,12 @@ BEGIN
 	-- Check if Schedule ID exists in Staff_Schedule table
 	IF NOT EXISTS(SELECT * FROM Staff_Schedule ss WHERE ss.ScheduleID = p_ScheduleID) THEN
 		ROLLBACK;
-		SELECT "Error: Schedule ID not found in Staff_Schedule table" AS output_msg;
+		signal sqlstate '45000' set message_text = "Schedule ID not found";
 
 	-- Check if Staff ID exists in Staff table
 	ELSEIF NOT EXISTS(SELECT * FROM Staff s WHERE s.StaffID = p_StaffID) THEN
 		ROLLBACK;
-		SELECT "Error: Staff ID not found in Staff table" AS output_msg;
+		signal sqlstate '45000' set message_text = "Staff ID not found";
 
 	-- Check for confliects with exisiting appointments
 	ELSE
@@ -186,11 +186,12 @@ BEGIN
 			SET ss.StaffID = p_StaffID, ss.DayOfWeek = p_DayOfWeek, ss.StartTime = p_StartTime, ss.EndTime = p_EndTime
 			WHERE ss.ScheduleID = p_ScheduleID;
 			COMMIT;
-			SELECT CONCAT("Staff Schedule with id `",p_ScheduleID,"` updated successfully") as output_msg;
+			select * from Staff_Schedule where ScheduleID = p_ScheduleID;
+
 		-- If there is a conflict, rollback
 		ELSE	
 			ROLLBACK;
-			SELECT "Error: The new schedule conflicts with existing scheduled appointments" AS output_msg;
+			signal sqlstate '45000' set message_text = "The new schedule conflicts with existing scheduled appointments";
         END IF;	
 	END IF;
 END $$
@@ -201,20 +202,22 @@ CREATE PROCEDURE sp_update_staff(IN StaffID INT, IN first_name VARCHAR(50), IN l
 BEGIN
 	-- Check if Staff ID exists in Staff table
 	if not exists(SELECT * FROM Staff s WHERE s.StaffID = StaffID) then
-		select "Error: Staff ID not found in Staff table" as output_msg;
+		signal sqlstate '45000' set message_text = "Staff ID not found";
+
 	-- Check if DepartmentID exists in the Department table
 	elseif not exists(SELECT * FROM Department d WHERE d.DepartmentID = DepartmentID) then
-		select "Error: Department ID not found" as output_msg;
+		signal sqlstate '45000' set message_text = "Department ID not found";
+
 	-- Check if ManagerID exists in the Staff table
 	elseif (not exists(SELECT * FROM Staff s WHERE s.StaffID = ManagerID) and ManagerID is not null) then
-		select "Error: Manager ID not found" as output_msg;
+		signal sqlstate '45000' set message_text = "Manager ID not found";
 	else
 		update Staff s
 		set s.FirstName=first_name, s.LastName=last_name, 
         s.JobType=JobType, s.Salary=Salary, 
         s.Qualification=Qualification, s.DepartmentID=DepartmentID, s.ManagerID=ManagerID
         where s.StaffID = StaffID;
-        select concat("Staff with id `",StaffID,"` updated successfully") as output_msg;
+		select * from Staff s where s.StaffID = StaffID;
 	end if;
 END $$
 
@@ -225,16 +228,16 @@ CREATE PROCEDURE sp_update_patient(IN PatientID INT, IN first_name VARCHAR(50), 
 BEGIN
 	-- Check if Patient ID exists
 	if not exists(SELECT * FROM Patients p WHERE p.PatientID = PatientID) then
-		select "Error: Patient ID not found" as output_msg;
+		signal sqlstate '45000' set message_text = "Patient ID not found";
 	-- Check if updated email unique
 	elseif exists(SELECT * FROM Patients p WHERE p.Email = Email AND p.PatientID != PatientID) then
-		select "Error: Email is not unique" as output_msg;
+		signal sqlstate '45000' set message_text = "Email is not unique";
 	else
 		update Patients p
 		set FirstName=first_name, LastName=last_name, p.DateOfBirth=DateOfBirth, p.Gender=Gender, 
         p.Address=Address, p.PhoneNum=PhoneNum, p.Email=Email, p.Allergies=Allergies
         where p.PatientID = PatientID;
-        select concat("Patient with id `",PatientID,"` updated successfully") as output_msg;
+		select * from Patients p where p.PatientID = PatientID;
 	end if;
 END $$
 
@@ -254,18 +257,18 @@ BEGIN
     
     -- Check if Appointment ID exists
     IF NOT EXISTS (SELECT * FROM Appointments a WHERE a.AppointmentID = p_AppointmentID) THEN
-        ROLLBACK; 
-        SELECT "Error: Appointment ID not found" AS output_msg;
+        ROLLBACK;
+        signal sqlstate '45000' set message_text = "Appointment ID not found";
 
     -- Check if Patient ID exists in the Patients table
     ELSEIF NOT EXISTS (SELECT * FROM Patients p WHERE p.PatientID = p_PatientID) THEN
         ROLLBACK; 
-        SELECT "Error: Patient ID not found" AS output_msg;
+        signal sqlstate '45000' set message_text = "Patient ID not found";
 
     -- Check if Staff ID exists in the Staff table
     ELSEIF NOT EXISTS (SELECT * FROM Staff s WHERE s.StaffID = p_StaffID) THEN
         ROLLBACK;
-        SELECT "Error: Staff ID not found" AS output_msg;
+        signal sqlstate '45000' set message_text = "Staff ID not found";
 
     -- Check for appointment conflicts for the same doctor
     ELSE
@@ -288,12 +291,12 @@ BEGIN
                 a.StaffID = p_StaffID
             WHERE a.AppointmentID = p_AppointmentID;
             COMMIT;
-            SELECT CONCAT("Appointment with id `", p_AppointmentID, "` updated successfully") AS output_msg;
-
+			select * from Appointments a where a.AppointmentID = p_AppointmentID;
+            
         -- If there is a conflict, rollback
         ELSE
             ROLLBACK; 
-            SELECT "Error: The updated appointment time conflicts with another appointment for the same staff member" AS output_msg;
+			signal sqlstate '45000' set message_text = "The updated appointment time conflicts with another appointment for the same staff member";
         END IF;
     END IF;
 END $$
@@ -307,7 +310,7 @@ BEGIN
 		select concat("Appointment with id `",AppointmentID,"` deleted successfully") as output_msg;
     -- not exists -> error msg
 	else
-		select "Error: Appointment ID not found" as output_msg;
+        signal sqlstate '45000' set message_text = "Appointment ID not found";
 	end if;
 END $$
 
