@@ -1,0 +1,10 @@
+
+POST http://localhost:3000/notes
+Content-Type: application/json
+    
+    {
+    "patientid": 2,
+    "AppointmentID": 2,
+    "DoctorID": 2,
+    "Note": "Note 2"
+    }
