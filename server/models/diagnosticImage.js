@@ -5,7 +5,7 @@ const diagnosticImageSchema = new mongoose.Schema(
     PatientID: Number,
     AppointmentID: Number,
     ImageType: String,
-    ImageURL: { data: Buffer, contentType: String },
+    ImageURL: String,
     Date: Date,
     Description: { type: String, required: false },
   },
