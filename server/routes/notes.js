@@ -19,9 +19,9 @@ router.get("/", async (req, res) => {
 });
 
 // // Get one note
-// router.get("/:id", getNote, (req, res) => {
-//   res.json(res.note);
-// });
+router.get("/:id", getNote, (req, res) => {
+  res.send(res.note);
+});
 
 // Create one note
 router.post("/", async (req, res) => {
@@ -39,36 +39,50 @@ router.post("/", async (req, res) => {
   }
 });
 
-// // Update one note
-// router.patch("/:id", getNote, async (req, res) => {
-//   if (req.body.PatientID != null) {
-//     res.note.PatientID = req.body.PatientID;
-//   }
-//   if (req.body.AppointmentID != null) {
-//     res.note.AppointmentID = req.body.AppointmentID;
-//   }
-//   if (req.body.DoctorID != null) {
-//     res.note.DoctorID = req.body.DoctorID;
-//   }
-//   if (req.body.Note != null) {
-//     res.note.Note = req.body.Note;
-//   }
-//   try {
-//     const updatedNote = await res.note.save();
-//     res.json(updatedNote);
-//   } catch (error) {
-//     res.status(400).json({ message: error.message });
-//   }
-// });
+// Update one note
+router.patch("/:id", getNote, async (req, res) => {
+  if (req.body.PatientID != null) {
+    res.note.PatientID = req.body.PatientID;
+  }
+  if (req.body.AppointmentID != null) {
+    res.note.AppointmentID = req.body.AppointmentID;
+  }
+  if (req.body.DoctorID != null) {
+    res.note.DoctorID = req.body.DoctorID;
+  }
+  if (req.body.Note != null) {
+    res.note.Note = req.body.Note;
+  }
+  try {
+    const updatedNote = await res.note.save();
+    res.json(updatedNote);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
 
 // // Delete one note
-// router.delete("/:id", getNote, async (req, res) => {
-//   try {
-//     await res.note.remove();
-//     res.json({ message: "Deleted note" });
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// });
+router.delete("/:id", getNote, async (req, res) => {
+  try {
+    await res.note.deleteOne();
+    res.json({ message: "Deleted note" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+async function getNote(req, res, next) {
+  let note;
+  try {
+    note = await Note.findById(req.params.id);
+    if (note == null) {
+      return res.status(404).json({ message: "Cannot find note" });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+  res.note = note;
+  next();
+}
 
 module.exports = router;
