@@ -3,38 +3,37 @@
 -- (basically any validity check requires the data from the database)
 -- other types of validity check should be done in the backend API
 
+drop procedure if exists sp_add_new_patient;
+drop procedure if exists sp_add_new_staff;
+drop procedure if exists sp_add_new_staff_schedule;
+drop procedure if exists sp_add_new_treatment;
+drop procedure if exists sp_add_new_appointment;
+drop procedure if exists sp_update_staff_schedule;
+drop procedure if exists sp_update_staff;
+drop procedure if exists sp_update_patient;
+drop procedure if exists sp_update_appointment;
+drop procedure if exists sp_delete_staff_schedule;
+drop procedure if exists sp_delete_appointment;
+
 DELIMITER $$
 -- add a new patient
 CREATE PROCEDURE sp_add_new_patient(IN first_name VARCHAR(50), IN last_name VARCHAR(50), IN DateOfBirth DATE,
     IN Gender VARCHAR(10), IN Address VARCHAR(255), IN PhoneNum VARCHAR(20), IN Email VARCHAR(100), 
     IN Allergies TEXT)
 BEGIN
-	-- Check if email unique
-	if exists(SELECT * FROM Patients p WHERE p.Email = Email) then
-        signal sqlstate '45000' set message_text = "Email is not unique";
-	else
-		insert into Patients (FirstName, LastName, DateOfBirth, Gender, Address, PhoneNum, Email, Allergies)
-		values (first_name, last_name, DateOfBirth, Gender, Address, PhoneNum, Email, Allergies);
-        select * from Patients where PatientID = LAST_INSERT_ID();
-	end if;
+	insert into Patients (FirstName, LastName, DateOfBirth, Gender, Address, PhoneNum, Email, Allergies)
+	values (first_name, last_name, DateOfBirth, Gender, Address, PhoneNum, Email, Allergies);
+	select * from Patients where PatientID = LAST_INSERT_ID();
 END $$
 
 -- add a new staff
 CREATE PROCEDURE sp_add_new_staff(IN first_name VARCHAR(50), IN last_name VARCHAR(50), IN JobType VARCHAR(50), 
 	IN Salary INT, IN Qualification VARCHAR(100), IN DepartmentID INT, IN ManagerID INT)
 BEGIN
-    -- Check if DepartmentID exists in the Department table
-	if not exists(SELECT * FROM Department d WHERE d.DepartmentID = DepartmentID) then
-		signal sqlstate '45000' set message_text = "Department ID not found";
-	-- Check if ManagerID exists in the Staff table
-	elseif (not exists(SELECT * FROM Staff s WHERE s.StaffID = ManagerID) and ManagerID is not null) then
-		signal sqlstate '45000' set message_text = "Manager ID not found";
-	else
-		-- insert staff info
-		insert into Staff (FirstName, LastName, JobType, Salary, Qualification, DepartmentID, ManagerID)
-		values (first_name, last_name, JobType, Salary, Qualification, DepartmentID, ManagerID);
-        select * from staff where StaffID = LAST_INSERT_ID();
-	end if;
+	-- insert staff info
+	insert into Staff (FirstName, LastName, JobType, Salary, Qualification, DepartmentID, ManagerID)
+	values (first_name, last_name, JobType, Salary, Qualification, DepartmentID, ManagerID);
+	select * from staff where StaffID = LAST_INSERT_ID();
 END $$
 
 -- add new staff schedule
@@ -45,44 +44,27 @@ CREATE PROCEDURE sp_add_new_staff_schedule(
 	IN p_EndTime TIME)
 BEGIN
     START TRANSACTION;
+	-- Insert staff schedule
+	INSERT INTO Staff_Schedule (StaffID, DayOfWeek, StartTime, EndTime)
+	VALUES (p_StaffID, p_DayOfWeek, p_StartTime, p_EndTime);
 
-    -- Check if Staff ID exists in Staff table
-    IF NOT EXISTS(SELECT * FROM Staff s WHERE s.StaffID = p_StaffID) THEN
-        ROLLBACK;
-        signal sqlstate '45000' set message_text = "Staff ID not found";
-
-    ELSE
-        -- Insert staff schedule
-        INSERT INTO Staff_Schedule (StaffID, DayOfWeek, StartTime, EndTime)
-        VALUES (p_StaffID, p_DayOfWeek, p_StartTime, p_EndTime);
-
-        -- Check if insert was successful
-        IF ROW_COUNT() > 0 THEN
-            COMMIT;
-			select * from Staff_Schedule where ScheduleID = LAST_INSERT_ID();
-        ELSE
-            ROLLBACK;
-            signal sqlstate '45000' set message_text = "Failed to add staff schedule";
-        END IF;
-    END IF;
+	-- Check if insert was successful
+	IF ROW_COUNT() > 0 THEN
+		COMMIT;
+		select * from Staff_Schedule where ScheduleID = LAST_INSERT_ID();
+	ELSE
+		ROLLBACK;
+		signal sqlstate '45000' set message_text = "Failed to add staff schedule";
+	END IF;
 END $$
 
 -- add a new treatment history
 CREATE PROCEDURE sp_add_new_treatment(IN PatientID INT, IN DoctorID INT, IN StartDate DATE, IN EndDate DATE,
     IN TreatmentType VARCHAR(100), IN BillingAmount INT, IN Status VARCHAR(50), IN Details TEXT)
 BEGIN
-    -- Check if Patient ID exists in the Patient table
-	if not exists(SELECT * FROM Patients p WHERE p.PatientID = PatientID) then
-        signal sqlstate '45000' set message_text = "Patient ID not found";
-    -- Check if Doctor ID exists in the Staff table
-	elseif not exists(SELECT * FROM Staff WHERE StaffID = DoctorID AND lower(JobType) = 'doctor') then
-        -- STAFF DOCTOR CHECK SHOULD BE DONE IN TRIGGER
-		signal sqlstate '45000' set message_text = "Staff ID not found or Staff is not doctor"; 
-	else
-		insert into TreatmentHistory (PatientID,DoctorID,StartDate,EndDate,TreatmentType,BillingAmount,Status,Details)
-		values (PatientID,DoctorID,StartDate,EndDate,TreatmentType,BillingAmount,Status,Details);
-        select * from TreatmentHistory where TreatmentID = LAST_INSERT_ID();
-	end if;
+	insert into TreatmentHistory (PatientID,DoctorID,StartDate,EndDate,TreatmentType,BillingAmount,Status,Details)
+	values (PatientID,DoctorID,StartDate,EndDate,TreatmentType,BillingAmount,Status,Details);
+	select * from TreatmentHistory where TreatmentID = LAST_INSERT_ID();
 END $$
 
 -- book an appointment
@@ -100,40 +82,28 @@ BEGIN
 
 	-- Start transaction
 	START TRANSACTION;
-
-    -- Check if Patient ID exists in the Patient table
-	IF NOT EXISTS(SELECT * FROM Patients p WHERE p.PatientID = p_PatientID) THEN
-		ROLLBACK; -- Rollback transaction if Patient ID does not exist
-		signal sqlstate '45000' set message_text = "Patient ID not found";
-    -- Check if Staff ID exists in the Staff table
-	ELSEIF NOT EXISTS(SELECT * FROM Staff s WHERE s.StaffID = p_StaffID) THEN
-		ROLLBACK; -- Rollback transaction if Staff ID does not exist
-		signal sqlstate '45000' set message_text = "Staff ID not found";
-
 	-- Check for overlapping appointments
-	ELSE
-		SELECT COUNT(*) INTO overlap_count
-		FROM Appointments
-		WHERE StaffID = p_StaffID
-			AND AppointmentDate = p_AppointmentDate
-			AND ((p_AppointmentStartTime BETWEEN AppointmentStartTime AND AppointmentEndTime)
-				OR (p_AppointmentEndTime BETWEEN AppointmentStartTime AND AppointmentEndTime)
-				OR (AppointmentStartTime BETWEEN p_AppointmentStartTime AND p_AppointmentEndTime)
-				OR (AppointmentEndTime BETWEEN p_AppointmentStartTime AND p_AppointmentEndTime));
+	SELECT COUNT(*) INTO overlap_count
+	FROM Appointments
+	WHERE StaffID = p_StaffID
+		AND AppointmentDate = p_AppointmentDate
+		AND ((p_AppointmentStartTime BETWEEN AppointmentStartTime AND AppointmentEndTime)
+			OR (p_AppointmentEndTime BETWEEN AppointmentStartTime AND AppointmentEndTime)
+			OR (AppointmentStartTime BETWEEN p_AppointmentStartTime AND p_AppointmentEndTime)
+			OR (AppointmentEndTime BETWEEN p_AppointmentStartTime AND p_AppointmentEndTime));
 
-		-- If no overlap, insert the appointment
-		IF overlap_count = 0 THEN
-			INSERT INTO Appointments (AppointmentDate, AppointmentStartTime, AppointmentEndTime, AppointmentStatus, Purpose, PatientID, StaffID)
-			VALUES (p_AppointmentDate, p_AppointmentStartTime, p_AppointmentEndTime, 'Scheduled', p_Purpose, p_PatientID, p_StaffID);
-			COMMIT; -- Commit transaction
-			select * from Appointments where AppointmentID = LAST_INSERT_ID();
+	-- If no overlap, insert the appointment
+	IF overlap_count = 0 THEN
+		INSERT INTO Appointments (AppointmentDate, AppointmentStartTime, AppointmentEndTime, AppointmentStatus, Purpose, PatientID, StaffID)
+		VALUES (p_AppointmentDate, p_AppointmentStartTime, p_AppointmentEndTime, 'Scheduled', p_Purpose, p_PatientID, p_StaffID);
+		COMMIT; -- Commit transaction
+		select * from Appointments where AppointmentID = LAST_INSERT_ID();
 
-		-- If there is no overlap, rollback
-		ELSE	
-			ROLLBACK; -- Rollback transaction if there is an overlap
-			signal sqlstate '45000' set message_text = "Appointment overlaps with existing appointment";
-		END IF;	
-	END IF;
+	-- If there is no overlap, rollback
+	ELSE	
+		ROLLBACK; -- Rollback transaction if there is an overlap
+		signal sqlstate '45000' set message_text = "Appointment overlaps with existing appointment";
+	END IF;	
 END $$
 
 -- update staff schedule
@@ -153,11 +123,6 @@ BEGIN
 	IF NOT EXISTS(SELECT * FROM Staff_Schedule ss WHERE ss.ScheduleID = p_ScheduleID) THEN
 		ROLLBACK;
 		signal sqlstate '45000' set message_text = "Schedule ID not found";
-
-	-- Check if Staff ID exists in Staff table
-	ELSEIF NOT EXISTS(SELECT * FROM Staff s WHERE s.StaffID = p_StaffID) THEN
-		ROLLBACK;
-		signal sqlstate '45000' set message_text = "Staff ID not found";
 
 	-- Check for confliects with exisiting appointments
 	ELSE
@@ -203,14 +168,6 @@ BEGIN
 	-- Check if Staff ID exists in Staff table
 	if not exists(SELECT * FROM Staff s WHERE s.StaffID = StaffID) then
 		signal sqlstate '45000' set message_text = "Staff ID not found";
-
-	-- Check if DepartmentID exists in the Department table
-	elseif not exists(SELECT * FROM Department d WHERE d.DepartmentID = DepartmentID) then
-		signal sqlstate '45000' set message_text = "Department ID not found";
-
-	-- Check if ManagerID exists in the Staff table
-	elseif (not exists(SELECT * FROM Staff s WHERE s.StaffID = ManagerID) and ManagerID is not null) then
-		signal sqlstate '45000' set message_text = "Manager ID not found";
 	else
 		update Staff s
 		set s.FirstName=first_name, s.LastName=last_name, 
@@ -229,9 +186,7 @@ BEGIN
 	-- Check if Patient ID exists
 	if not exists(SELECT * FROM Patients p WHERE p.PatientID = PatientID) then
 		signal sqlstate '45000' set message_text = "Patient ID not found";
-	-- Check if updated email unique
-	elseif exists(SELECT * FROM Patients p WHERE p.Email = Email AND p.PatientID != PatientID) then
-		signal sqlstate '45000' set message_text = "Email is not unique";
+
 	else
 		update Patients p
 		set FirstName=first_name, LastName=last_name, p.DateOfBirth=DateOfBirth, p.Gender=Gender, 
@@ -259,17 +214,6 @@ BEGIN
     IF NOT EXISTS (SELECT * FROM Appointments a WHERE a.AppointmentID = p_AppointmentID) THEN
         ROLLBACK;
         signal sqlstate '45000' set message_text = "Appointment ID not found";
-
-    -- Check if Patient ID exists in the Patients table
-    ELSEIF NOT EXISTS (SELECT * FROM Patients p WHERE p.PatientID = p_PatientID) THEN
-        ROLLBACK; 
-        signal sqlstate '45000' set message_text = "Patient ID not found";
-
-    -- Check if Staff ID exists in the Staff table
-    ELSEIF NOT EXISTS (SELECT * FROM Staff s WHERE s.StaffID = p_StaffID) THEN
-        ROLLBACK;
-        signal sqlstate '45000' set message_text = "Staff ID not found";
-
     -- Check for appointment conflicts for the same doctor
     ELSE
         SELECT COUNT(*) INTO conflict_count
@@ -299,6 +243,18 @@ BEGIN
 			signal sqlstate '45000' set message_text = "The updated appointment time conflicts with another appointment for the same staff member";
         END IF;
     END IF;
+END $$
+
+-- delete a staff schedule
+CREATE PROCEDURE sp_delete_staff_schedule(IN ScheduleID INT)
+BEGIN
+    -- Check if Schedule ID exists -> delete schedule
+	IF EXISTS(SELECT * FROM Staff_Schedule ss WHERE ss.ScheduleID = ScheduleID) THEN
+		delete from Staff_Schedule ss where ss.ScheduleID = ScheduleID;
+    -- not exists -> error msg
+	else
+        signal sqlstate '45000' set message_text = "Schedule ID not found";
+	end if;
 END $$
 
 -- cancel an appointment
