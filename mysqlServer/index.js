@@ -1,4 +1,6 @@
 const express = require("express");
+const cors = require("cors");
+
 const {
   addNewStaff,
   getStaff,
@@ -16,6 +18,8 @@ const {
 const app = express();
 const port = 3000;
 
+//fix CORS from Frontend
+app.use(cors());
 app.use(express.json());
 
 // GET will send undefined (for specific id search) or empty array (for collection search) if there is no result from mysql, otherwise it will send the result in object or array of objects
