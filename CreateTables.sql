@@ -133,7 +133,7 @@ JOIN
 GROUP BY 
     s.StaffID;
 
-ALTER TABLE CREATE TABLE StaffWorkloadReport AS ADD PRIMARY KEY (ReportID);
+ALTER TABLE StaffWorkloadReport ADD PRIMARY KEY (ReportID);
 
 -- StaffPerformanceReport
 -- CREATE TABLE StaffPerformanceReport (
@@ -160,4 +160,4 @@ JOIN
 GROUP BY 
     s.StaffID;
 
-ALTER TABLE CREATE TABLE StaffPerformanceReport AS ADD PRIMARY KEY (ReportID);
+ALTER TABLE StaffPerformanceReport ADD PRIMARY KEY (ReportID);
