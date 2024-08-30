@@ -65,7 +65,7 @@ CREATE TABLE Appointments (
     AppointmentDate DATE NOT NULL,
     AppointmentStartTime TIME NOT NULL,
 	AppointmentEndTime TIME NOT NULL,
-    AppointmentStatus ENUM('Scheduled','Completed','Cancelled') DEFAULT 'Scheduled', -- Example statuses: Scheduled, Completed, Canceled
+    AppointmentStatus ENUM('Scheduled','Completed','Cancelled') DEFAULT 'Scheduled', -- Example statuses: Scheduled, Completed, Cancelled
     Purpose VARCHAR(255) NOT NULL,
     PatientID INT NOT NULL,
     StaffID INT NOT NULL,
