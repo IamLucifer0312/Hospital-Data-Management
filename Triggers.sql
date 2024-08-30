@@ -7,6 +7,8 @@ drop trigger if exists update_staff_schedule;
 drop trigger if exists update_staff;
 drop trigger if exists update_patients;
 drop trigger if exists update_appointments;
+drop trigger if exists del_staff;
+drop trigger if exists del_staff_schedule;
 
 DELIMITER $$
 CREATE TRIGGER ins_patients
@@ -123,10 +125,24 @@ BEGIN
     end if;
 END $$
 
--- CREATE TRIGGER del_appointments
--- BEFORE DELETE ON Appointments
--- FOR EACH ROW
--- BEGIN
--- END $$
+CREATE TRIGGER del_staff
+AFTER DELETE ON Staff
+FOR EACH ROW
+BEGIN
+	-- delete staff schedules associated with the deleted staff
+    delete from Staff_Schedule ss where OLD.StaffID = ss.StaffID;
+END $$
+
+CREATE TRIGGER del_staff_schedule
+AFTER DELETE ON Staff_Schedule
+FOR EACH ROW
+BEGIN
+	-- change appointment associated with that staff schedule to 'Cancelled' status (appointment status)
+    update Appointments a set a.AppointmentStatus = 'Cancelled' 
+    where a.StaffID = OLD.StaffID
+    and DAYNAME(a.AppointmentDate) = OLD.DayOfWeek
+    and (a.AppointmentStartTime BETWEEN OLD.StartTime AND OLD.EndTime)
+    and (a.AppointmentEndTime BETWEEN OLD.StartTime AND OLD.EndTime);
+END $$
 
 DELIMITER ;
