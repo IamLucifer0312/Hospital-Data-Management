@@ -10,7 +10,7 @@ const connection = mysql
   })
   .promise();
 
-//Staff
+//STAFF
 async function getAllStaff() {
   const [rows] = await connection.query("SELECT * FROM staff");
   console.log(rows);
@@ -22,7 +22,7 @@ async function getStaff(id) {
     [id] //avoid sql injection
   );
   console.log(rows[0]);
-  return rows[0];
+  return rows[0]; //undefined if no staff found
 }
 async function getStaffByDepartment(id) {
   const [rows] = await connection.query(
@@ -30,7 +30,7 @@ async function getStaffByDepartment(id) {
     [id] //avoid sql injection
   );
   console.log(rows);
-  return rows;
+  return rows; //empty array if no staff found
 }
 async function addNewStaff(
   firstName,
@@ -82,8 +82,13 @@ async function updateStaffInfo(
   console.log(rows[0][0]);
   return rows[0][0];
 }
+async function deleteStaff(StaffID) {
+  const [rows] = await connection.query("CALL sp_delete_staff(?)", [StaffID]);
+  console.log(rows);
+  return rows;
+}
 
-// Staff Schedules
+// STAFF SCHEDULES
 async function getStaffSchedule(id) {
   const [rows] = await connection.query(
     "SELECT * FROM staff_schedule WHERE ScheduleID = ?",
@@ -132,8 +137,6 @@ async function deleteStaffSchedule(scheduleID) {
   return rows;
 }
 
-// getStaff(1);
-// addStaff("Nguyen", "Van Anh", "Doctor", 120000, "MD Cardiology", 6, null);
 module.exports = {
   getStaff,
   addNewStaff,
@@ -145,4 +148,5 @@ module.exports = {
   updateStaffSchedule,
   deleteStaffSchedule,
   getStaffSchedule,
+  deleteStaff,
 };
