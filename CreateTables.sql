@@ -43,7 +43,11 @@ CREATE TABLE Staff_Schedule (
     DayOfWeek ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday') NOT NULL,
     StartTime TIME NOT NULL,
     EndTime TIME NOT NULL,
-    FOREIGN KEY (StaffID) REFERENCES Staff(StaffID)
+    FOREIGN KEY (StaffID) REFERENCES Staff(StaffID),
+    
+	CHECK (StartTime >= '00:00:00' AND StartTime <= '23:59:59'),
+    CHECK (EndTime >= '00:00:00' AND EndTime <= '23:59:59'),
+    CHECK (StartTime < EndTime)
 );
 
 CREATE TABLE TreatmentHistory (
@@ -57,7 +61,9 @@ CREATE TABLE TreatmentHistory (
     Status VARCHAR(50),
     Details TEXT,
     FOREIGN KEY (PatientID) REFERENCES Patients(PatientID),
-    FOREIGN KEY (DoctorID) REFERENCES Staff(StaffID)
+    FOREIGN KEY (DoctorID) REFERENCES Staff(StaffID),
+    
+	CHECK (StartDate <= EndDate)
 );
 
 CREATE TABLE Appointments (
@@ -71,7 +77,11 @@ CREATE TABLE Appointments (
     StaffID INT NOT NULL,
     
     FOREIGN KEY (PatientID) REFERENCES Patients(PatientID),
-    FOREIGN KEY (StaffID) REFERENCES Staff(StaffID)
+    FOREIGN KEY (StaffID) REFERENCES Staff(StaffID),
+    
+	CHECK (AppointmentStartTime >= '00:00:00' AND AppointmentStartTime <= '23:59:59'),
+    CHECK (AppointmentEndTime >= '00:00:00' AND AppointmentEndTime <= '23:59:59'),
+    CHECK (AppointmentStartTime < AppointmentEndTime)
 );
 
 -- Reports include Patient treatment history, Staff workload, Staff performance, Billing
