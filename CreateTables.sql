@@ -58,6 +58,7 @@ CREATE TABLE TreatmentHistory (
     EndDate DATE,
     TreatmentType VARCHAR(100),
     BillingAmount INT,
+    SatisfactionScore DECIMAL(3, 2),
     Status VARCHAR(50),
     Details TEXT,
     FOREIGN KEY (PatientID) REFERENCES Patients(PatientID),
@@ -108,7 +109,7 @@ FROM
 WHERE 
     t.StartDate >= '2024-01-01' AND t.EndDate <= '2024-12-31';
 
-ALTER TABLE PatientTreatmentReport ADD PRIMARY KEY (ReportID);
+ALTER TABLE PatientTreatmentReport ADD COLUMN ReportID INT AUTO_INCREMENT PRIMARY KEY;
 
 -- StaffWorkloadReport
 -- CREATE TABLE StaffWorkloadReport (
@@ -133,7 +134,7 @@ JOIN
 GROUP BY 
     s.StaffID;
 
-ALTER TABLE StaffWorkloadReport ADD PRIMARY KEY (ReportID);
+ALTER TABLE StaffWorkloadReport ADD COLUMN ReportID INT AUTO_INCREMENT PRIMARY KEY;
 
 -- StaffPerformanceReport
 -- CREATE TABLE StaffPerformanceReport (
@@ -160,4 +161,4 @@ JOIN
 GROUP BY 
     s.StaffID;
 
-ALTER TABLE StaffPerformanceReport ADD PRIMARY KEY (ReportID);
+ALTER TABLE StaffPerformanceReport ADD COLUMN ReportID INT AUTO_INCREMENT PRIMARY KEY;
