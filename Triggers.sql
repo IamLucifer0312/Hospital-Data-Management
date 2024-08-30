@@ -29,6 +29,8 @@ BEGIN
 	-- Check if ManagerID exists in the Staff table
 	elseif (not exists(SELECT * FROM Staff s WHERE s.StaffID = NEW.ManagerID) and NEW.ManagerID is not null) then
 		signal sqlstate '45000' set message_text = "Manager ID not found";
+	elseif getStaffSal(NEW.ManagerID) <= NEW.salary then
+		signal sqlstate '45000' set message_text = "Staff salary should be less than Manager salary";
     end if;
 END $$
 
@@ -93,6 +95,8 @@ BEGIN
 	-- Check if ManagerID exists in the Staff table
 	elseif (not exists(SELECT * FROM Staff s WHERE s.StaffID = NEW.ManagerID) and NEW.ManagerID is not null) then
 		signal sqlstate '45000' set message_text = "Manager ID not found";
+	elseif getStaffSal(NEW.ManagerID) <= NEW.salary then
+		signal sqlstate '45000' set message_text = "Staff salary should be less than Manager salary";
     end if;
 END $$
 
