@@ -1,6 +1,13 @@
 CREATE DATABASE Hospital;
 use Hospital;
 
+drop table if exists TreatmentHistory;
+drop table if exists Appointments;
+drop table if exists Staff_Schedule;
+drop table if exists Patients;
+drop table if exists Staff;
+drop table if exists Department;
+
 CREATE TABLE Patients (
     PatientID INT AUTO_INCREMENT PRIMARY KEY,
     FirstName VARCHAR(50),
@@ -22,7 +29,7 @@ CREATE TABLE Staff (
     StaffID INT PRIMARY KEY AUTO_INCREMENT,
     FirstName VARCHAR(50) NOT NULL,
     LastName VARCHAR(50) NOT NULL,
-    JobType VARCHAR(50) NOT NULL,
+    JobType ENUM('Doctor', 'Nurse', 'Admin', 'Lab Technician', 'Surgeon') NOT NULL,
 	Salary INT,
     Qualification VARCHAR(100),
     DepartmentID INT NOT NULL,
@@ -58,7 +65,7 @@ CREATE TABLE Appointments (
     AppointmentDate DATE NOT NULL,
     AppointmentStartTime TIME NOT NULL,
 	AppointmentEndTime TIME NOT NULL,
-    AppointmentStatus VARCHAR(50) DEFAULT 'Scheduled', -- Example statuses: Scheduled, Completed, Canceled
+    AppointmentStatus ENUM('Scheduled','Completed','Cancelled') DEFAULT 'Scheduled', -- Example statuses: Scheduled, Completed, Canceled
     Purpose VARCHAR(255) NOT NULL,
     PatientID INT NOT NULL,
     StaffID INT NOT NULL,
