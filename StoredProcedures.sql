@@ -12,9 +12,11 @@ drop procedure if exists sp_update_staff_schedule;
 drop procedure if exists sp_update_staff;
 drop procedure if exists sp_update_patient;
 drop procedure if exists sp_update_appointment;
+drop procedure if exists sp_delete_staff;
+drop procedure if exists sp_delete_patient;
 drop procedure if exists sp_delete_staff_schedule;
 drop procedure if exists sp_delete_appointment;
-
+drop procedure if exists sp_delete_treatment;
 DELIMITER $$
 -- add a new patient
 CREATE PROCEDURE sp_add_new_patient(IN first_name VARCHAR(50), IN last_name VARCHAR(50), IN DateOfBirth DATE,
@@ -106,6 +108,42 @@ BEGIN
 	END IF;	
 END $$
 
+-- update patient info
+CREATE PROCEDURE sp_update_patient(IN PatientID INT, IN first_name VARCHAR(50), IN last_name VARCHAR(50), 
+	IN DateOfBirth DATE, IN Gender VARCHAR(10), IN Address VARCHAR(255), IN PhoneNum VARCHAR(20), 
+    IN Email VARCHAR(100), IN Allergies TEXT)
+BEGIN
+	update Patients p
+	set FirstName=first_name, LastName=last_name, p.DateOfBirth=DateOfBirth, p.Gender=Gender, 
+	p.Address=Address, p.PhoneNum=PhoneNum, p.Email=Email, p.Allergies=Allergies
+	where p.PatientID = PatientID;
+	
+	-- no rows affected -> error msg
+	if row_count() = 0 then
+		signal sqlstate '45000' set message_text = "Patient ID not found";
+	else
+		select * from Patients p where p.PatientID = PatientID;
+	end if;
+END $$
+
+-- update staff info
+CREATE PROCEDURE sp_update_staff(IN StaffID INT, IN first_name VARCHAR(50), IN last_name VARCHAR(50), 
+	IN JobType VARCHAR(50), IN Salary INT, IN Qualification VARCHAR(100), IN DepartmentID INT, IN ManagerID INT)
+BEGIN
+	update Staff s
+	set s.FirstName=first_name, s.LastName=last_name, 
+	s.JobType=JobType, s.Salary=Salary, 
+	s.Qualification=Qualification, s.DepartmentID=DepartmentID, s.ManagerID=ManagerID
+	where s.StaffID = StaffID;
+    
+	-- no rows affected -> error msg
+	if row_count() = 0 then
+		signal sqlstate '45000' set message_text = "Staff ID not found";
+	else
+		select * from Staff s where s.StaffID = StaffID;
+	end if;
+END $$
+
 -- update staff schedule
 CREATE PROCEDURE sp_update_staff_schedule(
 	IN p_ScheduleID INT, 
@@ -158,42 +196,6 @@ BEGIN
 	END IF;	
 END $$
 
--- update staff info
-CREATE PROCEDURE sp_update_staff(IN StaffID INT, IN first_name VARCHAR(50), IN last_name VARCHAR(50), 
-	IN JobType VARCHAR(50), IN Salary INT, IN Qualification VARCHAR(100), IN DepartmentID INT, IN ManagerID INT)
-BEGIN
-	update Staff s
-	set s.FirstName=first_name, s.LastName=last_name, 
-	s.JobType=JobType, s.Salary=Salary, 
-	s.Qualification=Qualification, s.DepartmentID=DepartmentID, s.ManagerID=ManagerID
-	where s.StaffID = StaffID;
-    
-	-- no rows affected -> error msg
-	if row_count() = 0 then
-		signal sqlstate '45000' set message_text = "Staff ID not found";
-	else
-		select * from Staff s where s.StaffID = StaffID;
-	end if;
-END $$
-
--- update patient info
-CREATE PROCEDURE sp_update_patient(IN PatientID INT, IN first_name VARCHAR(50), IN last_name VARCHAR(50), 
-	IN DateOfBirth DATE, IN Gender VARCHAR(10), IN Address VARCHAR(255), IN PhoneNum VARCHAR(20), 
-    IN Email VARCHAR(100), IN Allergies TEXT)
-BEGIN
-	update Patients p
-	set FirstName=first_name, LastName=last_name, p.DateOfBirth=DateOfBirth, p.Gender=Gender, 
-	p.Address=Address, p.PhoneNum=PhoneNum, p.Email=Email, p.Allergies=Allergies
-	where p.PatientID = PatientID;
-	
-	-- no rows affected -> error msg
-	if row_count() = 0 then
-		signal sqlstate '45000' set message_text = "Patient ID not found";
-	else
-		select * from Patients p where p.PatientID = PatientID;
-	end if;
-END $$
-
 -- update appointment info
 CREATE PROCEDURE sp_update_appointment(
 	IN p_AppointmentID INT, 
@@ -242,6 +244,26 @@ BEGIN
 	END IF;
 END $$
 
+-- delete a staff
+CREATE PROCEDURE sp_delete_staff(IN StaffID INT)
+BEGIN
+	delete from staff s where s.StaffID = StaffID;
+    -- no rows affected -> error msg
+	if row_count() = 0 then
+        signal sqlstate '45000' set message_text = "Staff ID not found";
+	end if;
+END $$
+
+-- delete a patient
+CREATE PROCEDURE sp_delete_patient(IN PatientID INT)
+BEGIN
+	delete from Patients p where p.PatientID = PatientID;
+    -- no rows affected -> error msg
+	if row_count() = 0 then
+        signal sqlstate '45000' set message_text = "Patient ID not found";
+	end if;
+END $$
+
 -- delete a staff schedule
 CREATE PROCEDURE sp_delete_staff_schedule(IN ScheduleID INT)
 BEGIN
@@ -252,13 +274,23 @@ BEGIN
 	end if;
 END $$
 
--- cancel an appointment
+-- delete an appointment
 CREATE PROCEDURE sp_delete_appointment(IN AppointmentID INT)
 BEGIN
 	delete from Appointments a where a.AppointmentID = AppointmentID;
     -- not exists -> error msg
 	if row_count() = 0 then
         signal sqlstate '45000' set message_text = "Appointment ID not found";
+	end if;
+END $$
+
+-- delete an treatment history
+CREATE PROCEDURE sp_delete_treatment(IN TreatmentID INT)
+BEGIN
+	delete from TreatmentHistory t where t.TreatmentID = TreatmentID;
+    -- not exists -> error msg
+	if row_count() = 0 then
+        signal sqlstate '45000' set message_text = "Treatment ID not found";
 	end if;
 END $$
 
