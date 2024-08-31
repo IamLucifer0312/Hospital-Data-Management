@@ -217,6 +217,109 @@ async function deletePatient(PatientID) {
   return rows;
 }
 
+// APPOINTMENT
+async function getAllAppointment() {
+  const [rows] = await connection.query("SELECT * FROM appointment");
+  console.log(rows);
+  return rows;
+}
+
+async function getAppointment(id) {
+  const [rows] = await connection.query(
+    "SELECT * FROM appointment WHERE AppointmentID = ?",
+    [id]
+  );
+  console.log(rows[0]);
+  return rows[0];
+}
+
+async function getAppointmentsByPatient(patientId) {
+  const [rows] = await connection.query(
+    "SELECT * FROM appointment WHERE PatientID = ?",
+    [patientId]
+  );
+  console.log(rows);
+  return rows;
+}
+
+async function getAppointmentsByStaff(staffId) {
+  const [rows] = await connection.query(
+    "SELECT * FROM appointment WHERE StaffID = ?",
+    [staffId]
+  );
+  console.log(rows);
+  return rows;
+}
+
+async function getAppointmentsByPatientAndStaff(patientId, staffId) {
+  const [rows] = await connection.query(
+    "SELECT * FROM appointment WHERE PatientID = ? AND StaffID = ?",
+    [patientId, staffId] // Using both patientId and staffId to filter results
+  );
+  console.log(rows); // Log the rows for debugging purposes
+  return rows; // Return the filtered appointments
+}
+
+async function addNewAppointment(
+  appointmentDate,
+  appointmentStartTime,
+  appointmentEndTime,
+  appointmentStatus,
+  purpose,
+  patientID,
+  staffID
+) {
+  const [rows] = await connection.query(
+    "CALL sp_add_new_appointment(?,?,?,?,?,?,?)",
+    [
+      appointmentDate,
+      appointmentStartTime,
+      appointmentEndTime,
+      appointmentStatus,
+      purpose,
+      patientID,
+      staffID,
+    ]
+  );
+  console.log(rows[0][0]);
+  return rows[0][0];
+}
+
+async function updateAppointmentInfo(
+  appointmentID,
+  appointmentDate,
+  appointmentStartTime,
+  appointmentEndTime,
+  appointmentStatus,
+  purpose,
+  patientID,
+  staffID
+) {
+  const [rows] = await connection.query(
+    "CALL sp_update_appointment(?,?,?,?,?,?,?,?)",
+    [
+      appointmentID,
+      appointmentDate,
+      appointmentStartTime,
+      appointmentEndTime,
+      appointmentStatus,
+      purpose,
+      patientID,
+      staffID,
+    ]
+  );
+  console.log(rows[0][0]);
+  return rows[0][0];
+}
+
+async function deleteAppointment(appointmentID) {
+  const [rows] = await connection.query("CALL sp_delete_appointment(?)", [
+    appointmentID,
+  ]);
+  console.log(rows);
+  return rows;
+}
+
 module.exports = {
   getStaff,
   addNewStaff,
@@ -234,4 +337,12 @@ module.exports = {
   addNewPatient,
   updatePatientInfo,
   deletePatient,
+  getAllAppointment,
+  getAppointment,
+  getAppointmentsByPatient,
+  getAppointmentsByStaff,
+  getAppointmentsByPatientAndStaff,
+  addNewAppointment,
+  updateAppointmentInfo,
+  deleteAppointment,
 };
