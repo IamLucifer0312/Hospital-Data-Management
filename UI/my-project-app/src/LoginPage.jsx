@@ -1,31 +1,31 @@
-import React, { useState } from 'react';
-import hospitalImage from './assets/login.jpg'
-import logo from './assets/logo.png'
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import hospitalImage from "./assets/login.jpg";
+import logo from "./assets/logo.png";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();  
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (username === 'group9' && password === '123') {
-      navigate('/main-page');
+    if (username === "group9" && password === "123") {
+      navigate("/main-page");
     } else {
-      alert('Incorrect credentials!');
+      alert("Incorrect credentials!");
     }
   };
 
   return (
-    <div 
-      className="h-screen bg-cover bg-center flex" 
+    <div
+      className="h-screen bg-cover bg-center flex"
       style={{ backgroundImage: `url('/path/to/your/background-image.png')` }}
     >
       <div className="w-1/2 hidden lg:flex items-center justify-center">
-        <img 
+        <img
           src={hospitalImage}
-          alt="Hospital Illustration" 
+          alt="Hospital Illustration"
           className="object-contain max-h-2/3 max-w-full"
         />
       </div>
@@ -33,17 +33,17 @@ const LoginPage = () => {
       <div className="w-full lg:w-1/2 flex items-center justify-center">
         <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
           <div className="text-center mb-6">
-            <img 
-              src={logo}
-              alt="Logo" 
-              className="mx-auto mb-4 w-36"  
-            />
-            <h2 className="text-3xl font-bold text-gray-800">Hospital Management System</h2>
+            <img src={logo} alt="Logo" className="mx-auto mb-4 w-36" />
+            <h2 className="text-3xl font-bold text-gray-800">
+              Hospital Management System
+            </h2>
           </div>
 
           <form onSubmit={handleLogin}>
             <div className="mb-4">
-              <label htmlFor="username" className="sr-only">Username</label>
+              <label htmlFor="username" className="sr-only">
+                Username
+              </label>
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3">
                   <i className="fas fa-user text-gray-400"></i>
@@ -59,7 +59,9 @@ const LoginPage = () => {
               </div>
             </div>
             <div className="mb-6">
-              <label htmlFor="password" className="sr-only">Password</label>
+              <label htmlFor="password" className="sr-only">
+                Password
+              </label>
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3">
                   <i className="fas fa-lock text-gray-400"></i>

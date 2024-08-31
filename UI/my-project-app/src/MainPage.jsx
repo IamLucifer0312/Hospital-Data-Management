@@ -13,6 +13,7 @@ import StaffTable from "./components/StaffTable";
 import logo from "./assets/hospital-logo.svg";
 import DiagnosticImageTable from "./components/DiagnosticImageTable";
 import NotesTable from "./components/NotesTable";
+import DepartmentTable from "./components/DepartmentTable";
 
 const MainPage = () => {
   const [activeSection, setActiveSection] = useState("Staff");
@@ -22,22 +23,22 @@ const MainPage = () => {
     {
       name: "Staff",
       icon: <FaUserMd size={24} />,
-      subOptions: ["Tables", "Notes", "Staff Schedules"],
+      subOptions: ["All infomation", "Department", "Notes"],
     },
     {
       name: "Patient",
       icon: <FaUser size={24} />,
-      subOptions: ["Tables", "Diagnostic Images"],
+      subOptions: ["All infomation", "Diagnostic Images"],
     },
     {
       name: "Treatment History",
       icon: <FaHistory size={24} />,
-      subOptions: ["Tables"],
+      subOptions: ["All infomation"],
     },
     {
       name: "Appointment",
       icon: <FaCalendarAlt size={24} />,
-      subOptions: ["Tables"],
+      subOptions: ["All infomation"],
     },
     {
       name: "Report",
@@ -52,7 +53,7 @@ const MainPage = () => {
 
   const renderContent = () => {
     switch (activeSubsection) {
-      case "Tables":
+      case "All infomation":
         switch (activeSection) {
           case "Patient":
             return (
@@ -81,6 +82,8 @@ const MainPage = () => {
         return <NotesTable />;
       case "Diagnostic Images":
         return <DiagnosticImageTable />;
+      case "Department":
+        return <DepartmentTable />;
       case "Staff Schedules":
         return (
           <div>
@@ -129,19 +132,20 @@ const MainPage = () => {
         ))}
       </div>
 
-      {/* Middle Section */}
       <div className="w-64 bg-gray-100 text-gray-800 flex flex-col py-8 px-6 h-full">
         <div className="flex items-center h-20">
           {" "}
-          <h2 className="text-3xl font-bold">{activeSection}</h2>
+          <h2 className="text-3xl font-bold uppercase ml-3 text-red-500">
+            {activeSection}
+          </h2>
         </div>
-        <ul className="space-y-6">
+        <ul className="space-y-6 mt-12">
           {sections
             .find((section) => section.name === activeSection)
             .subOptions.map((subOption) => (
               <li
                 key={subOption}
-                className={`cursor-pointer px-6 py-3 rounded-md flex justify-between items-center hover:bg-blue-100 hover:text-blue-600 transition-all ${
+                className={`text-xl text-pretty cursor-pointer px-6 py-3 rounded-md flex justify-between items-center hover:bg-blue-100 hover:text-blue-600 transition-all ${
                   activeSubsection === subOption
                     ? "bg-blue-50 text-blue-600 font-semibold"
                     : "text-gray-800"
