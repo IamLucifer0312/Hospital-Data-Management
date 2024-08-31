@@ -213,6 +213,11 @@ async function deletePatient(PatientID) {
   const [rows] = await connection.query("CALL sp_delete_patient(?)", [
     PatientID,
   ]);
+}
+
+//DEPARTMENT
+async function getAllDepartment() {
+  const [rows] = await connection.query("SELECT * FROM Department");
   console.log(rows);
   return rows;
 }
@@ -234,4 +239,5 @@ module.exports = {
   addNewPatient,
   updatePatientInfo,
   deletePatient,
+  getAllDepartment,
 };

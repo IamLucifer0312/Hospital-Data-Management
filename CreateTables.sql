@@ -104,6 +104,9 @@ SELECT
     t.PatientID, 
     t.TreatmentID, 
     t.DoctorID
+    t.StartDate
+    t.EndDate
+    CURDATE() AS ReportDate
 FROM 
     TreatmentHistory t
 WHERE 

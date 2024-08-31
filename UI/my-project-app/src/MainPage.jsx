@@ -14,6 +14,7 @@ import logo from "./assets/hospital-logo.svg";
 import DiagnosticImageTable from "./components/DiagnosticImageTable";
 import NotesTable from "./components/NotesTable";
 import DepartmentTable from "./components/DepartmentTable";
+import AddNewStaffPage from "./components/AddNewStaffPage";
 
 const MainPage = () => {
   const [activeSection, setActiveSection] = useState("Staff");
@@ -23,7 +24,14 @@ const MainPage = () => {
     {
       name: "Staff",
       icon: <FaUserMd size={24} />,
-      subOptions: ["All infomation", "Department", "Notes"],
+      subOptions: [
+        "All infomation",
+        "Department",
+        "Notes",
+        "Add new Staff",
+        "Update Staff Information",
+        "Update Staff Schedule",
+      ],
     },
     {
       name: "Patient",
@@ -90,6 +98,8 @@ const MainPage = () => {
             <p>Table</p>
           </div>
         );
+      case "Add new Staff":
+        return <AddNewStaffPage />;
       case "PatientTreatmentReport":
         return (
           <div>
@@ -180,8 +190,8 @@ const MainPage = () => {
           </div>
         </div>
 
-        <h1 className="text-4xl font-bold mb-8 text-center">
-          {`${activeSection} ${activeSubsection}`}
+        <h1 className="text-4xl font-bold mb-8 text-center uppercase text-pretty">
+          {`${activeSubsection}`}
         </h1>
         {renderContent()}
       </div>
