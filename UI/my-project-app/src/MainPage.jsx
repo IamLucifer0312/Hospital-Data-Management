@@ -10,6 +10,7 @@ import {
   FaUserCircle,
 } from "react-icons/fa";
 import StaffTable from "./StaffTable";
+import logo from "./assets/hospital-logo.svg";
 
 const MainPage = () => {
   const [activeSection, setActiveSection] = useState("Staff");
@@ -21,7 +22,11 @@ const MainPage = () => {
       icon: <FaUserMd size={24} />,
       subOptions: ["Tables", "Notes", "Staff Schedules"],
     },
-    { name: "Patient", icon: <FaUser size={24} />, subOptions: ["Tables"] },
+    {
+      name: "Patient",
+      icon: <FaUser size={24} />,
+      subOptions: ["Tables", "Diagnostic Images"],
+    },
     {
       name: "Treatment History",
       icon: <FaHistory size={24} />,
@@ -107,25 +112,27 @@ const MainPage = () => {
 
   return (
     <div className="h-screen flex">
-      <div className="w-16 bg-blue-700 text-white flex flex-col items-center py-10 space-y-6 h-full">
+      <div className="w-20 bg-teal-700 text-white flex flex-col items-center py-10 space-y-8 h-full">
+        <div className="mb-8 rounded-lg">
+          <img src={logo} alt="Logo" className="h-20 w-20" />
+        </div>
         {sections.map((section) => (
           <div
             key={section.name}
-            className={`cursor-pointer ${
-              activeSection === section.name ? "text-blue-300" : ""
+            className={`cursor-pointer p-2 rounded-lg flex justify-center items-center ${
+              activeSection === section.name ? "bg-blue-400 text-white" : ""
             }`}
-            onClick={() => {
-              setActiveSection(section.name);
-              setActiveSubsection(section.subOptions[0]);
-            }}
+            onClick={() => setActiveSection(section.name)}
           >
             {section.icon}
           </div>
         ))}
       </div>
 
+      {/* Middle Section */}
       <div className="w-64 bg-gray-100 text-gray-800 flex flex-col py-8 px-6 h-full">
-        <div className="mb-10">
+        <div className="flex items-center h-20">
+          {" "}
           <h2 className="text-3xl font-bold">{activeSection}</h2>
         </div>
         <ul className="space-y-6">
@@ -153,7 +160,6 @@ const MainPage = () => {
       <div className="flex-1 bg-gray-100 p-4 overflow-y-auto">
         <div className="flex justify-between items-center mb-8">
           <div className="relative w-1/2">
-            {" "}
             <input
               type="text"
               className="bg-white border border-gray-300 rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"

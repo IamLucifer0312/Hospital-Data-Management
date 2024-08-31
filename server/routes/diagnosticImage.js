@@ -21,7 +21,7 @@ const upload = multer({ storage: storage });
 router.get("/", async (req, res) => {
   try {
     const diagnosticImages = await DiagnosticImage.find();
-    if (notes.length === 0) {
+    if (diagnosticImages.length === 0) {
       res.status(404).send("No items found");
     } else {
       res.json(diagnosticImages);
