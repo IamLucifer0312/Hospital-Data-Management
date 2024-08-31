@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use("/staff", staffRoutes);
+app.use("/staffs", staffRoutes);
 app.use("/staff", staffScheduleRoutes);
 app.use("/patient", patientRoutes);
 app.use("/appointments", appointmentRoutes);

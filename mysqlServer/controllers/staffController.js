@@ -18,7 +18,7 @@ const getAllStaffController = async (req, res) => {
 
 const getStaffController = async (req, res) => {
   try {
-    const result = await getStaff(req.params.id);
+    const result = await getStaff(req.params.staffId);
     res.send(result);
   } catch (err) {
     res.status(500).send(err);
@@ -74,7 +74,7 @@ const updateStaffInfoController = async (req, res) => {
 
   try {
     const result = await updateStaffInfo(
-      req.params.id,
+      req.params.staffId,
       firstName,
       lastName,
       jobType,
@@ -91,7 +91,7 @@ const updateStaffInfoController = async (req, res) => {
 
 const deleteStaffController = async (req, res) => {
   try {
-    await deleteStaff(req.params.staffID);
+    await deleteStaff(req.params.staffId);
     res.status(204).send();
   } catch (err) {
     res.status(500).send(err);
