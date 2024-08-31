@@ -1,7 +1,7 @@
 const mysql = require("mysql2");
 require("dotenv").config();
 
-const connection = mysql 
+const connection = mysql
   .createConnection({
     host: process.env.MYSQL_HOST,
     user: process.env.MYSQL_USER,
@@ -137,6 +137,86 @@ async function deleteStaffSchedule(scheduleID) {
   return rows;
 }
 
+// PATIENT
+async function getAllPatient() {
+  const [rows] = await connection.query("SELECT * FROM patients");
+  console.log(rows);
+  return rows;
+}
+
+async function getPatient(id) {
+  const [rows] = await connection.query(
+    "SELECT * FROM patient WHERE PatientID = ?",
+    [id] //avoid sql injection
+  );
+  console.log(rows[0]);
+  return rows[0]; //undefined if no patients found
+}
+
+async function addNewPatient(
+  firstName,
+  lastName,
+  dateOfBirth,
+  gender,
+  address,
+  phoneNum,
+  email,
+  allergies
+) {
+  const [rows] = await connection.query(
+    "CALL sp_add_new_patient(?,?,?,?,?,?,?,?)",
+    [
+      firstName,
+      lastName,
+      dateOfBirth,
+      gender,
+      address,
+      phoneNum,
+      email,
+      allergies,
+    ]
+  );
+  console.log(rows[0][0]);
+  return rows[0][0];
+}
+
+async function updatePatientInfo(
+  patientID,
+  firstName,
+  lastName,
+  dateOfBirth,
+  gender,
+  address,
+  phoneNum,
+  email,
+  allergies
+) {
+  const [rows] = await connection.query(
+    "CALL sp_update_patient(?,?,?,?,?,?,?,?,?)",
+    [
+      patientID,
+      firstName,
+      lastName,
+      dateOfBirth,
+      gender,
+      address,
+      phoneNum,
+      email,
+      allergies,
+    ]
+  );
+  console.log(rows[0][0]);
+  return rows[0][0];
+}
+
+async function deletePatient(PatientID) {
+  const [rows] = await connection.query("CALL sp_delete_patient(?)", [
+    PatientID,
+  ]);
+  console.log(rows);
+  return rows;
+}
+
 module.exports = {
   getStaff,
   addNewStaff,
@@ -149,4 +229,9 @@ module.exports = {
   deleteStaffSchedule,
   getStaffSchedule,
   deleteStaff,
+  getAllPatient,
+  getPatient,
+  addNewPatient,
+  updatePatientInfo,
+  deletePatient,
 };
