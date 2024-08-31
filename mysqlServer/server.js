@@ -15,7 +15,7 @@ app.use(express.json());
 // Routes
 app.use("/staffs", staffRoutes);
 app.use("/staff", staffScheduleRoutes);
-app.use("/patient", patientRoutes);
+app.use("/patients", patientRoutes);
 app.use("/appointments", appointmentRoutes);
 
 app.listen(port, () => {

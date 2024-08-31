@@ -12,9 +12,9 @@ const {
 // PATIENT Routes
 
 router.get("/", getAllPatientController);
-router.get("/:id", getPatientController);
+router.get("/:patientId", getPatientController);
 router.post("/", addNewPatientController);
-router.put("/:id", updatePatientInfoController);
-router.delete("/:patientID", deletePatientController);
+router.put("/:patientId", updatePatientInfoController);
+router.delete("/:patientId", deletePatientController);
 
 module.exports = router;
