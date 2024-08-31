@@ -1,7 +1,7 @@
 const express = require("express");
 const { model, default: mongoose } = require("mongoose");
 const router = express.Router();
-const Note = require("../models/notes");
+const Users = require("../models/users");
 const db = mongoose.connection;
 const multer = require("multer");
 
@@ -20,11 +20,11 @@ const upload = multer({ storage: storage });
 // Get all notes
 router.get("/", async (req, res) => {
   try {
-    const notes = await Note.find();
-    if (notes.length === 0) {
-      res.status(404).send("No notes found");
+    const users = await Users.find();
+    if (users.length === 0) {
+      res.status(404).send("No users found");
     } else {
-      res.json(notes);
+      res.json(users);
     }
   } catch (error) {
     res.status(500).send(error.message);
@@ -32,69 +32,69 @@ router.get("/", async (req, res) => {
 });
 
 // // Get one note
-router.get("/:id", getNote, (req, res) => {
-  res.send(res.note);
+router.get("/:id", getUser, (req, res) => {
+  res.send(res.user);
 });
 
 // Create one note
 router.post("/", upload.none(), async (req, res) => {
-  const note = new Note({
-    PatientID: req.body.PatientID,
-    AppointmentID: req.body.AppointmentID,
-    DoctorID: req.body.DoctorID,
-    Note: req.body.Note,
+  const user = new Users({
+    role: req.body.role,
+    username: req.body.username,
+    password: req.body.password,
+    profile_id: req.body.profile_id,
   });
   try {
-    const newNote = await note.save();
-    res.status(201).json(newNote);
+    const newUser = await user.save();
+    res.status(201).json(newUser);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 });
 
 // Update one note
-router.patch("/:id", upload.none(), getNote, async (req, res) => {
-  if (req.body.PatientID != null) {
-    res.note.PatientID = req.body.PatientID;
+router.patch("/:id", upload.none(), getUser, async (req, res) => {
+  if (req.body.role != null) {
+    res.user.role = req.body.role;
   }
-  if (req.body.AppointmentID != null) {
-    res.note.AppointmentID = req.body.AppointmentID;
+  if (req.body.username != null) {
+    res.user.username = req.body.username;
   }
-  if (req.body.DoctorID != null) {
-    res.note.DoctorID = req.body.DoctorID;
+  if (req.body.password != null) {
+    res.user.password = req.body.password;
   }
-  if (req.body.Note != null) {
-    res.note.Note = req.body.Note;
+  if (req.body.profile_id != null) {
+    res.user.profile_id = req.body.profile_id;
   }
   try {
-    const updatedNote = await res.note.save();
-    res.json(updatedNote);
+    const updatedUser = await res.user.save();
+    res.json(updatedUser);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 });
 
 // // Delete one note
-router.delete("/:id", getNote, async (req, res) => {
+router.delete("/:id", getUser, async (req, res) => {
   try {
-    await res.note.deleteOne();
-    res.json({ message: "Deleted note" });
+    await res.user.deleteOne();
+    res.json({ message: "Deleted user" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-async function getNote(req, res, next) {
-  let note;
+async function getUser(req, res, next) {
+  let user;
   try {
-    note = await Note.findById(req.params.id);
-    if (note == null) {
-      return res.status(404).json({ message: "Cannot find note" });
+    user = await Users.findById(req.params.id);
+    if (user == null) {
+      return res.status(404).json({ message: "Cannot find user" });
     }
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
-  res.note = note;
+  res.user = user;
   next();
 }
 

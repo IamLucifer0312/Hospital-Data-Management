@@ -18,11 +18,15 @@ db.on("error", (error) => console.error(error));
 
 db.once("open", () => console.log("Connected to database"));
 
+// Use all routes
 const NoteRouter = require("./routes/notes");
 app.use("/notes", NoteRouter);
 
 const DiagnosticImageRouter = require("./routes/diagnosticImage");
 app.use("/diagnosticImage", DiagnosticImageRouter);
+
+const UserRouter = require("./routes/users");
+app.use("/users", UserRouter);
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
