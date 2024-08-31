@@ -8,7 +8,7 @@ const {
 
 const getStaffScheduleController = async (req, res) => {
   try {
-    const result = await getStaffSchedule(req.params.scheduleID);
+    const result = await getStaffSchedule(req.params.scheduleId);
     res.send(result);
   } catch (err) {
     res.status(500).send(err);
@@ -17,7 +17,7 @@ const getStaffScheduleController = async (req, res) => {
 
 const getStaffSchedulesByStaffController = async (req, res) => {
   try {
-    const result = await getStaffSchedulesByStaff(req.params.staffID);
+    const result = await getStaffSchedulesByStaff(req.params.staffId);
     res.send(result);
   } catch (err) {
     res.status(500).send(err);
@@ -29,7 +29,7 @@ const addStaffScheduleController = async (req, res) => {
 
   try {
     const result = await addStaffSchedule(
-      req.params.staffID,
+      req.params.staffId,
       dayOfWeek,
       startTime,
       endTime
@@ -45,8 +45,8 @@ const updateStaffScheduleController = async (req, res) => {
 
   try {
     const result = await updateStaffSchedule(
-      req.params.scheduleID,
-      req.params.staffID,
+      req.params.scheduleId,
+      req.params.staffId,
       dayOfWeek,
       startTime,
       endTime
@@ -59,7 +59,7 @@ const updateStaffScheduleController = async (req, res) => {
 
 const deleteStaffScheduleController = async (req, res) => {
   try {
-    await deleteStaffSchedule(req.params.scheduleID);
+    await deleteStaffSchedule(req.params.scheduleId);
     res.status(204).send();
   } catch (err) {
     res.status(500).send(err);

@@ -15,10 +15,10 @@ const {
 // PUT same with POST but for update
 // DELETE will send error object including error msg if failed to delete data, otherwise it will send nothing (No Content) when successfully deleted
 
-router.get("/:staffID/schedules/:scheduleID", getStaffScheduleController);
-router.get("/:staffID/schedules", getStaffSchedulesByStaffController);
-router.post("/:staffID/schedules/", addStaffScheduleController);
-router.put("/:staffID/schedules/:scheduleID", updateStaffScheduleController);
-router.delete("/:staffID/schedules/:scheduleID", deleteStaffScheduleController);
+router.get("/:scheduleId", getStaffScheduleController);
+router.get("/staff/:staffId", getStaffSchedulesByStaffController);
+router.post("/staff/:staffId", addStaffScheduleController);
+router.put("/:scheduleId/staff/:staffId", updateStaffScheduleController);
+router.delete("/:scheduleId", deleteStaffScheduleController);
 
 module.exports = router;

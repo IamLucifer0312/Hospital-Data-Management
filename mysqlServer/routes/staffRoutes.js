@@ -18,10 +18,10 @@ const {
 // DELETE will send error object including error msg if failed to delete data, otherwise it will send nothing (No Content) when successfully deleted
 
 router.get("/", getAllStaffController);
-router.get("/:id", getStaffController);
-router.get("/by-department/:departmentID", getStaffByDepartmentController);
+router.get("/:staffId", getStaffController);
+router.get("/department/:departmentId", getStaffByDepartmentController);
 router.post("/", addNewStaffController);
-router.put("/:id", updateStaffInfoController);
-router.delete("/:staffID", deleteStaffController);
+router.put("/:staffId", updateStaffInfoController);
+router.delete("/:staffId", deleteStaffController);
 
 module.exports = router;

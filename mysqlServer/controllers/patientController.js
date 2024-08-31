@@ -17,7 +17,7 @@ const getAllPatientController = async (req, res) => {
 
 const getPatientController = async (req, res) => {
   try {
-    const result = await getPatient(req.params.id);
+    const result = await getPatient(req.params.patientId);
     res.send(result);
   } catch (err) {
     res.status(500).send(err);
@@ -67,7 +67,7 @@ const updatePatientInfoController = async (req, res) => {
 
   try {
     const result = await updatePatientInfo(
-      req.params.id,
+      req.params.patientId,
       firstName,
       lastName,
       dateOfBirth,
@@ -85,7 +85,7 @@ const updatePatientInfoController = async (req, res) => {
 
 const deletePatientController = async (req, res) => {
   try {
-    await deletePatient(req.params.patientID);
+    await deletePatient(req.params.patientId);
     res.status(204).send();
   } catch (err) {
     res.status(500).send(err);

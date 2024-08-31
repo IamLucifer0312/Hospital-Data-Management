@@ -1,24 +1,40 @@
 import React, { useState, useEffect } from "react";
 import StaffScheduleModal from "./StaffScheduleModal";
+import UpdateStaffInformationModal from "./UpdateStaffInformationModal";
 
 const StaffTable = () => {
   const [staffData, setStaffData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedStaffID, setSelectedStaffID] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+  const [selectedStaff, setSelectedStaff] = useState(null);
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [sortField, setSortField] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
 
   const handleViewSchedule = (staffID) => {
     setSelectedStaffID(staffID);
-    setShowModal(true);
+    setShowScheduleModal(true);
+  };
+
+  const handleUpdateInfo = (staff) => {
+    setSelectedStaff(staff);
+    setShowUpdateModal(true);
   };
 
   const handleSort = (field) => {
     const isAsc = sortField === field && sortOrder === "asc";
     setSortField(field);
     setSortOrder(isAsc ? "desc" : "asc");
+  };
+
+  const handleUpdateSuccess = (updatedStaff) => {
+    setStaffData((prevData) =>
+      prevData.map((staff) =>
+        staff.StaffID === updatedStaff.StaffID ? updatedStaff : staff
+      )
+    );
   };
 
   useEffect(() => {
@@ -135,20 +151,33 @@ const StaffTable = () => {
               </td>
               <td className="py-3 px-6 text-center whitespace-nowrap">
                 <button
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mr-2"
                   onClick={() => handleViewSchedule(staff.StaffID)}
                 >
                   View Working Schedule
+                </button>
+                <button
+                  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                  onClick={() => handleUpdateInfo(staff)}
+                >
+                  Update Information
                 </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      {showModal && (
+      {showScheduleModal && (
         <StaffScheduleModal
           staffID={selectedStaffID}
-          closeModal={() => setShowModal(false)}
+          closeModal={() => setShowScheduleModal(false)}
+        />
+      )}
+      {showUpdateModal && selectedStaff && (
+        <UpdateStaffInformationModal
+          staff={selectedStaff}
+          closeModal={() => setShowUpdateModal(false)}
+          onUpdate={handleUpdateSuccess}
         />
       )}
     </div>
