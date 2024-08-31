@@ -103,9 +103,9 @@ CREATE TABLE PatientTreatmentReport AS
 SELECT 
     t.PatientID, 
     t.TreatmentID, 
-    t.DoctorID
-    t.StartDate
-    t.EndDate
+    t.DoctorID,
+    t.StartDate,
+    t.EndDate,
     CURDATE() AS ReportDate
 FROM 
     TreatmentHistory t

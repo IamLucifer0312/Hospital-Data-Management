@@ -29,7 +29,6 @@ const MainPage = () => {
         "Department",
         "Notes",
         "Add new Staff",
-        "Update Staff Information",
         "Update Staff Schedule",
       ],
     },

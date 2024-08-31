@@ -17,7 +17,7 @@ const AddNewStaff = () => {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const response = await fetch("http://localhost:4000/department");
+        const response = await fetch("http://localhost:4000/staff/department");
         const data = await response.json();
         setDepartments(data);
       } catch (err) {

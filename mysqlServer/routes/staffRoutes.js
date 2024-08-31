@@ -8,7 +8,9 @@ const {
   addNewStaffController,
   updateStaffInfoController,
   deleteStaffController,
+  getAllDepartmentController,
 } = require("../controllers/staffController");
+const { getAllDepartment } = require("../database");
 
 // STAFF Routes
 
@@ -20,6 +22,9 @@ const {
 router.get("/", getAllStaffController);
 router.get("/:staffId", getStaffController);
 router.get("/department/:departmentId", getStaffByDepartmentController);
+router.get("/department", getAllDepartmentController);
+router.get("/:id", getStaffController);
+router.get("/by-department/:departmentID", getStaffByDepartmentController);
 router.post("/", addNewStaffController);
 router.put("/:staffId", updateStaffInfoController);
 router.delete("/:staffId", deleteStaffController);

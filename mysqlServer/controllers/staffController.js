@@ -5,11 +5,21 @@ const {
   getStaffByDepartment,
   updateStaffInfo,
   deleteStaff,
+  getAllDepartment,
 } = require("../database");
 
 const getAllStaffController = async (req, res) => {
   try {
     const result = await getAllStaff();
+    res.send(result);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+};
+
+const getAllDepartmentController = async (req, res) => {
+  try {
+    const result = await getAllDepartment();
     res.send(result);
   } catch (err) {
     res.status(500).send(err);
@@ -105,4 +115,5 @@ module.exports = {
   addNewStaffController,
   updateStaffInfoController,
   deleteStaffController,
+  getAllDepartmentController,
 };

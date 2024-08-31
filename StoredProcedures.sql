@@ -158,7 +158,7 @@ BEGIN
 	START TRANSACTION;
 	-- Check for conflicts with exisiting appointments
 	SELECT COUNT(*) INTO conflict_count
-	FROM Appointment a
+	FROM Appointments a
 	WHERE a.StaffID = p_StaffID
 		AND a.AppointmentStatus = 'Scheduled'
 		AND a.AppointmentDate = (SELECT CURDATE() + INTERVAL (

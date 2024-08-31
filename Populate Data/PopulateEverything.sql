@@ -94,60 +94,63 @@ VALUES
     ('Bui', 'Minh Tuan', 'Doctor', 114000, 'MD Oncology', 4, 27),
     ('Do', 'Quoc Khanh', 'Admin', 52400, 'MBA Healthcare', 5, 27),
     ('Ngo', 'Thien Thanh', 'Nurse', 58400, 'BSN', 5, 28);
-    
+
+-- Treatment History
 -- Treatment History
 INSERT INTO TreatmentHistory (PatientID, DoctorID, StartDate, EndDate, TreatmentType, BillingAmount, SatisfactionScore, Status, Details)
 VALUES
 (1, 1, '2024-01-10', '2024-01-20', 'Cardiac Surgery', 50000, 4.8, 'Completed', 'Performed bypass surgery successfully.'),
 (2, 4, '2024-02-15', '2024-02-25', 'Neurological Assessment', 15000, 4.5, 'Completed', 'Patient experienced mild headaches, diagnosed with migraine.'),
-(3, 7, '2024-03-12', '2024-03-22', 'Orthopedic Surgery', 30000, 4.7, 'Completed', 'Knee replacement surgery, patient is recovering well.'),
+(3, 8, '2024-03-12', '2024-03-22', 'Orthopedic Surgery', 30000, 4.7, 'Completed', 'Knee replacement surgery, patient is recovering well.'),
 (4, 8, '2024-04-22', '2024-05-02', 'Oncology Consultation', 10000, 4.3, 'In Progress', 'Ongoing treatment for lung cancer.'),
 (5, 11, '2024-05-02', '2024-05-12', 'Cardiac Consultation', 12000, 4.9, 'Completed', 'Heart check-up; no issues detected.'),
 (6, 14, '2024-06-05', '2024-06-15', 'Neurological Surgery', 40000, 4.6, 'Completed', 'Removed benign brain tumor, patient is stable.'),
-(7, 17, '2024-06-18', '2024-06-28', 'Oncology Surgery', 35000, 4.4, 'In Progress', 'Breast cancer surgery, ongoing post-operative care.'),
+(7, 18, '2024-06-18', '2024-06-28', 'Oncology Surgery', 35000, 4.4, 'In Progress', 'Breast cancer surgery, ongoing post-operative care.'),
 (8, 21, '2024-07-01', '2024-07-11', 'Cardiac Consultation', 8000, 4.7, 'Completed', 'Routine cardiac check-up; advised lifestyle changes.'),
 (9, 24, '2024-07-10', '2024-07-20', 'Neurological Assessment', 15000, 4.3, 'Completed', 'Dizziness and memory loss, early signs of Alzheimer detected.'),
-(10, 27, '2024-07-15', '2024-07-25', 'Oncology Consultation', 9000, 4.5, 'Completed', 'Initial consultation for lymphoma treatment.'),
-(11, 28, '2024-08-03', '2024-08-13', 'Orthopedic Consultation', 10000, 4.8, 'Completed', 'Shoulder pain due to arthritis, prescribed physical therapy.'),
+(10, 28, '2024-07-15', '2024-07-25', 'Oncology Consultation', 9000, 4.5, 'Completed', 'Initial consultation for lymphoma treatment.'),
+(11, 1, '2024-08-03', '2024-08-13', 'Orthopedic Consultation', 10000, 4.8, 'Completed', 'Shoulder pain due to arthritis, prescribed physical therapy.'),
 (12, 18, '2024-08-10', '2024-08-20', 'Oncology Surgery', 45000, 4.7, 'Completed', 'Colon cancer surgery, patient in recovery.'),
 (13, 4, '2024-08-15', '2024-08-25', 'Neurological Surgery', 38000, 4.4, 'Completed', 'Epilepsy surgery, patient is under observation.'),
-(14, 17, '2024-08-20', '2024-08-30', 'Oncology Consultation', 15000, 4.5, 'In Progress', 'Ongoing chemotherapy for ovarian cancer.'),
+(14, 18, '2024-08-20', '2024-08-30', 'Oncology Consultation', 15000, 4.5, 'In Progress', 'Ongoing chemotherapy for ovarian cancer.'),
 (15, 11, '2024-08-25', '2024-09-05', 'Cardiac Surgery', 55000, 4.6, 'In Progress', 'Valve replacement surgery, patient recovering well.'),
 (16, 21, '2024-08-28', '2024-09-07', 'Cardiac Consultation', 10000, 4.9, 'In Progress', 'Routine follow-up after surgery, no complications.'),
 (17, 1, '2024-09-01', '2024-09-10', 'Cardiac Surgery', 60000, 4.7, 'In Progress', 'Awaiting triple bypass surgery.'),
 (18, 14, '2024-09-05', '2024-09-15', 'Neurological Assessment', 25000, 4.4, 'In Progress', 'Parkinson disease diagnosis, beginning treatment.'),
-(19, 7, '2024-09-10', '2024-09-20', 'Orthopedic Surgery', 45000, 4.8, 'In Progress', 'Hip replacement surgery scheduled.'),
-(20, 11, '2024-09-12', '2024-09-22', 'Cardiac Consultation', 12000, 4.7, 'In Progress', 'Stress test; mild angina detected.'),
-(21, 8, '2024-09-15', '2024-09-25', 'Oncology Surgery', 30000, 4.6, 'In Progress', 'Skin cancer excision, patient stable.'),
-(22, 24, '2024-09-20', '2024-09-30', 'Neurological Consultation', 17000, 4.3, 'In Progress', 'Follow-up for stroke rehabilitation.'),
-(23, 27, '2024-09-25', '2024-10-05', 'Oncology Surgery', 38000, 4.7, 'In Progress', 'Liver cancer surgery, patient in post-op recovery.'),
-(24, 17, '2024-10-01', '2024-10-11', 'Oncology Consultation', 15000, 4.4, 'In Progress', 'Monitoring patient after chemotherapy.'),
+(19, 8, '2024-09-10', '2024-09-20', 'Orthopedic Surgery', 45000, 4.8, 'In Progress', 'Hip replacement surgery scheduled.'),
+(20, 8, '2024-09-12', '2024-09-22', 'Oncology Surgery', 12000, 4.7, 'In Progress', 'Skin cancer excision, patient stable.'),
+(21, 8, '2024-09-15', '2024-09-25', 'Oncology Surgery', 30000, 4.6, 'In Progress', 'Liver cancer surgery, patient in post-op care.'),
+(22, 14, '2024-09-20', '2024-09-30', 'Neurological Consultation', 17000, 4.3, 'In Progress', 'Follow-up for stroke rehabilitation.'),
+(23, 28, '2024-09-25', '2024-10-05', 'Oncology Surgery', 38000, 4.7, 'In Progress', 'Liver cancer surgery, patient in post-op recovery.'),
+(24, 18, '2024-10-01', '2024-10-11', 'Oncology Consultation', 15000, 4.4, 'In Progress', 'Monitoring patient after chemotherapy.'),
 (25, 21, '2024-10-05', '2024-10-15', 'Cardiac Surgery', 60000, 4.9, 'In Progress', 'Pacemaker installation, patient stable.'),
 (26, 14, '2024-10-08', '2024-10-18', 'Neurological Consultation', 22000, 4.2, 'In Progress', 'Seizure management, medication adjusted.'),
-(27, 7, '2024-10-12', '2024-10-22', 'Orthopedic Consultation', 18000, 4.6, 'In Progress', 'Fracture treatment; follow-up for bone healing.'),
+(27, 8, '2024-10-12', '2024-10-22', 'Orthopedic Consultation', 18000, 4.6, 'In Progress', 'Fracture treatment; follow-up for bone healing.'),
 (28, 18, '2024-10-18', '2024-10-28', 'Oncology Surgery', 40000, 4.8, 'In Progress', 'Thyroid cancer surgery, no complications.'),
 (29, 11, '2024-10-22', '2024-11-01', 'Cardiac Consultation', 9000, 4.5, 'In Progress', 'High blood pressure management, lifestyle advice given.'),
 (30, 1, '2024-10-30', '2024-11-09', 'Cardiac Surgery', 65000, 4.7, 'In Progress', 'Scheduled for angioplasty.'),
 (31, 4, '2024-11-02', '2024-11-12', 'Neurological Surgery', 55000, 4.8, 'In Progress', 'Prepping for spinal cord surgery.'),
-(32, 7, '2024-11-08', '2024-11-18', 'Orthopedic Surgery', 50000, 4.6, 'In Progress', 'Ankle fusion surgery, patient recovering.'),
+(32, 8, '2024-11-08', '2024-11-18', 'Orthopedic Surgery', 50000, 4.6, 'In Progress', 'Ankle fusion surgery, patient recovering.'),
 (33, 14, '2024-11-12', '2024-11-22', 'Neurological Assessment', 16000, 4.5, 'In Progress', 'Alzheimer progression, adjusted treatment plan.'),
 (34, 8, '2024-11-18', '2024-11-28', 'Oncology Surgery', 43000, 4.8, 'In Progress', 'Breast cancer surgery, awaiting results.'),
 (35, 21, '2024-11-22', '2024-12-02', 'Cardiac Consultation', 8000, 4.9, 'In Progress', 'Cholesterol management, diet plan provided.'),
-(36, 17, '2024-11-25', '2024-12-05', 'Oncology Consultation', 22000, 4.6, 'In Progress', 'Post-surgery monitoring for breast cancer.'),
+(36, 18, '2024-11-25', '2024-12-05', 'Oncology Consultation', 22000, 4.6, 'In Progress', 'Post-surgery monitoring for breast cancer.'),
 (37, 11, '2024-11-28', '2024-12-08', 'Cardiac Surgery', 57000, 4.7, 'In Progress', 'Aortic valve repair, patient is stable.'),
 (38, 18, '2024-12-02', '2024-12-12', 'Oncology Consultation', 20000, 4.7, 'In Progress', 'Routine follow-up after radiation therapy.'),
 (39, 1, '2024-12-05', '2024-12-15', 'Cardiac Surgery', 68000, 4.9, 'In Progress', 'Scheduled for heart transplant.'),
-(40, 7, '2024-12-10', '2024-12-20', 'Orthopedic Surgery', 51000, 4.8, 'In Progress', 'Spinal fusion surgery, patient in recovery.'),
+(40, 8, '2024-12-10', '2024-12-20', 'Orthopedic Surgery', 51000, 4.8, 'In Progress', 'Spinal fusion surgery, patient in recovery.'),
 (41, 4, '2024-12-15', '2024-12-25', 'Neurological Surgery', 62000, 4.6, 'In Progress', 'Cranial surgery for trauma, patient under observation.'),
 (42, 14, '2024-12-20', '2024-12-30', 'Neurological Assessment', 18000, 4.4, 'In Progress', 'Patient is showing improvement post-surgery.'),
-(43, 27, '2024-12-22', '2025-01-01', 'Oncology Surgery', 70000, 4.7, 'In Progress', 'Successful surgery for bladder cancer.'),
+(43, 28, '2024-12-22', '2025-01-01', 'Oncology Surgery', 70000, 4.7, 'In Progress', 'Successful surgery for bladder cancer.'),
 (44, 11, '2024-12-28', '2025-01-07', 'Cardiac Consultation', 9000, 4.6, 'In Progress', 'Cardiac stress test, no significant issues found.'),
 (45, 8, '2024-12-30', '2025-01-09', 'Oncology Consultation', 16000, 4.5, 'In Progress', 'Patient is responding well to chemotherapy.'),
-(46, 17, '2025-01-02', '2025-01-12', 'Oncology Consultation', 23000, 4.4, 'In Progress', 'Continuous monitoring for leukemia treatment.'),
-(47, 7, '2025-01-05', '2025-01-15', 'Orthopedic Surgery', 54000, 4.7, 'In Progress', 'Successful shoulder surgery, patient in physiotherapy.'),
+(46, 18, '2025-01-02', '2025-01-12', 'Oncology Consultation', 23000, 4.4, 'In Progress', 'Continuous monitoring for leukemia treatment.'),
+(47, 8, '2025-01-05', '2025-01-15', 'Orthopedic Surgery', 54000, 4.7, 'In Progress', 'Successful shoulder surgery, patient in physiotherapy.'),
 (48, 1, '2025-01-10', '2025-01-20', 'Cardiac Surgery', 65000, 4.9, 'In Progress', 'Heart valve replacement, patient recovering well.'),
 (49, 4, '2025-01-15', '2025-01-25', 'Neurological Surgery', 72000, 4.6, 'In Progress', 'Brain surgery for tumor removal, patient in ICU.'),
-(50, 27, '2025-01-20', '2025-01-30', 'Oncology Surgery', 85000, 4.8, 'In Progress', 'Pancreatic cancer surgery, patient in post-op care.');
+(50, 28, '2025-01-20', '2025-01-30', 'Oncology Surgery', 85000, 4.8, 'In Progress', 'Pancreatic cancer surgery, patient in post-op care.');
+
+
 
 -- Appointment Data
 INSERT INTO Appointments (AppointmentDate, AppointmentStartTime, AppointmentEndTime, AppointmentStatus, Purpose, PatientID, StaffID)
@@ -169,7 +172,7 @@ VALUES
 ('2024-08-25', '12:10:00', '13:00:00', 'Scheduled', 'Follow-up for valve replacement surgery.', 15, 11),
 ('2024-08-28', '13:15:00', '14:05:00', 'Scheduled', 'Routine cardiac follow-up post-surgery.', 16, 21),
 ('2024-09-01', '14:30:00', '15:20:00', 'Scheduled', 'Pre-surgery consultation for triple bypass.', 17, 1),
-('2024-09-05', '15:25:00', '16:15:00', 'Cancelled', 'Initial consultation and treatment for Parkinson\'s disease.', 18, 14),
+('2024-09-05', '15:25:00', '16:15:00', 'Cancelled', 'Initial consultation and treatment for Parkinson disease.', 18, 14),
 ('2024-09-10', '16:05:00', '17:00:00', 'Scheduled', 'Hip replacement surgery consultation and scheduling.', 19, 7),
 ('2024-09-12', '17:10:00', '18:00:00', 'Cancelled', 'Stress test and evaluation for angina.', 20, 11),
 ('2024-09-15', '08:15:00', '09:05:00', 'Scheduled', 'Skin cancer surgical consultation and procedure.', 21, 8),
@@ -184,7 +187,7 @@ VALUES
 ('2024-10-30', '17:10:00', '18:00:00', 'Scheduled', 'Pre-procedure consultation for angioplasty.', 30, 1),
 ('2024-11-02', '08:20:00', '09:15:00', 'Scheduled', 'Preparation for spinal cord surgery.', 31, 4),
 ('2024-11-08', '09:30:00', '10:20:00', 'Scheduled', 'Post-shoulder surgery consultation and physiotherapy.', 32, 7),
-('2024-11-12', '10:05:00', '11:00:00', 'Scheduled', 'Consultation for Alzheimer\'s disease progression.', 33, 14),
+('2024-11-12', '10:05:00', '11:00:00', 'Scheduled', 'Consultation for Alzheimers disease progression.', 33, 14),
 ('2024-11-18', '11:10:00', '12:00:00', 'Scheduled', 'Follow-up for breast cancer surgical results.', 34, 8),
 ('2024-11-22', '12:15:00', '13:05:00', 'Scheduled', 'Cholesterol management and dietary consultation.', 35, 21),
 ('2024-11-25', '13:20:00', '14:10:00', 'Scheduled', 'Post-surgery monitoring for breast cancer.', 36, 17),
@@ -201,7 +204,6 @@ VALUES
 ('2025-01-05', '14:20:00', '15:10:00', 'Scheduled', 'Post-shoulder surgery physiotherapy follow-up.', 47, 7),
 ('2025-01-10', '15:30:00', '16:20:00', 'Scheduled', 'Heart valve replacement recovery check.', 48, 1),
 ('2025-01-15', '16:05:00', '17:00:00', 'Scheduled', 'Brain tumor removal surgery follow-up.', 49, 4);
-
 
 -- Staff Schedule Data
 INSERT INTO Staff_Schedule (StaffID, DayOfWeek, StartTime, EndTime)
