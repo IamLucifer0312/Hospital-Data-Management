@@ -2,8 +2,18 @@ import React from "react";
 import StaffScheduleList from "./StaffScheduleList";
 
 const StaffScheduleModal = ({ staffID, closeModal }) => {
+  const handleClickOutside = (e) => {
+    if (e.target.id === "modal-overlay") {
+      closeModal();
+    }
+  };
+
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
+    <div
+      id="modal-overlay"
+      className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center"
+      onClick={handleClickOutside}
+    >
       <div className="bg-white rounded-lg shadow-lg max-w-3xl w-full">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-2xl font-bold">Working Schedule</h2>
