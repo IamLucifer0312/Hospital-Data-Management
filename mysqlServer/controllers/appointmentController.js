@@ -114,7 +114,7 @@ const updateAppointmentInfoController = async (req, res) => {
 
 const deleteAppointmentController = async (req, res) => {
   try {
-    await deleteAppointment(req.params.appointmentID);
+    await deleteAppointment(req.params.appointmentId);
     res.status(204).send();
   } catch (err) {
     res.status(500).send(err);

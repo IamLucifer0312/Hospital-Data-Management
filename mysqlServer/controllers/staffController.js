@@ -27,7 +27,7 @@ const getStaffController = async (req, res) => {
 
 const getStaffByDepartmentController = async (req, res) => {
   try {
-    const result = await getStaffByDepartment(req.params.departmentID);
+    const result = await getStaffByDepartment(req.params.departmentId);
     res.send(result);
   } catch (err) {
     res.status(500).send(err);

@@ -19,7 +19,7 @@ const {
 
 router.get("/", getAllStaffController);
 router.get("/:staffId", getStaffController);
-router.get("/department/:departmentID", getStaffByDepartmentController);
+router.get("/department/:departmentId", getStaffByDepartmentController);
 router.post("/", addNewStaffController);
 router.put("/:staffId", updateStaffInfoController);
 router.delete("/:staffId", deleteStaffController);
