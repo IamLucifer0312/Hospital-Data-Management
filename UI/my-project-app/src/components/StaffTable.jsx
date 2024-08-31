@@ -6,10 +6,9 @@ const StaffTable = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Fetch data from the API
     const fetchStaffData = async () => {
       try {
-        const response = await fetch("http://localhost:3000/staff");
+        const response = await fetch("http://localhost:4000/staff");
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }

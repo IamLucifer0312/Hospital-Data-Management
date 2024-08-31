@@ -9,8 +9,10 @@ import {
   FaSearch,
   FaUserCircle,
 } from "react-icons/fa";
-import StaffTable from "./StaffTable";
+import StaffTable from "./components/StaffTable";
 import logo from "./assets/hospital-logo.svg";
+import DiagnosticImageTable from "./components/DiagnosticImageTable";
+import NotesTable from "./components/NotesTable";
 
 const MainPage = () => {
   const [activeSection, setActiveSection] = useState("Staff");
@@ -76,11 +78,9 @@ const MainPage = () => {
             return null;
         }
       case "Notes":
-        return (
-          <div>
-            <p>Table</p>
-          </div>
-        );
+        return <NotesTable />;
+      case "Diagnostic Images":
+        return <DiagnosticImageTable />;
       case "Staff Schedules":
         return (
           <div>
