@@ -14,7 +14,7 @@ app.use(express.json());
 
 // Routes
 app.use("/staffs", staffRoutes);
-app.use("/staff", staffScheduleRoutes);
+app.use("/schedules", staffScheduleRoutes);
 app.use("/patients", patientRoutes);
 app.use("/appointments", appointmentRoutes);
 
