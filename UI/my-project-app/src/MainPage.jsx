@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaUser,
   FaUserMd,
@@ -19,6 +19,12 @@ import AddNewStaffPage from "./components/AddNewStaffPage";
 const MainPage = () => {
   const [activeSection, setActiveSection] = useState("Staff");
   const [activeSubsection, setActiveSubsection] = useState("Tables");
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const loggedInUser = JSON.parse(localStorage.getItem("user"));
+    setUser(loggedInUser);
+  }, []);
 
   const sections = [
     {
@@ -168,8 +174,8 @@ const MainPage = () => {
         <div className="flex justify-end items-center mb-8">
           <div className="flex items-center space-x-4">
             <div className="text-right">
-              <p className="text-sm font-semibold">Group9</p>
-              <p className="text-xs text-gray-500">Administrator</p>
+              <p className="text-sm font-semibold">{user?.username}</p>
+              <p className="text-xs text-gray-500">{user?.role}</p>
             </div>
             <FaUserCircle size={36} className="text-gray-500" />
           </div>

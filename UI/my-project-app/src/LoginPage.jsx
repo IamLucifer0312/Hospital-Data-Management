@@ -6,14 +6,31 @@ import { useNavigate } from "react-router-dom";
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (username === "group9" && password === "123") {
-      navigate("/main-page");
-    } else {
-      alert("Incorrect credentials!");
+    try {
+      const response = await fetch("http://localhost:3000/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem("user", JSON.stringify(data));
+        localStorage.setItem("isAuthenticated", true);
+        navigate("/main-page");
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || "Login failed!");
+      }
+    } catch (err) {
+      setError("An error occurred during login. Please try again.");
     }
   };
 
@@ -76,6 +93,7 @@ const LoginPage = () => {
                 />
               </div>
             </div>
+            {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
             <button
               type="submit"
               className="w-full bg-teal-500 text-white py-3 rounded-full font-semibold hover:bg-teal-600 transition-colors duration-300"
