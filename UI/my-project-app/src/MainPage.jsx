@@ -17,6 +17,7 @@ import AddNewStaffPage from "./components/AddNewStaffPage";
 import { useNavigate } from "react-router-dom";
 import DoctorScheduleViewer from "./components/DoctorScheduleViewer";
 import BookAppointment from "./components/BookAppointment";
+import AppointmentTable from "./components/AppointmentTable";
 
 const MainPage = () => {
   const [activeSection, setActiveSection] = useState("Staff");
@@ -105,11 +106,7 @@ const MainPage = () => {
               </div>
             );
           case "Appointment":
-            return (
-              <div>
-                <p>Table</p>
-              </div>
-            );
+            return <AppointmentTable />;
           default:
             return null;
         }

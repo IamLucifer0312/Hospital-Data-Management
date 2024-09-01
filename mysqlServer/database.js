@@ -224,7 +224,30 @@ async function getAllDepartment() {
 
 // APPOINTMENT
 async function getAllAppointment() {
-  const [rows] = await connection.query("SELECT * FROM appointments");
+  const query = `
+    SELECT 
+      a.AppointmentID,
+      a.AppointmentDate,
+      a.AppointmentStartTime,
+      a.AppointmentEndTime,
+      a.AppointmentStatus,
+      a.Purpose,
+      p.FirstName AS PatientFirstName,
+      p.LastName AS PatientLastName,
+      p.PhoneNum AS PatientPhoneNum,
+      s.FirstName AS DoctorFirstName,
+      s.LastName AS DoctorLastName,
+      s.Qualification AS DoctorQualification
+    FROM 
+      Appointments a
+    INNER JOIN 
+      Patients p ON a.PatientID = p.PatientID
+    INNER JOIN 
+      Staff s ON a.StaffID = s.StaffID
+    WHERE 
+      s.JobType = 'Doctor';
+  `;
+  const [rows] = await connection.query(query);
   console.log(rows);
   return rows;
 }
