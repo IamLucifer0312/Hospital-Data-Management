@@ -10,6 +10,7 @@ const {
   addNewAppointmentController,
   updateAppointmentInfoController,
   deleteAppointmentController,
+  bookDoctorAppointmentController,
 } = require("../controllers/appointmentController");
 
 // APPOINTMENT Routes
@@ -24,5 +25,6 @@ router.get(
 router.post("/", addNewAppointmentController);
 router.put("/:appointmentId", updateAppointmentInfoController);
 router.delete("/:appointmentId", deleteAppointmentController);
+router.post("/book", bookDoctorAppointmentController);
 
 module.exports = router;

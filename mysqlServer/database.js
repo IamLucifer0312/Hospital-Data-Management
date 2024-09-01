@@ -333,6 +333,27 @@ async function getStaffScheduleGivenTime(startDate, endDate) {
   return rows[0];
 }
 
+async function bookDoctorAppointment(
+  doctorId,
+  patientId,
+  appointmentDate,
+  startTime,
+  endTime,
+  purpose
+) {
+  const [rows] = await connection.query(
+    `
+    CALL book_appointment(?, ?, ?, ?, ?, ?, @resultMessage);
+    SELECT @resultMessage AS resultMessage;
+  `,
+    [doctorId, patientId, appointmentDate, startTime, endTime, purpose]
+  );
+
+  const resultMessage = rows[1][0].resultMessage;
+
+  return resultMessage;
+}
+
 module.exports = {
   getStaff,
   addNewStaff,
@@ -360,4 +381,5 @@ module.exports = {
   updateAppointmentInfo,
   deleteAppointment,
   getStaffScheduleGivenTime,
+  bookDoctorAppointment,
 };

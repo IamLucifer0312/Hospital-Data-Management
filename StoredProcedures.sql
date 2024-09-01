@@ -349,3 +349,38 @@ BEGIN
 END $$
 
 DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE book_appointment(
+    IN doctorId INT,
+    IN patientId INT,
+    IN appointmentDate DATE,
+    IN startTime TIME,
+    IN endTime TIME,
+    IN purpose VARCHAR(255),
+    OUT resultMessage VARCHAR(255)
+)
+BEGIN
+    DECLARE available INT;
+
+    SELECT COUNT(*)
+    INTO available
+    FROM Appointments
+    WHERE StaffID = doctorId
+    AND AppointmentDate = appointmentDate
+    AND (
+        (AppointmentStartTime < endTime AND AppointmentEndTime > startTime)
+    );
+
+    IF available > 0 THEN
+        SET resultMessage = 'Doctor is not available at the selected time.';
+    ELSE
+        INSERT INTO Appointments (StaffID, PatientID, AppointmentDate, AppointmentStartTime, AppointmentEndTime, Purpose)
+        VALUES (doctorId, patientId, appointmentDate, startTime, endTime, purpose);
+        
+        SET resultMessage = 'Appointment booked successfully.';
+    END IF;
+END $$
+
+DELIMITER ;
