@@ -7,7 +7,7 @@ import { FaSearch } from "react-icons/fa";
 
 const StaffTable = () => {
   const [staffData, setStaffData] = useState([]);
-  const [filteredStaffData, setFilteredStaffData] = useState([]); // New state for filtered data
+  const [filteredStaffData, setFilteredStaffData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedStaffID, setSelectedStaffID] = useState(null);
@@ -17,7 +17,10 @@ const StaffTable = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [sortField, setSortField] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
-  const [searchQuery, setSearchQuery] = useState(""); // New state for search query
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  const isAdmin = user?.role === "admin";
 
   const handleViewSchedule = (staffID) => {
     setSelectedStaffID(staffID);
@@ -97,7 +100,7 @@ const StaffTable = () => {
         }
         const data = await response.json();
         setStaffData(data);
-        setFilteredStaffData(data); // Initialize filtered data
+        setFilteredStaffData(data);
         setLoading(false);
       } catch (error) {
         setError(error);
@@ -177,7 +180,8 @@ const StaffTable = () => {
             <th className="py-3 px-6 text-left">Qualification</th>
             <th className="py-3 px-6 text-left">Department ID</th>
             <th className="py-3 px-6 text-left">Manager ID</th>
-            <th className="py-3 px-6 text-center">Actions</th>
+            {/* Conditionally render the Actions column */}
+            {isAdmin && <th className="py-3 px-6 text-center">Actions</th>}
           </tr>
         </thead>
 
@@ -211,13 +215,16 @@ const StaffTable = () => {
               <td className="py-3 px-6 text-left whitespace-nowrap">
                 {staff.ManagerID || "N/A"}
               </td>
-              <td className="py-3 px-6 text-center whitespace-nowrap">
-                <DropDownMenu
-                  onViewSchedule={() => handleViewSchedule(staff.StaffID)}
-                  onUpdateInfo={() => handleUpdateInfo(staff)}
-                  onDelete={() => handleDeleteStaff(staff)}
-                />
-              </td>
+              {/* Conditionally render the DropDownMenu */}
+              {isAdmin && (
+                <td className="py-3 px-6 text-center whitespace-nowrap">
+                  <DropDownMenu
+                    onViewSchedule={() => handleViewSchedule(staff.StaffID)}
+                    onUpdateInfo={() => handleUpdateInfo(staff)}
+                    onDelete={() => handleDeleteStaff(staff)}
+                  />
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

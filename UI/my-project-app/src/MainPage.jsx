@@ -6,7 +6,6 @@ import {
   FaCalendarAlt,
   FaChartBar,
   FaChevronRight,
-  FaSearch,
   FaUserCircle,
 } from "react-icons/fa";
 import StaffTable from "./components/StaffTable";
@@ -15,22 +14,38 @@ import DiagnosticImageTable from "./components/DiagnosticImageTable";
 import NotesTable from "./components/NotesTable";
 import DepartmentTable from "./components/DepartmentTable";
 import AddNewStaffPage from "./components/AddNewStaffPage";
+import { useNavigate } from "react-router-dom";
 
 const MainPage = () => {
   const [activeSection, setActiveSection] = useState("Staff");
-  const [activeSubsection, setActiveSubsection] = useState("Tables");
+  const [activeSubsection, setActiveSubsection] = useState("All infomation");
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loggedInUser = JSON.parse(localStorage.getItem("user"));
     setUser(loggedInUser);
-  }, []);
+    if (!loggedInUser) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("isAuthenticated");
+    navigate("/login");
+  };
 
   const sections = [
     {
       name: "Staff",
       icon: <FaUserMd size={24} />,
-      subOptions: ["All infomation", "Department", "Notes", "Add new Staff"],
+      subOptions: [
+        "All infomation",
+        "Department",
+        "Notes",
+        ...(user?.role === "admin" ? ["Add new Staff"] : []),
+      ],
     },
     {
       name: "Patient",
@@ -143,7 +158,6 @@ const MainPage = () => {
 
       <div className="w-52 bg-gray-100 text-gray-800 flex flex-col py-8 px-6 h-full">
         <div className="flex items-center h-20">
-          {" "}
           <h2 className="text-xl font-bold uppercase ml-3 text-red-500">
             {activeSection}
           </h2>
@@ -168,6 +182,14 @@ const MainPage = () => {
               </li>
             ))}
         </ul>
+        <div className="mt-auto">
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 text-white py-2 px-4 rounded-full w-full hover:bg-red-600"
+          >
+            Logout
+          </button>
+        </div>
       </div>
 
       <div className="flex-1 bg-gray-100 p-4 overflow-y-auto">
