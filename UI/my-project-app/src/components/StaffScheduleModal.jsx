@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import UpdateStaffScheduleModal from "./UpdateStaffScheduleModal";
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
 
 const StaffScheduleModal = ({ staffID, closeModal }) => {
   const [schedules, setSchedules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState(null);
+  const [scheduleToDelete, setScheduleToDelete] = useState(null);
 
   useEffect(() => {
     const fetchSchedules = async () => {
@@ -52,10 +55,15 @@ const StaffScheduleModal = ({ staffID, closeModal }) => {
     setShowUpdateModal(false);
   };
 
-  const handleDeleteClick = async (scheduleID) => {
+  const handleDeleteClick = (scheduleID) => {
+    setScheduleToDelete(scheduleID);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
     try {
       const response = await fetch(
-        `http://localhost:4000/schedules/${scheduleID}`,
+        `http://localhost:4000/schedules/${scheduleToDelete}`,
         {
           method: "DELETE",
         }
@@ -67,10 +75,12 @@ const StaffScheduleModal = ({ staffID, closeModal }) => {
 
       // Update the state to remove the deleted schedule
       setSchedules(
-        schedules.filter((schedule) => schedule.ScheduleID !== scheduleID)
+        schedules.filter((schedule) => schedule.ScheduleID !== scheduleToDelete)
       );
+      setShowDeleteModal(false); // Close the delete confirmation modal
     } catch (err) {
       setErrorMessage("Failed to delete schedule.");
+      setShowDeleteModal(false);
     }
   };
 
@@ -148,6 +158,13 @@ const StaffScheduleModal = ({ staffID, closeModal }) => {
             scheduleData={selectedSchedule}
             onUpdate={handleUpdateSuccess}
             isAddingNew={!selectedSchedule}
+          />
+        )}
+
+        {showDeleteModal && (
+          <DeleteConfirmationModal
+            onConfirm={confirmDelete}
+            onCancel={() => setShowDeleteModal(false)}
           />
         )}
       </div>

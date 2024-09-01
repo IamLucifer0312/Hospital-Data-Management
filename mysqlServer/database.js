@@ -217,7 +217,7 @@ async function deletePatient(PatientID) {
 
 //DEPARTMENT
 async function getAllDepartment() {
-  const [rows] = await connection.query("SELECT * FROM Department");
+  const [rows] = await connection.query("SELECT * FROM department");
   console.log(rows);
   return rows;
 }

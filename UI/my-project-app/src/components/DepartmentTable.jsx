@@ -19,7 +19,7 @@ const DepartmentTable = () => {
       try {
         setLoading(true);
         const response = await fetch(
-          `http://localhost:4000/staffs/by-department/${activeDepartment}`
+          `http://localhost:4000/staffs/department/${activeDepartment}`
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");

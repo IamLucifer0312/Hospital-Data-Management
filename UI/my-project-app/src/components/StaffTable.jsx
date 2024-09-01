@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import DropDownMenu from "./DropDownMenu";
 import StaffScheduleModal from "./StaffScheduleModal";
 import UpdateStaffInformationModal from "./UpdateStaffInformationModal";
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
 
 const StaffTable = () => {
   const [staffData, setStaffData] = useState([]);
@@ -10,6 +12,7 @@ const StaffTable = () => {
   const [selectedStaff, setSelectedStaff] = useState(null);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [sortField, setSortField] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
 
@@ -21,6 +24,11 @@ const StaffTable = () => {
   const handleUpdateInfo = (staff) => {
     setSelectedStaff(staff);
     setShowUpdateModal(true);
+  };
+
+  const handleDeleteStaff = (staff) => {
+    setSelectedStaff(staff);
+    setShowDeleteModal(true);
   };
 
   const handleSort = (field) => {
@@ -35,6 +43,26 @@ const StaffTable = () => {
         staff.StaffID === updatedStaff.StaffID ? updatedStaff : staff
       )
     );
+  };
+
+  const handleDeleteConfirm = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:4000/staffs/${selectedStaff.StaffID}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to delete staff.");
+      }
+      setStaffData(
+        staffData.filter((s) => s.StaffID !== selectedStaff.StaffID)
+      );
+      setShowDeleteModal(false);
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   useEffect(() => {
@@ -150,23 +178,17 @@ const StaffTable = () => {
                 {staff.ManagerID || "N/A"}
               </td>
               <td className="py-3 px-6 text-center whitespace-nowrap">
-                <button
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mr-2"
-                  onClick={() => handleViewSchedule(staff.StaffID)}
-                >
-                  View Working Schedule
-                </button>
-                <button
-                  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                  onClick={() => handleUpdateInfo(staff)}
-                >
-                  Update Information
-                </button>
+                <DropDownMenu
+                  onViewSchedule={() => handleViewSchedule(staff.StaffID)}
+                  onUpdateInfo={() => handleUpdateInfo(staff)}
+                  onDelete={() => handleDeleteStaff(staff)}
+                />
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
       {showScheduleModal && (
         <StaffScheduleModal
           staffID={selectedStaffID}
@@ -178,6 +200,12 @@ const StaffTable = () => {
           staff={selectedStaff}
           closeModal={() => setShowUpdateModal(false)}
           onUpdate={handleUpdateSuccess}
+        />
+      )}
+      {showDeleteModal && selectedStaff && (
+        <DeleteConfirmationModal
+          onConfirm={handleDeleteConfirm}
+          onCancel={() => setShowDeleteModal(false)}
         />
       )}
     </div>

@@ -10,7 +10,6 @@ const {
   deleteStaffController,
   getAllDepartmentController,
 } = require("../controllers/staffController");
-const { getAllDepartment } = require("../database");
 
 // STAFF Routes
 
@@ -19,12 +18,13 @@ const { getAllDepartment } = require("../database");
 // PUT same with POST but for update
 // DELETE will send error object including error msg if failed to delete data, otherwise it will send nothing (No Content) when successfully deleted
 
+// department routes
+router.get("/department", getAllDepartmentController);
+router.get("/department/:departmentId", getStaffByDepartmentController);
+
+// staff-related routes
 router.get("/", getAllStaffController);
 router.get("/:staffId", getStaffController);
-router.get("/department/:departmentId", getStaffByDepartmentController);
-router.get("/department", getAllDepartmentController);
-router.get("/:id", getStaffController);
-router.get("/by-department/:departmentID", getStaffByDepartmentController);
 router.post("/", addNewStaffController);
 router.put("/:staffId", updateStaffInfoController);
 router.delete("/:staffId", deleteStaffController);

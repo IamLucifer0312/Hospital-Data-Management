@@ -17,7 +17,7 @@ const AddNewStaff = () => {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const response = await fetch("http://localhost:4000/staff/department");
+        const response = await fetch("http://localhost:4000/staffs/department");
         const data = await response.json();
         setDepartments(data);
       } catch (err) {
@@ -27,7 +27,7 @@ const AddNewStaff = () => {
 
     const fetchManagers = async () => {
       try {
-        const response = await fetch("http://localhost:4000/staff");
+        const response = await fetch("http://localhost:4000/staffs");
         const data = await response.json();
         setManagers(data);
       } catch (err) {
@@ -56,7 +56,7 @@ const AddNewStaff = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:4000/staff", {
+      const response = await fetch("http://localhost:4000/staffs", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
