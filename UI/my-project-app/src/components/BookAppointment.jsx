@@ -58,25 +58,28 @@ const BookAppointment = () => {
     setResultMessage("");
 
     try {
-      const response = await fetch("http://localhost:4000/appointments/book", {
+      const response = await fetch("http://localhost:4000/appointments", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          doctorId: doctorId?.value,
-          patientId: patientId?.value,
-          appointmentDate,
-          startTime,
-          endTime,
-          purpose,
+          appointmentDate: appointmentDate,
+          appointmentStartTime: startTime,
+          appointmentEndTime: endTime,
+          appointmentStatus: "Scheduled",
+          purpose: purpose,
+          patientID: patientId?.value,
+          staffID: doctorId?.value,
         }),
       });
 
       const data = await response.json();
-      setResultMessage(data.message);
+      setResultMessage(data.message || "Appointment booked successfully!");
     } catch (err) {
-      setResultMessage("Failed to book appointment. Please try again.");
+      setResultMessage(
+        err.message || "Failed to book appointment. Please try again."
+      );
     } finally {
       setLoading(false);
     }
