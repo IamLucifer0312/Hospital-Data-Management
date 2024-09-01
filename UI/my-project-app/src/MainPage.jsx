@@ -20,6 +20,7 @@ const MainPage = () => {
   const [activeSection, setActiveSection] = useState("Staff");
   const [activeSubsection, setActiveSubsection] = useState("All infomation");
   const [user, setUser] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,6 +35,10 @@ const MainPage = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("isAuthenticated");
     navigate("/login");
+  };
+
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
   };
 
   const sections = [
@@ -62,15 +67,17 @@ const MainPage = () => {
       icon: <FaCalendarAlt size={24} />,
       subOptions: ["All infomation"],
     },
-    {
-      name: "Report",
-      icon: <FaChartBar size={24} />,
-      subOptions: [
-        "PatientTreatmentReport",
-        "StaffWorkloadReport",
-        "StaffPerformanceReport",
-      ],
-    },
+    user?.role === "admin"
+      ? {
+          name: "Report",
+          icon: <FaChartBar size={24} />,
+          subOptions: [
+            "PatientTreatmentReport",
+            "StaffWorkloadReport",
+            "StaffPerformanceReport",
+          ],
+        }
+      : {},
   ];
 
   const renderContent = () => {
@@ -182,24 +189,30 @@ const MainPage = () => {
               </li>
             ))}
         </ul>
-        <div className="mt-auto">
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 text-white py-2 px-4 rounded-full w-full hover:bg-red-600"
-          >
-            Logout
-          </button>
-        </div>
       </div>
 
       <div className="flex-1 bg-gray-100 p-4 overflow-y-auto">
-        <div className="flex justify-end items-center mb-8">
+        <div className="flex justify-end items-center mb-8 relative">
           <div className="flex items-center space-x-4">
             <div className="text-right">
               <p className="text-sm font-semibold">{user?.username}</p>
               <p className="text-xs text-gray-500">{user?.role}</p>
             </div>
-            <FaUserCircle size={36} className="text-gray-500" />
+            <FaUserCircle
+              size={36}
+              className="text-gray-500 cursor-pointer"
+              onClick={toggleDropdown}
+            />
+            {showDropdown && (
+              <div className="absolute right-0 mt-12 bg-white border border-gray-300 rounded-lg shadow-lg py-2 w-48">
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                >
+                  Sign out
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
