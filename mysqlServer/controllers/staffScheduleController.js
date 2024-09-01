@@ -4,6 +4,7 @@ const {
   addStaffSchedule,
   updateStaffSchedule,
   deleteStaffSchedule,
+  getStaffScheduleGivenTime,
 } = require("../database");
 
 const getStaffScheduleController = async (req, res) => {
@@ -66,10 +67,23 @@ const deleteStaffScheduleController = async (req, res) => {
   }
 };
 
+const getDoctorScheduleByGivenTimeController = async (req, res) => {
+  try {
+    const result = await getStaffScheduleGivenTime(
+      req.body.startDate,
+      req.body.endDate
+    );
+    res.send(result);
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+  }
+};
+
 module.exports = {
   getStaffScheduleController,
   getStaffSchedulesByStaffController,
   addStaffScheduleController,
   updateStaffScheduleController,
   deleteStaffScheduleController,
+  getDoctorScheduleByGivenTimeController,
 };

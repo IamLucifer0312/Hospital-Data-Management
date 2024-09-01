@@ -15,6 +15,7 @@ import NotesTable from "./components/NotesTable";
 import DepartmentTable from "./components/DepartmentTable";
 import AddNewStaffPage from "./components/AddNewStaffPage";
 import { useNavigate } from "react-router-dom";
+import DoctorScheduleViewer from "./components/DoctorScheduleViewer";
 
 const MainPage = () => {
   const [activeSection, setActiveSection] = useState("Staff");
@@ -65,7 +66,7 @@ const MainPage = () => {
     {
       name: "Appointment",
       icon: <FaCalendarAlt size={24} />,
-      subOptions: ["All infomation"],
+      subOptions: ["All infomation", "View Doctor Schedule"],
     },
     user?.role === "admin"
       ? {
@@ -121,6 +122,8 @@ const MainPage = () => {
         );
       case "Add new Staff":
         return <AddNewStaffPage />;
+      case "View Doctor Schedule":
+        return <DoctorScheduleViewer />;
       case "PatientTreatmentReport":
         return (
           <div>

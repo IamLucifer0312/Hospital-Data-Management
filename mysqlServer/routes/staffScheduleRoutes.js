@@ -6,6 +6,7 @@ const {
   addStaffScheduleController,
   updateStaffScheduleController,
   deleteStaffScheduleController,
+  getDoctorScheduleByGivenTimeController,
 } = require("../controllers/staffScheduleController");
 
 // STAFF SCHEDULE Routes
@@ -20,5 +21,7 @@ router.get("/staff/:staffId", getStaffSchedulesByStaffController);
 router.post("/staff/:staffId", addStaffScheduleController);
 router.put("/:scheduleId/staff/:staffId", updateStaffScheduleController);
 router.delete("/:scheduleId", deleteStaffScheduleController);
+// POST route to get all doctor schedules within a given duration
+router.post("/doctors", getDoctorScheduleByGivenTimeController);
 
 module.exports = router;

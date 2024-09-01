@@ -325,6 +325,14 @@ async function deleteAppointment(appointmentID) {
   return rows;
 }
 
+async function getStaffScheduleGivenTime(startDate, endDate) {
+  const [rows] = await connection.query("CALL get_doctor_schedule(?, ?)", [
+    startDate,
+    endDate,
+  ]);
+  return rows[0];
+}
+
 module.exports = {
   getStaff,
   addNewStaff,
@@ -351,4 +359,5 @@ module.exports = {
   addNewAppointment,
   updateAppointmentInfo,
   deleteAppointment,
+  getStaffScheduleGivenTime,
 };

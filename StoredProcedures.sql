@@ -295,3 +295,57 @@ BEGIN
 END $$
 
 DELIMITER ;
+
+-- Get working schedule in given time
+DELIMITER $$
+
+CREATE PROCEDURE get_doctor_schedule(
+    IN startDate DATE,
+    IN endDate DATE
+)
+BEGIN
+    SELECT
+        CONCAT(s.FirstName, ' ', s.LastName) AS DoctorName,
+        ss.DayOfWeek,
+        ss.StartTime,
+        ss.EndTime,
+        CASE
+            WHEN EXISTS (
+                SELECT 1
+                FROM Appointments a
+                WHERE a.StaffID = s.StaffID
+                AND a.AppointmentDate BETWEEN startDate AND endDate
+                AND ss.DayOfWeek = DAYNAME(a.AppointmentDate)
+                AND (
+                    (a.AppointmentStartTime < ss.EndTime AND a.AppointmentEndTime > ss.StartTime)
+                )
+            ) THEN 'Busy'
+            ELSE 'Available'
+        END AS Status
+    FROM
+        Staff_Schedule ss
+        INNER JOIN Staff s ON ss.StaffID = s.StaffID
+    WHERE
+        s.JobType = 'Doctor'
+    AND
+        ss.DayOfWeek IN (
+            SELECT DISTINCT DAYNAME(dates.Date)
+            FROM (
+                SELECT startDate + INTERVAL seq DAY AS Date
+                FROM (
+                    SELECT @row := @row + 1 AS seq
+                    FROM (
+                        SELECT 0 UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3
+                        UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6
+                    ) AS n
+                    CROSS JOIN (SELECT @row := -1) AS r
+                ) AS seqs
+            ) AS dates
+            WHERE dates.Date BETWEEN startDate AND endDate
+        )
+    ORDER BY
+        ss.DayOfWeek, s.FirstName, s.LastName;
+
+END $$
+
+DELIMITER ;

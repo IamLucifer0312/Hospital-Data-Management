@@ -68,13 +68,20 @@ CREATE TRIGGER ins_appointments
 BEFORE INSERT ON Appointments
 FOR EACH ROW
 BEGIN
-    -- Check if Patient ID exists in the Patient table
-	IF NOT EXISTS(SELECT * FROM Patients p WHERE p.PatientID = NEW.PatientID) THEN
-		signal sqlstate '45000' set message_text = "Patient ID not found";
-    -- Check if Staff ID exists in the Staff table
-	ELSEIF NOT EXISTS(SELECT * FROM Staff s WHERE s.StaffID = NEW.StaffID) THEN
-		signal sqlstate '45000' set message_text = "Staff ID not found";
-    end if;
+    DECLARE staff_jobType VARCHAR(50);
+    
+    IF NOT EXISTS (SELECT * FROM Patients p WHERE p.PatientID = NEW.PatientID) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Patient ID not found';
+    
+    ELSEIF NOT EXISTS (SELECT * FROM Staff s WHERE s.StaffID = NEW.StaffID) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Staff ID not found';
+    
+    ELSE
+        SELECT JobType INTO staff_jobType FROM Staff WHERE StaffID = NEW.StaffID;
+        IF TRIM(LOWER(staff_jobType)) != 'doctor' THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Assigned staff must be a doctor';
+        END IF;
+    END IF;
 END $$
 
 CREATE TRIGGER update_staff_schedule
@@ -116,13 +123,20 @@ CREATE TRIGGER update_appointments
 BEFORE UPDATE ON Appointments
 FOR EACH ROW
 BEGIN
-    -- Check if Patient ID exists in the Patient table
-	IF NOT EXISTS(SELECT * FROM Patients p WHERE p.PatientID = NEW.PatientID) THEN
-		signal sqlstate '45000' set message_text = "Patient ID not found";
-    -- Check if Staff ID exists in the Staff table
-	ELSEIF NOT EXISTS(SELECT * FROM Staff s WHERE s.StaffID = NEW.StaffID) THEN
-		signal sqlstate '45000' set message_text = "Staff ID not found";
-    end if;
+    DECLARE staff_jobType VARCHAR(50);
+    
+    IF NOT EXISTS (SELECT * FROM Patients p WHERE p.PatientID = NEW.PatientID) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Patient ID not found';
+    
+    ELSEIF NOT EXISTS (SELECT * FROM Staff s WHERE s.StaffID = NEW.StaffID) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Staff ID not found';
+    
+    ELSE
+        SELECT JobType INTO staff_jobType FROM Staff WHERE StaffID = NEW.StaffID;
+        IF TRIM(LOWER(staff_jobType)) != 'doctor' THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Assigned staff must be a doctor';
+        END IF;
+    END IF;
 END $$
 
 CREATE TRIGGER del_staff
