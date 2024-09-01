@@ -3,9 +3,11 @@ import DropDownMenu from "./DropDownMenu";
 import StaffScheduleModal from "./StaffScheduleModal";
 import UpdateStaffInformationModal from "./UpdateStaffInformationModal";
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
+import { FaSearch } from "react-icons/fa";
 
 const StaffTable = () => {
   const [staffData, setStaffData] = useState([]);
+  const [filteredStaffData, setFilteredStaffData] = useState([]); // New state for filtered data
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedStaffID, setSelectedStaffID] = useState(null);
@@ -15,6 +17,7 @@ const StaffTable = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [sortField, setSortField] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
+  const [searchQuery, setSearchQuery] = useState(""); // New state for search query
 
   const handleViewSchedule = (staffID) => {
     setSelectedStaffID(staffID);
@@ -43,6 +46,11 @@ const StaffTable = () => {
         staff.StaffID === updatedStaff.StaffID ? updatedStaff : staff
       )
     );
+    setFilteredStaffData((prevData) =>
+      prevData.map((staff) =>
+        staff.StaffID === updatedStaff.StaffID ? updatedStaff : staff
+      )
+    );
   };
 
   const handleDeleteConfirm = async () => {
@@ -59,10 +67,25 @@ const StaffTable = () => {
       setStaffData(
         staffData.filter((s) => s.StaffID !== selectedStaff.StaffID)
       );
+      setFilteredStaffData(
+        filteredStaffData.filter((s) => s.StaffID !== selectedStaff.StaffID)
+      );
       setShowDeleteModal(false);
     } catch (err) {
       setError(err.message);
     }
+  };
+
+  const handleSearch = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+
+    const filteredData = staffData.filter((staff) => {
+      const fullName = `${staff.FirstName} ${staff.LastName}`.toLowerCase();
+      return fullName.includes(query);
+    });
+
+    setFilteredStaffData(filteredData);
   };
 
   useEffect(() => {
@@ -74,6 +97,7 @@ const StaffTable = () => {
         }
         const data = await response.json();
         setStaffData(data);
+        setFilteredStaffData(data); // Initialize filtered data
         setLoading(false);
       } catch (error) {
         setError(error);
@@ -100,7 +124,7 @@ const StaffTable = () => {
     );
   }
 
-  const sortedStaffData = [...staffData].sort((a, b) => {
+  const sortedStaffData = [...filteredStaffData].sort((a, b) => {
     if (!sortField) return 0;
     if (sortOrder === "asc") {
       return a[sortField].localeCompare(b[sortField]);
@@ -112,6 +136,16 @@ const StaffTable = () => {
 
   return (
     <div className="overflow-x-auto">
+      <div className="relative w-full mb-4">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={handleSearch}
+          className="bg-white border border-gray-300 rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
+          placeholder="Search by Full Name"
+        />
+        <FaSearch className="absolute left-3 top-2/4 transform -translate-y-2/4 text-gray-500" />
+      </div>
       <table className="min-w-full bg-white border border-gray-300">
         <thead>
           <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">

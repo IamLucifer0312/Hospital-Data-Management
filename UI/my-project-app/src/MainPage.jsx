@@ -165,15 +165,7 @@ const MainPage = () => {
       </div>
 
       <div className="flex-1 bg-gray-100 p-4 overflow-y-auto">
-        <div className="flex justify-between items-center mb-8">
-          <div className="relative w-1/2">
-            <input
-              type="text"
-              className="bg-white border border-gray-300 rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
-              placeholder="Search"
-            />
-            <FaSearch className="absolute left-3 top-2/4 transform -translate-y-2/4 text-gray-500" />
-          </div>
+        <div className="flex justify-end items-center mb-8">
           <div className="flex items-center space-x-4">
             <div className="text-right">
               <p className="text-sm font-semibold">Group9</p>

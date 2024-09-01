@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import AddNoteModal from "./AddNoteModal";
 
 const NotesTable = () => {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   useEffect(() => {
     const fetchNotes = async () => {
@@ -24,6 +26,10 @@ const NotesTable = () => {
     fetchNotes();
   }, []);
 
+  const handleAddNote = (newNote) => {
+    setNotes((prevNotes) => [...prevNotes, newNote]);
+  };
+
   if (loading) {
     return (
       <div className="h-screen flex items-center justify-center">
@@ -42,6 +48,14 @@ const NotesTable = () => {
 
   return (
     <div className="w-full p-4">
+      <div className="flex justify-end mb-4">
+        <button
+          onClick={() => setShowAddModal(true)}
+          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+        >
+          Add Note
+        </button>
+      </div>
       <table className="min-w-full bg-white border border-gray-300">
         <thead>
           <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
@@ -85,6 +99,13 @@ const NotesTable = () => {
           ))}
         </tbody>
       </table>
+
+      {showAddModal && (
+        <AddNoteModal
+          closeModal={() => setShowAddModal(false)}
+          onAddNote={handleAddNote}
+        />
+      )}
     </div>
   );
 };

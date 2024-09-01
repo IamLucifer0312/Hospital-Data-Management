@@ -224,14 +224,14 @@ async function getAllDepartment() {
 
 // APPOINTMENT
 async function getAllAppointment() {
-  const [rows] = await connection.query("SELECT * FROM appointment");
+  const [rows] = await connection.query("SELECT * FROM appointments");
   console.log(rows);
   return rows;
 }
 
 async function getAppointment(id) {
   const [rows] = await connection.query(
-    "SELECT * FROM appointment WHERE AppointmentID = ?",
+    "SELECT * FROM appointments WHERE AppointmentID = ?",
     [id]
   );
   console.log(rows[0]);
@@ -240,7 +240,7 @@ async function getAppointment(id) {
 
 async function getAppointmentsByPatient(patientId) {
   const [rows] = await connection.query(
-    "SELECT * FROM appointment WHERE PatientID = ?",
+    "SELECT * FROM appointments WHERE PatientID = ?",
     [patientId]
   );
   console.log(rows);
@@ -249,7 +249,7 @@ async function getAppointmentsByPatient(patientId) {
 
 async function getAppointmentsByStaff(staffId) {
   const [rows] = await connection.query(
-    "SELECT * FROM appointment WHERE StaffID = ?",
+    "SELECT * FROM appointments WHERE StaffID = ?",
     [staffId]
   );
   console.log(rows);
@@ -258,7 +258,7 @@ async function getAppointmentsByStaff(staffId) {
 
 async function getAppointmentsByPatientAndStaff(patientId, staffId) {
   const [rows] = await connection.query(
-    "SELECT * FROM appointment WHERE PatientID = ? AND StaffID = ?",
+    "SELECT * FROM appointments WHERE PatientID = ? AND StaffID = ?",
     [patientId, staffId] // Using both patientId and staffId to filter results
   );
   console.log(rows); // Log the rows for debugging purposes
@@ -343,4 +343,12 @@ module.exports = {
   updatePatientInfo,
   deletePatient,
   getAllDepartment,
+  getAllAppointment,
+  getAppointment,
+  getAppointmentsByPatient,
+  getAppointmentsByStaff,
+  getAppointmentsByPatientAndStaff,
+  addNewAppointment,
+  updateAppointmentInfo,
+  deleteAppointment,
 };
