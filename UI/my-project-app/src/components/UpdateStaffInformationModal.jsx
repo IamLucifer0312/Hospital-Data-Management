@@ -25,7 +25,7 @@ const UpdateStaffInformationModal = ({ staff, closeModal, onUpdate }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:4000/staff/${staff.StaffID}`,
+        `http://localhost:4000/staffs/${staff.StaffID}`,
         {
           method: "PUT",
           headers: {

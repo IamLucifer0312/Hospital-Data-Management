@@ -24,13 +24,7 @@ const MainPage = () => {
     {
       name: "Staff",
       icon: <FaUserMd size={24} />,
-      subOptions: [
-        "All infomation",
-        "Department",
-        "Notes",
-        "Add new Staff",
-        "Update Staff Schedule",
-      ],
+      subOptions: ["All infomation", "Department", "Notes", "Add new Staff"],
     },
     {
       name: "Patient",
@@ -141,10 +135,10 @@ const MainPage = () => {
         ))}
       </div>
 
-      <div className="w-64 bg-gray-100 text-gray-800 flex flex-col py-8 px-6 h-full">
+      <div className="w-52 bg-gray-100 text-gray-800 flex flex-col py-8 px-6 h-full">
         <div className="flex items-center h-20">
           {" "}
-          <h2 className="text-3xl font-bold uppercase ml-3 text-red-500">
+          <h2 className="text-xl font-bold uppercase ml-3 text-red-500">
             {activeSection}
           </h2>
         </div>
@@ -154,7 +148,7 @@ const MainPage = () => {
             .subOptions.map((subOption) => (
               <li
                 key={subOption}
-                className={`text-xl text-pretty cursor-pointer px-6 py-3 rounded-md flex justify-between items-center hover:bg-blue-100 hover:text-blue-600 transition-all ${
+                className={`text-md text-pretty cursor-pointer font-semibold px-2 py-3 rounded-md flex justify-between items-center hover:bg-blue-100 hover:text-blue-600 transition-all ${
                   activeSubsection === subOption
                     ? "bg-blue-50 text-blue-600 font-semibold"
                     : "text-gray-800"

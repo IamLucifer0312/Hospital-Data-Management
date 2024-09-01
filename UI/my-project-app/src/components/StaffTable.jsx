@@ -40,7 +40,7 @@ const StaffTable = () => {
   useEffect(() => {
     const fetchStaffData = async () => {
       try {
-        const response = await fetch("http://localhost:4000/staff");
+        const response = await fetch("http://localhost:4000/staffs");
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }

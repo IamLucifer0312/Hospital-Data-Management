@@ -13,7 +13,7 @@ const StaffScheduleList = ({ staffID }) => {
     const fetchSchedules = async () => {
       try {
         const response = await fetch(
-          `http://localhost:4000/staff/${staffID}/schedules`
+          `http://localhost:4000/schedules/staff/${staffID}`
         );
         const data = await response.json();
         setSchedules(data);
@@ -26,13 +26,15 @@ const StaffScheduleList = ({ staffID }) => {
   }, [staffID]);
 
   const handleUpdateClick = (scheduleID) => {
+    console.log("Update button clicked for ScheduleID:", scheduleID);
     setSelectedScheduleID(scheduleID);
     setIsAddingNew(false);
     setShowUpdateModal(true);
   };
 
   const handleAddNewClick = () => {
-    setSelectedScheduleID(null); // No existing schedule selected
+    console.log("Add New Schedule button clicked");
+    setSelectedScheduleID(null);
     setIsAddingNew(true);
     setShowUpdateModal(true);
   };
@@ -45,7 +47,7 @@ const StaffScheduleList = ({ staffID }) => {
   const handleDeleteConfirm = async () => {
     try {
       await fetch(
-        `http://localhost:4000/staff/${staffID}/schedules/${selectedScheduleID}`,
+        `http://localhost:4000/schedules/${selectedScheduleID}/staff/${staffID}`,
         {
           method: "DELETE",
         }

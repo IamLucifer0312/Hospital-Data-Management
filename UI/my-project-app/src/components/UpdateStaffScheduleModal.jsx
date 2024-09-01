@@ -5,6 +5,7 @@ const UpdateStaffScheduleModal = ({
   scheduleID,
   closeModal,
   onUpdate,
+  scheduleData,
   isAddingNew,
 }) => {
   const [dayOfWeek, setDayOfWeek] = useState("");
@@ -14,29 +15,18 @@ const UpdateStaffScheduleModal = ({
   const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
-    if (!isAddingNew && scheduleID) {
-      const fetchScheduleDetails = async () => {
-        try {
-          const response = await fetch(
-            `http://localhost:4000/staff/${staffID}/schedules/${scheduleID}`
-          );
-          const schedule = await response.json();
-          setDayOfWeek(schedule.dayOfWeek || "");
-          setStartTime(schedule.startTime || "");
-          setEndTime(schedule.endTime || "");
-        } catch (err) {
-          setErrorMessage("Failed to load schedule details");
-        }
-      };
-      fetchScheduleDetails();
+    if (scheduleData && !isAddingNew) {
+      setDayOfWeek(scheduleData.DayOfWeek || "");
+      setStartTime(scheduleData.StartTime || "");
+      setEndTime(scheduleData.EndTime || "");
     }
-  }, [staffID, scheduleID, isAddingNew]);
+  }, [scheduleData, isAddingNew]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const url = isAddingNew
-      ? `http://localhost:4000/staff/${staffID}/schedules`
-      : `http://localhost:4000/staff/${staffID}/schedules/${scheduleID}`;
+      ? `http://localhost:4000/schedules/staff/${staffID}`
+      : `http://localhost:4000/schedules/${scheduleID}/staff/${staffID}`;
 
     const method = isAddingNew ? "POST" : "PUT";
 
@@ -55,8 +45,12 @@ const UpdateStaffScheduleModal = ({
       }
 
       const updatedSchedule = await response.json();
+
       onUpdate(updatedSchedule);
+
       setSuccessMessage("Schedule saved successfully!");
+
+      setTimeout(() => closeModal(), 1000);
     } catch (error) {
       setErrorMessage(error.message);
     }
