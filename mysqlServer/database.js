@@ -146,7 +146,7 @@ async function getAllPatient() {
 
 async function getPatient(id) {
   const [rows] = await connection.query(
-    "SELECT * FROM patient WHERE PatientID = ?",
+    "SELECT * FROM patients WHERE PatientID = ?",
     [id] //avoid sql injection
   );
   console.log(rows[0]);
@@ -235,6 +235,8 @@ async function getAllAppointment() {
       p.FirstName AS PatientFirstName,
       p.LastName AS PatientLastName,
       p.PhoneNum AS PatientPhoneNum,
+      p.PatientID,
+      s.StaffID,
       s.FirstName AS DoctorFirstName,
       s.LastName AS DoctorLastName,
       s.Qualification AS DoctorQualification
@@ -377,6 +379,13 @@ async function bookDoctorAppointment(
   return resultMessage;
 }
 
+async function cancelAppointment(appointmentId) {
+  const [rows] = await connection.query("CALL sp_cancel_appointment(?)", [
+    appointmentId,
+  ]);
+  return rows;
+}
+
 module.exports = {
   getStaff,
   addNewStaff,
@@ -405,4 +414,5 @@ module.exports = {
   deleteAppointment,
   getStaffScheduleGivenTime,
   bookDoctorAppointment,
+  cancelAppointment,
 };

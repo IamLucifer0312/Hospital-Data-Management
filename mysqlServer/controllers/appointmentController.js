@@ -8,6 +8,7 @@ const {
   updateAppointmentInfo,
   deleteAppointment,
   bookDoctorAppointment,
+  cancelAppointment,
 } = require("../database");
 
 const getAllAppointmentController = async (req, res) => {
@@ -147,6 +148,23 @@ const bookDoctorAppointmentController = async (req, res) => {
       .send({ message: "Internal server error", error: err.message });
   }
 };
+
+const cancelAppointmentController = async (req, res) => {
+  const { appointmentId } = req.params;
+
+  try {
+    const result = await cancelAppointment(appointmentId);
+    res
+      .status(200)
+      .send({ message: "Appointment cancelled successfully", result });
+  } catch (err) {
+    console.error("Error cancelling appointment:", err);
+    res
+      .status(500)
+      .send({ message: err.sqlMessage || "Failed to cancel appointment" });
+  }
+};
+
 module.exports = {
   getAllAppointmentController,
   getAppointmentController,
@@ -157,4 +175,5 @@ module.exports = {
   updateAppointmentInfoController,
   deleteAppointmentController,
   bookDoctorAppointmentController,
+  cancelAppointmentController,
 };
