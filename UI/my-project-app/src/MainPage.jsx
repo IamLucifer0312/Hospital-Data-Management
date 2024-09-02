@@ -11,7 +11,6 @@ import {
 import StaffTable from "./components/StaffTable";
 import logo from "./assets/hospital-logo.svg";
 import DiagnosticImageTable from "./components/DiagnosticImageTable";
-import NotesTable from "./components/NotesTable";
 import DepartmentTable from "./components/DepartmentTable";
 import AddNewStaffPage from "./components/AddNewStaffPage";
 import { useNavigate } from "react-router-dom";
@@ -51,7 +50,6 @@ const MainPage = () => {
       subOptions: [
         "All infomation",
         "Department",
-        "Notes",
         ...(user?.role === "admin" ? ["Add new Staff"] : []),
       ],
     },
@@ -110,8 +108,6 @@ const MainPage = () => {
           default:
             return null;
         }
-      case "Notes":
-        return <NotesTable />;
       case "Diagnostic Images":
         return <DiagnosticImageTable />;
       case "Department":

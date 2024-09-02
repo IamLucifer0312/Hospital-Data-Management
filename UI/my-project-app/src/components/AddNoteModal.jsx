@@ -1,25 +1,29 @@
 import React, { useState, useEffect } from "react";
-import Select from "react-select";
 
-const AddNoteModal = ({ closeModal, onAddNote }) => {
-  const [staffOptions, setStaffOptions] = useState([]);
-  const [patientOptions, setPatientOptions] = useState([]);
-  const [appointmentOptions, setAppointmentOptions] = useState([]);
-  const [selectedStaff, setSelectedStaff] = useState(null);
-  const [selectedPatient, setSelectedPatient] = useState(null);
-  const [selectedAppointment, setSelectedAppointment] = useState(null);
+const AddNoteModal = ({
+  closeModal,
+  onAddNote,
+  initialStaff,
+  initialPatient,
+  initialAppointment,
+}) => {
+  const [staffName, setStaffName] = useState("");
+  const [patientName, setPatientName] = useState("");
+  const [appointmentDetails, setAppointmentDetails] = useState("");
   const [note, setNote] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchOptions = async () => {
+    console.log(initialStaff);
+    console.log(initialPatient);
+    const fetchDetails = async () => {
       try {
         const [staffResponse, patientResponse, appointmentResponse] =
           await Promise.all([
-            fetch("http://localhost:4000/staffs"),
-            fetch("http://localhost:4000/patients"),
-            fetch("http://localhost:4000/appointments"),
+            fetch(`http://localhost:4000/staffs/${initialStaff}`),
+            fetch(`http://localhost:4000/patients/${initialPatient}`),
+            fetch(`http://localhost:4000/appointments/${initialAppointment}`),
           ]);
 
         if (
@@ -27,60 +31,32 @@ const AddNoteModal = ({ closeModal, onAddNote }) => {
           !patientResponse.ok ||
           !appointmentResponse.ok
         ) {
-          throw new Error("Failed to fetch options");
+          throw new Error("Failed to fetch details");
         }
 
         const staffData = await staffResponse.json();
         const patientData = await patientResponse.json();
         const appointmentData = await appointmentResponse.json();
 
-        setStaffOptions(
-          staffData.map((staff) => ({
-            value: staff.StaffID,
-            label:
-              staff.FirstName +
-              " " +
-              staff.LastName +
-              " - " +
-              "ID: " +
-              staff.StaffID +
-              " - " +
-              "Job: " +
-              staff.JobType,
-          }))
-        );
-        setPatientOptions(
-          patientData.map((patient) => ({
-            value: patient.PatientID,
-            label:
-              patient.FirstName +
-              " " +
-              patient.LastName +
-              " - " +
-              "ID: " +
-              patient.PatientID,
-          }))
-        );
-        setAppointmentOptions(
-          appointmentData.map((appointment) => ({
-            value: appointment.AppointmentID,
-            label: `Appointment ${appointment.AppointmentID} - ${appointment.AppointmentDate} - ${appointment.AppointmentStatus}`,
-          }))
+        setStaffName(`${staffData.FirstName} ${staffData.LastName}`);
+        setPatientName(`${patientData.FirstName} ${patientData.LastName}`);
+        setAppointmentDetails(
+          `Appointment ${appointmentData.AppointmentID} - ${appointmentData.AppointmentDate} - ${appointmentData.AppointmentStatus}`
         );
 
         setLoading(false);
       } catch (error) {
-        setError(error);
+        setError(error.message);
         setLoading(false);
       }
     };
 
-    fetchOptions();
-  }, []);
+    fetchDetails();
+  }, [initialStaff, initialPatient, initialAppointment]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!selectedStaff || !selectedPatient || !selectedAppointment || !note) {
+    if (!staffName || !patientName || !appointmentDetails || !note) {
       setError("All fields are required");
       return;
     }
@@ -92,9 +68,9 @@ const AddNoteModal = ({ closeModal, onAddNote }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          StaffID: selectedStaff.value,
-          PatientID: selectedPatient.value,
-          AppointmentID: selectedAppointment.value,
+          DoctorID: initialStaff,
+          PatientID: initialPatient,
+          AppointmentID: initialAppointment,
           Note: note,
         }),
       });
@@ -141,36 +117,33 @@ const AddNoteModal = ({ closeModal, onAddNote }) => {
             <label className="block text-gray-700 text-sm font-bold mb-2">
               Staff
             </label>
-            <Select
-              options={staffOptions}
-              onChange={setSelectedStaff}
-              value={selectedStaff}
-              placeholder="Select Staff"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            <input
+              type="text"
+              value={staffName}
+              readOnly
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
             />
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">
               Patient
             </label>
-            <Select
-              options={patientOptions}
-              onChange={setSelectedPatient}
-              value={selectedPatient}
-              placeholder="Select Patient"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            <input
+              type="text"
+              value={patientName}
+              readOnly
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
             />
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">
               Appointment
             </label>
-            <Select
-              options={appointmentOptions}
-              onChange={setSelectedAppointment}
-              value={selectedAppointment}
-              placeholder="Select Appointment"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            <input
+              type="text"
+              value={appointmentDetails}
+              readOnly
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
             />
           </div>
           <div className="mb-4">
