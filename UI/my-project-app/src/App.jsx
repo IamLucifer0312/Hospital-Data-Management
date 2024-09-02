@@ -1,5 +1,6 @@
 import "./App.css";
 import LoginPage from "./LoginPage";
+import RegisterPage from "./RegisterPage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MainPage from "./MainPage";
 import PrivateRoute from "./components/PrivateRoute";
@@ -9,6 +10,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route
           path="/main-page"
           element={
