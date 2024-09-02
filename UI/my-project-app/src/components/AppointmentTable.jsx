@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { FaSearch } from "react-icons/fa";
 import AppointmentDropDownMenu from "./AppointmentDropDownMenu";
 import NotesModal from "./NotesModal";
 import AddNoteModal from "./AddNoteModal";
+import UpdateAppointmentModal from "./UpdateAppointmentModal"; // New import
+import { FaSearch } from "react-icons/fa";
 
 const AppointmentTable = () => {
   const [appointments, setAppointments] = useState([]);
@@ -13,6 +14,8 @@ const AppointmentTable = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showNotesModal, setShowNotesModal] = useState(false);
   const [showAddNoteModal, setShowAddNoteModal] = useState(false);
+  const [showUpdateAppointmentModal, setShowUpdateAppointmentModal] =
+    useState(false); // New state
   const [message, setMessage] = useState("");
   const [sortField, setSortField] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
@@ -65,7 +68,6 @@ const AppointmentTable = () => {
   };
 
   const handleViewNotes = (appointment) => {
-    console.log("View Notes clicked for Appointment:", appointment);
     if (appointment.StaffID && appointment.PatientID) {
       setSelectedAppointment(appointment);
       setShowNotesModal(true);
@@ -78,8 +80,12 @@ const AppointmentTable = () => {
 
   const handleAddNote = (appointment) => {
     setSelectedAppointment(appointment);
-    console.log(appointment);
     setShowAddNoteModal(true);
+  };
+
+  const handleUpdateAppointment = (appointment) => {
+    setSelectedAppointment(appointment);
+    setShowUpdateAppointmentModal(true); // Show the update modal
   };
 
   const confirmCancelAppointment = async (appointment) => {
@@ -225,6 +231,9 @@ const AppointmentTable = () => {
                   onCancel={() => handleCancelAppointment(appointment)}
                   onViewNotes={() => handleViewNotes(appointment)}
                   onAddNote={() => handleAddNote(appointment)}
+                  onUpdateAppointment={() =>
+                    handleUpdateAppointment(appointment)
+                  } // Add this line
                 />
               </td>
             </tr>
@@ -274,6 +283,16 @@ const AppointmentTable = () => {
           initialStaff={selectedAppointment?.StaffID}
           initialPatient={selectedAppointment?.PatientID}
           initialAppointment={selectedAppointment?.AppointmentID}
+        />
+      )}
+
+      {showUpdateAppointmentModal && (
+        <UpdateAppointmentModal
+          closeModal={() => setShowUpdateAppointmentModal(false)}
+          initialAppointment={selectedAppointment}
+          onUpdate={(updatedAppointment) =>
+            console.log("Appointment updated:", updatedAppointment)
+          }
         />
       )}
 

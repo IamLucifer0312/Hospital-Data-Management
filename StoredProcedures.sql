@@ -196,63 +196,63 @@ BEGIN
 	END IF;	
 END $$
 
--- update appointment info
+DELIMITER $$
+
 CREATE PROCEDURE sp_update_appointment(
-	IN p_AppointmentID INT, 
-	IN p_AppointmentDate DATE, 
-	IN p_AppointmentStartTime TIME, 
-	IN p_AppointmentEndTime TIME, 
-	IN p_AppointmentStatus VARCHAR(50), 
-	IN p_Purpose VARCHAR(255), 
-	IN p_PatientID INT, 
-	IN p_StaffID INT)
+    IN p_AppointmentID INT, 
+    IN p_AppointmentDate DATE, 
+    IN p_AppointmentStartTime TIME, 
+    IN p_AppointmentEndTime TIME, 
+    IN p_AppointmentStatus VARCHAR(50), 
+    IN p_Purpose VARCHAR(255), 
+    IN p_PatientID INT, 
+    IN p_StaffID INT)
 BEGIN
     DECLARE conflict_count INT DEFAULT 0;
+    DECLARE appointment_exists INT DEFAULT 0;
+
     START TRANSACTION;
     
+    -- Check if the appointment exists
+    SELECT COUNT(*) INTO appointment_exists
+    FROM Appointments
+    WHERE AppointmentID = p_AppointmentID;
+
+    IF appointment_exists = 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Appointment ID not found';
+    END IF;
+
     -- Check for appointment conflicts for the same doctor
-	SELECT COUNT(*) INTO conflict_count
-	FROM Appointments a
-	WHERE a.StaffID = p_StaffID
-	  AND a.AppointmentDate = p_AppointmentDate
-	  AND a.AppointmentID != p_AppointmentID  -- Exclude the appointment being updated
-	  AND ((a.AppointmentStartTime < p_AppointmentEndTime AND a.AppointmentEndTime > p_AppointmentStartTime));
+    SELECT COUNT(*) INTO conflict_count
+    FROM Appointments a
+    WHERE a.StaffID = p_StaffID
+      AND a.AppointmentDate = p_AppointmentDate
+      AND a.AppointmentID != p_AppointmentID  -- Exclude the appointment being updated
+      AND ((a.AppointmentStartTime < p_AppointmentEndTime AND a.AppointmentEndTime > p_AppointmentStartTime));
 
-	-- If no conflicts, update the appointment
-	IF conflict_count = 0 THEN
-		UPDATE Appointments a
-		SET a.AppointmentDate = p_AppointmentDate, 
-			a.AppointmentStartTime = p_AppointmentStartTime, 
-			a.AppointmentEndTime = p_AppointmentEndTime, 
-			a.AppointmentStatus = p_AppointmentStatus, 
-			a.Purpose = p_Purpose, 
-			a.PatientID = p_PatientID, 
-			a.StaffID = p_StaffID
-		WHERE a.AppointmentID = p_AppointmentID;
-		COMMIT;
-		-- no rows affected after update -> Appointment ID not found
-		if row_count() = 0 then
-			signal sqlstate '45000' set message_text = "Appointment ID not found";
-		else
-			select * from Appointments a where a.AppointmentID = p_AppointmentID;
-		end if;
-		
-	-- If there is a conflict, rollback
-	ELSE
-		ROLLBACK; 
-		signal sqlstate '45000' set message_text = "The updated appointment time conflicts with another appointment for the same staff member";
-	END IF;
+    -- If no conflicts, update the appointment
+    IF conflict_count = 0 THEN
+        UPDATE Appointments a
+        SET a.AppointmentDate = p_AppointmentDate, 
+            a.AppointmentStartTime = p_AppointmentStartTime, 
+            a.AppointmentEndTime = p_AppointmentEndTime, 
+            a.AppointmentStatus = p_AppointmentStatus, 
+            a.Purpose = p_Purpose, 
+            a.PatientID = p_PatientID, 
+            a.StaffID = p_StaffID
+        WHERE a.AppointmentID = p_AppointmentID;
+        
+        COMMIT;
+        
+        -- Return the updated appointment
+        SELECT * FROM Appointments WHERE AppointmentID = p_AppointmentID;
+    ELSE
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'The updated appointment time conflicts with another appointment for the same staff member';
+    END IF;
 END $$
 
--- delete a staff
-CREATE PROCEDURE sp_delete_staff(IN StaffID INT)
-BEGIN
-	delete from staff s where s.StaffID = StaffID;
-    -- no rows affected -> error msg
-	if row_count() = 0 then
-        signal sqlstate '45000' set message_text = "Staff ID not found";
-	end if;
-END $$
+DELIMITER ;
 
 -- delete a patient
 CREATE PROCEDURE sp_delete_patient(IN PatientID INT)
