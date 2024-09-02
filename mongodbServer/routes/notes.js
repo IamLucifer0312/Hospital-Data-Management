@@ -17,6 +17,26 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+router.get("/", async (req, res) => {
+  const { appointmentID } = req.query;
+
+  const query = {};
+  if (appointmentID) {
+    query.AppointmentID = appointmentID;
+  }
+
+  try {
+    const notes = await Note.find(query);
+    if (notes.length === 0) {
+      res.status(404).send("No notes found");
+    } else {
+      res.json(notes);
+    }
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
 // Get all notes
 router.get("/", async (req, res) => {
   try {
