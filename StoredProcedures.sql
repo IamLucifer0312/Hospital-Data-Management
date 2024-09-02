@@ -349,3 +349,32 @@ BEGIN
 END $$
 
 DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_cancel_appointment(
+    IN p_AppointmentID INT
+)
+BEGIN
+    DECLARE currentStatus VARCHAR(50);
+
+    SELECT AppointmentStatus INTO currentStatus
+    FROM Appointments
+    WHERE AppointmentID = p_AppointmentID;
+
+    IF currentStatus = 'Cancelled' THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Appointment is already cancelled';
+    END IF;
+
+    IF currentStatus = 'Scheduled' THEN
+        UPDATE Appointments
+        SET AppointmentStatus = 'Cancelled'
+        WHERE AppointmentID = p_AppointmentID;
+    ELSE
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Only scheduled appointments can be cancelled';
+    END IF;
+END $$
+
+DELIMITER ;
