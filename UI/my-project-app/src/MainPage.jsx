@@ -13,6 +13,7 @@ import logo from "./assets/hospital-logo.svg";
 import DiagnosticImageTable from "./components/DiagnosticImageTable";
 import DepartmentTable from "./components/DepartmentTable";
 import AddNewStaffPage from "./components/AddNewStaffPage";
+import AddNewPatientPage from "./components/AddNewPatientPage";
 import { useNavigate } from "react-router-dom";
 import DoctorScheduleViewer from "./components/DoctorScheduleViewer";
 import BookAppointment from "./components/BookAppointment";
@@ -56,7 +57,11 @@ const MainPage = () => {
     {
       name: "Patient",
       icon: <FaUser size={24} />,
-      subOptions: ["All infomation", "Diagnostic Images"],
+      subOptions: [
+        "All infomation",
+        "Diagnostic Images",
+        ...(user?.role === "admin" ? ["Add new Patient"] : []),
+      ],
     },
     {
       name: "Treatment History",
@@ -120,6 +125,8 @@ const MainPage = () => {
         );
       case "Add new Staff":
         return <AddNewStaffPage />;
+      case "Add new Patient":
+        return <AddNewPatientPage />;
       case "View Doctor Schedule":
         return <DoctorScheduleViewer />;
       case "Book Appointment":

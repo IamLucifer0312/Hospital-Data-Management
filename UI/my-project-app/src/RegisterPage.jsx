@@ -9,7 +9,74 @@ const RegisterPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState(""); // New state for role selection
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const navigate = useNavigate();
+
+  const addUser = async (user) => {
+    try {
+      const response = await fetch("http://localhost:3000/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      });
+
+      if (response.ok) {
+        navigate("/login");
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || "Registration failed!");
+      }
+    } catch (err) {
+      setError("An error occurred during registration. Please try again.");
+    }
+  };
+
+  const addPatient = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+
+    const newStaff = {
+      firstName,
+      lastName,
+      jobType,
+      salary,
+      qualification,
+      departmentID,
+      managerID,
+    };
+
+    try {
+      const response = await fetch("http://localhost:4000/staffs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newStaff),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add new staff");
+      }
+
+      const result = await response.json();
+      setSuccess("Staff member added successfully!");
+      setFirstName("");
+      setLastName("");
+      setJobType("Doctor");
+      setSalary("");
+      setQualification("");
+      setDepartmentID("");
+      setManagerID("");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -19,7 +86,7 @@ const RegisterPage = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/users/register", {
+      const response = await fetch("http://localhost:3000/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -130,9 +197,6 @@ const RegisterPage = () => {
                   <option value="" disabled>
                     Select Role
                   </option>
-                  <option value="Doctor">Doctor</option>
-                  <option value="Nurse">Nurse</option>
-                  <option value="Admin">Admin</option>
                   <option value="Patient">Patient</option>
                   {/* Add more roles as needed */}
                 </select>
