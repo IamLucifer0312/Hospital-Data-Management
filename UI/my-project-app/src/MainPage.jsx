@@ -9,6 +9,7 @@ import {
   FaUserCircle,
 } from "react-icons/fa";
 import StaffTable from "./components/StaffTable";
+import PatientTable from "./components/PatientTable";
 import logo from "./assets/hospital-logo.svg";
 import DiagnosticImageTable from "./components/DiagnosticImageTable";
 import DepartmentTable from "./components/DepartmentTable";
@@ -95,11 +96,7 @@ const MainPage = () => {
       case "All infomation":
         switch (activeSection) {
           case "Patient":
-            return (
-              <div>
-                <p>Table</p>
-              </div>
-            );
+            return <PatientTable />;
           case "Staff":
             return <StaffTable />;
           case "Treatment History":
