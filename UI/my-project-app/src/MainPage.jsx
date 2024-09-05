@@ -20,6 +20,7 @@ import DoctorScheduleViewer from "./components/DoctorScheduleViewer";
 import BookAppointment from "./components/BookAppointment";
 import AppointmentTable from "./components/AppointmentTable";
 import TreatmentHistoryTable from "./components/TreatmentTable";
+import AddNewTreatment from "./components/AddTreatment";
 
 const MainPage = () => {
   const [activeSection, setActiveSection] = useState("Staff");
@@ -68,7 +69,7 @@ const MainPage = () => {
     {
       name: "Treatment History",
       icon: <FaHistory size={24} />,
-      subOptions: ["All infomation"],
+      subOptions: ["All infomation", "Add new Treatment"],
     },
     {
       name: "Appointment",
@@ -121,6 +122,8 @@ const MainPage = () => {
         return <AddNewStaffPage />;
       case "Add new Patient":
         return <AddNewPatientPage />;
+      case "Add new Treatment":
+        return <AddNewTreatment />;
       case "View Doctor Schedule":
         return <DoctorScheduleViewer />;
       case "Book Appointment":

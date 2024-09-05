@@ -402,8 +402,8 @@ async function getAllTreatmentHistory() {
 }
 
 async function addTreatmentHistory(
-  patientId,
-  doctorId,
+  patientID,
+  doctorID,
   startDate,
   endDate,
   treatmentType,
@@ -414,8 +414,8 @@ async function addTreatmentHistory(
   const [rows] = await connection.query(
     "CALL sp_add_new_treatment(?,?,?,?,?,?,?,?)",
     [
-      patientId,
-      doctorId,
+      patientID,
+      doctorID,
       startDate,
       endDate,
       treatmentType,

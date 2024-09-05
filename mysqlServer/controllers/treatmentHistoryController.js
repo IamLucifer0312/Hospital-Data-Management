@@ -24,15 +24,25 @@ const getAllTreatmentHistoryController = async (req, res) => {
 
 const addTreatmentHistoryController = async (req, res) => {
   try {
+    const {
+      patientID,
+      doctorID,
+      startDate,
+      endDate,
+      treatmentType,
+      billingAmount,
+      status,
+      details,
+    } = req.body;
     const result = await addTreatmentHistory(
-      req.params.patientId,
-      req.params.doctorId,
-      req.params.startDate,
-      req.params.endDate,
-      req.params.treatmentType,
-      req.params.billingAmount,
-      req.params.status,
-      req.params.details
+      patientID,
+      doctorID,
+      startDate,
+      endDate,
+      treatmentType,
+      billingAmount,
+      status,
+      details
     );
     res.status(201).send(result);
   } catch (err) {
