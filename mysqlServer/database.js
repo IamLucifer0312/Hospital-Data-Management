@@ -438,7 +438,7 @@ async function getPatientTreatmentHistoryOnDuration(
     "CALL sp_get_patient_treatment_history(?,?,?)",
     [patientID, startDate, endDate]
   );
-  return rows;
+  return rows[0][0];
 }
 
 async function getAllPatientsTreatmentOnDuration(startDate, endDate) {
@@ -446,14 +446,14 @@ async function getAllPatientsTreatmentOnDuration(startDate, endDate) {
     "CALL sp_get_all_patients_treatment(?,?)",
     [startDate, endDate]
   );
-  return rows;
+  return rows[0];
 }
 
 async function getStaffJobHistory(staffID) {
   const [rows] = await connection.query("CALL sp_get_staff_job_history(?)", [
     staffID,
   ]);
-  return rows;
+  return rows[0];
 }
 
 async function getDoctorWorkInDuration(doctorID, startDate, endDate) {
@@ -461,7 +461,7 @@ async function getDoctorWorkInDuration(doctorID, startDate, endDate) {
     "CALL sp_get_doctor_work_in_duration(?,?,?)",
     [doctorID, startDate, endDate]
   );
-  return rows;
+  return rows[0][0];
 }
 
 async function getAllDoctorsWorkInDuration(startDate, endDate) {
@@ -469,7 +469,7 @@ async function getAllDoctorsWorkInDuration(startDate, endDate) {
     "CALL sp_get_all_doctors_work_in_duration(?,?)",
     [startDate, endDate]
   );
-  return rows;
+  return rows[0];
 }
 
 module.exports = {

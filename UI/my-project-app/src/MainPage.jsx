@@ -112,12 +112,6 @@ const MainPage = () => {
         return <DiagnosticImageTable />;
       case "Department":
         return <DepartmentTable />;
-      case "Staff Schedules":
-        return (
-          <div>
-            <p>Table</p>
-          </div>
-        );
       case "Add new Staff":
         return <AddNewStaffPage />;
       case "Add new Patient":

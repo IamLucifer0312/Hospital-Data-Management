@@ -5,7 +5,7 @@ const staffScheduleRoutes = require("./routes/staffScheduleRoutes");
 const patientRoutes = require("./routes/patientRoutes");
 const appointmentRoutes = require("./routes/appointmentRoutes");
 const treatmentHistoryRoutes = require("./routes/treatmentHistoryRoutes");
-
+const reportRoutes = require("./routes/reportRoutes");
 const app = express();
 const port = 4000;
 
@@ -19,6 +19,7 @@ app.use("/schedules", staffScheduleRoutes);
 app.use("/patients", patientRoutes);
 app.use("/appointments", appointmentRoutes);
 app.use("/treatments", treatmentHistoryRoutes);
+app.use("/reports", reportRoutes);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

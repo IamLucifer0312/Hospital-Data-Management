@@ -435,6 +435,27 @@ DELIMITER ;
 
 DELIMITER $$
 
+CREATE PROCEDURE sp_get_doctor_work_in_duration(
+    IN p_DoctorID INT, 
+    IN p_StartDate DATE, 
+    IN p_EndDate DATE
+)
+BEGIN
+    SELECT t.TreatmentID, t.TreatmentDate, t.PatientID, 
+           p.FirstName AS PatientFirstName, p.LastName AS PatientLastName, 
+           t.DoctorID, d.FirstName AS DoctorFirstName, d.LastName AS DoctorLastName, 
+           t.TreatmentDescription, t.BillingAmount
+    FROM Treatment t
+    JOIN Patient p ON t.PatientID = p.PatientID
+    JOIN Doctor d ON t.DoctorID = d.DoctorID
+    WHERE t.DoctorID = p_DoctorID
+    AND t.TreatmentDate BETWEEN p_StartDate AND p_EndDate;
+END;
+
+DELIMITER ;
+
+DELIMITER $$
+
 CREATE PROCEDURE sp_get_all_doctors_work_in_duration(
     IN p_StartDate DATE, 
     IN p_EndDate DATE
