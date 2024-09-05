@@ -135,7 +135,8 @@ ALTER TABLE StaffPerformanceReport ADD COLUMN ReportID INT AUTO_INCREMENT PRIMAR
 CREATE TABLE JobChangeHistory (
     ChangeID INT PRIMARY KEY AUTO_INCREMENT,
     StaffID INT NOT NULL,
-    JobType ENUM('Doctor', 'Nurse', 'Admin', 'Lab Technician', 'Surgeon') NOT NULL,
+    OldJobType ENUM('Doctor', 'Nurse', 'Admin', 'Lab Technician', 'Surgeon') NOT NULL,
+    NewJobType ENUM('Doctor', 'Nurse', 'Admin', 'Lab Technician', 'Surgeon') NOT NULL,
     Salary INT,
     DepartmentID INT NOT NULL,
     ChangeDate DATE NOT NULL,

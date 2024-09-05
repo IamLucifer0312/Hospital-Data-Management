@@ -383,38 +383,19 @@ DELIMITER ;
 
 DELIMITER $$
 
-CREATE PROCEDURE sp_get_patient_treatment_history(
-    IN p_PatientID INT, 
-    IN p_StartDate DATE, 
-    IN p_EndDate DATE
-)
-BEGIN
-    SELECT t.TreatmentID, t.TreatmentDate, t.TreatmentDescription, t.DoctorID, 
-           d.FirstName AS DoctorFirstName, d.LastName AS DoctorLastName, 
-           t.BillingAmount
-    FROM Treatment t
-    JOIN Doctor d ON t.DoctorID = d.DoctorID
-    WHERE t.PatientID = p_PatientID
-      AND t.TreatmentDate BETWEEN p_StartDate AND p_EndDate;
-END;
-
-DELIMITER ;
-
-DELIMITER $$
-
 CREATE PROCEDURE sp_get_all_patients_treatment(
-    IN p_StartDate DATE, 
+    IN p_StartDate DATE,
     IN p_EndDate DATE
 )
 BEGIN
-    SELECT t.TreatmentID, t.TreatmentDate, t.TreatmentDescription, t.PatientID,
-           p.FirstName AS PatientFirstName, p.LastName AS PatientLastName, 
-           t.DoctorID, d.FirstName AS DoctorFirstName, d.LastName AS DoctorLastName, 
-           t.BillingAmount
-    FROM Treatment t
-    JOIN Patient p ON t.PatientID = p.PatientID
-    JOIN Doctor d ON t.DoctorID = d.DoctorID
-    WHERE t.TreatmentDate BETWEEN p_StartDate AND p_EndDate;
+    SELECT t.TreatmentID, t.StartDate, t.EndDate, t.Details, t.PatientID,
+           p.FirstName AS PatientFirstName, p.LastName AS PatientLastName,
+           t.DoctorID, d.FirstName AS DoctorFirstName, d.LastName AS DoctorLastName,
+           t.BillingAmount, t.Status
+    FROM TreatmentHistory t
+    JOIN Patients p ON t.PatientID = p.PatientID
+    JOIN Staff d ON t.DoctorID = d.StaffID
+    WHERE t.StartDate BETWEEN p_StartDate AND p_EndDate;
 END;
 
 DELIMITER ;
@@ -425,7 +406,7 @@ CREATE PROCEDURE sp_get_staff_job_history(
     IN p_StaffID INT
 )
 BEGIN
-    SELECT j.JobChangeID, j.ChangeDate, j.OldJobTitle, j.NewJobTitle
+    SELECT j.ChangeID, j.ChangeDate, j.OldJobType , j.NewJobType, j.Salary, j.DepartmentID
     FROM JobChangeHistory j
     WHERE j.StaffID = p_StaffID
     ORDER BY j.ChangeDate DESC;
@@ -435,42 +416,20 @@ DELIMITER ;
 
 DELIMITER $$
 
-CREATE PROCEDURE sp_get_doctor_work_in_duration(
-    IN p_DoctorID INT, 
-    IN p_StartDate DATE, 
-    IN p_EndDate DATE
-)
-BEGIN
-    SELECT t.TreatmentID, t.TreatmentDate, t.PatientID, 
-           p.FirstName AS PatientFirstName, p.LastName AS PatientLastName, 
-           t.DoctorID, d.FirstName AS DoctorFirstName, d.LastName AS DoctorLastName, 
-           t.TreatmentDescription, t.BillingAmount
-    FROM Treatment t
-    JOIN Patient p ON t.PatientID = p.PatientID
-    JOIN Doctor d ON t.DoctorID = d.DoctorID
-    WHERE t.DoctorID = p_DoctorID
-    AND t.TreatmentDate BETWEEN p_StartDate AND p_EndDate;
-END;
-
-DELIMITER ;
-
-DELIMITER $$
-
 CREATE PROCEDURE sp_get_all_doctors_work_in_duration(
-    IN p_StartDate DATE, 
+    IN p_StartDate DATE,
     IN p_EndDate DATE
 )
 BEGIN
-    SELECT t.TreatmentID, t.TreatmentDate, t.PatientID, 
-           p.FirstName AS PatientFirstName, p.LastName AS PatientLastName, 
-           t.DoctorID, d.FirstName AS DoctorFirstName, d.LastName AS DoctorLastName, 
-           t.TreatmentDescription, t.BillingAmount
-    FROM Treatment t
-    JOIN Patient p ON t.PatientID = p.PatientID
-    JOIN Doctor d ON t.DoctorID = d.DoctorID
-    WHERE t.TreatmentDate BETWEEN p_StartDate AND p_EndDate;
+    SELECT t.TreatmentID, t.StartDate, t.EndDate, t.PatientID,
+           p.FirstName AS PatientFirstName, p.LastName AS PatientLastName,
+           t.DoctorID, d.FirstName AS DoctorFirstName, d.LastName AS DoctorLastName,
+           t.Details, t.BillingAmount
+    FROM TreatmentHistory t
+    JOIN Patients p ON t.PatientID = p.PatientID
+    JOIN Staff d ON t.DoctorID = d.StaffID
+    WHERE t.StartDate BETWEEN p_StartDate AND p_EndDate;
 END;
 
 DELIMITER ;
-
 

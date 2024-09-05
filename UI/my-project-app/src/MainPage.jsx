@@ -21,6 +21,7 @@ import BookAppointment from "./components/BookAppointment";
 import AppointmentTable from "./components/AppointmentTable";
 import TreatmentHistoryTable from "./components/TreatmentTable";
 import AddNewTreatment from "./components/AddTreatment";
+import PatientTreatmentReport from "./components/PatientTreatmentReport";
 
 const MainPage = () => {
   const [activeSection, setActiveSection] = useState("Staff");
@@ -123,11 +124,7 @@ const MainPage = () => {
       case "Book Appointment":
         return <BookAppointment />;
       case "Patient Treatment":
-        return (
-          <div>
-            <p>Table</p>
-          </div>
-        );
+        return <PatientTreatmentReport />;
       case "Staff Workload":
         return (
           <div>
