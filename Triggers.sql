@@ -76,6 +76,15 @@ BEGIN
     ELSEIF NOT EXISTS (SELECT * FROM Staff s WHERE s.StaffID = NEW.StaffID) THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Staff ID not found';
     
+	-- check appointment date and time match with staff schedule
+    ELSEIF NOT EXISTS(
+				SELECT * FROM Staff_Schedule ss 
+                WHERE ss.StaffID = NEW.StaffID
+                AND ss.DayOfWeek = DAYNAME(NEW.AppointmentDate)
+				AND (NEW.AppointmentStartTime BETWEEN ss.StartTime AND ss.EndTime)
+				AND (NEW.AppointmentEndTime BETWEEN ss.StartTime AND ss.EndTime)
+				) THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Appointment date time not match with Staff Schedule';
     ELSE
         SELECT JobType INTO staff_jobType FROM Staff WHERE StaffID = NEW.StaffID;
         IF TRIM(LOWER(staff_jobType)) != 'doctor' THEN
@@ -125,12 +134,21 @@ FOR EACH ROW
 BEGIN
     DECLARE staff_jobType VARCHAR(50);
     
+    -- Check foreign key exist 
     IF NOT EXISTS (SELECT * FROM Patients p WHERE p.PatientID = NEW.PatientID) THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Patient ID not found';
-    
     ELSEIF NOT EXISTS (SELECT * FROM Staff s WHERE s.StaffID = NEW.StaffID) THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Staff ID not found';
     
+    -- check appointment date and time match with staff schedule
+    ELSEIF NOT EXISTS(
+				SELECT * FROM Staff_Schedule ss 
+                WHERE ss.StaffID = NEW.StaffID
+                AND ss.DayOfWeek = DAYNAME(NEW.AppointmentDate)
+				AND (NEW.AppointmentStartTime BETWEEN ss.StartTime AND ss.EndTime)
+				AND (NEW.AppointmentEndTime BETWEEN ss.StartTime AND ss.EndTime)
+				) THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Appointment date time not match with Staff Schedule';
     ELSE
         SELECT JobType INTO staff_jobType FROM Staff WHERE StaffID = NEW.StaffID;
         IF TRIM(LOWER(staff_jobType)) != 'doctor' THEN
@@ -151,7 +169,7 @@ CREATE TRIGGER at_del_staff_schedule
 AFTER DELETE ON Staff_Schedule
 FOR EACH ROW
 BEGIN
-	-- change appointment associated with that staff schedule to 'Cancelled' status (appointment status)
+	-- change appointment status associated with that staff schedule to 'Cancelled'
     update Appointments a set a.AppointmentStatus = 'Cancelled' 
     where a.StaffID = OLD.StaffID
     and DAYNAME(a.AppointmentDate) = OLD.DayOfWeek
