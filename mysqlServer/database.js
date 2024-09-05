@@ -428,6 +428,50 @@ async function addTreatmentHistory(
   return resultMessage;
 }
 
+// REPORT
+async function getPatientTreatmentHistoryOnDuration(
+  patientID,
+  startDate,
+  endDate
+) {
+  const [rows] = await connection.query(
+    "CALL sp_get_patient_treatment_history(?,?,?)",
+    [patientID, startDate, endDate]
+  );
+  return rows;
+}
+
+async function getAllPatientsTreatmentOnDuration(startDate, endDate) {
+  const [rows] = await connection.query(
+    "CALL sp_get_all_patients_treatment(?,?)",
+    [startDate, endDate]
+  );
+  return rows;
+}
+
+async function getStaffJobHistory(staffID) {
+  const [rows] = await connection.query("CALL sp_get_staff_job_history(?)", [
+    staffID,
+  ]);
+  return rows;
+}
+
+async function getDoctorWorkInDuration(doctorID, startDate, endDate) {
+  const [rows] = await connection.query(
+    "CALL sp_get_doctor_work_in_duration(?,?,?)",
+    [doctorID, startDate, endDate]
+  );
+  return rows;
+}
+
+async function getAllDoctorsWorkInDuration(startDate, endDate) {
+  const [rows] = await connection.query(
+    "CALL sp_get_all_doctors_work_in_duration(?,?)",
+    [startDate, endDate]
+  );
+  return rows;
+}
+
 module.exports = {
   getStaff,
   addNewStaff,
@@ -460,4 +504,9 @@ module.exports = {
   getTreatmentHistory,
   getAllTreatmentHistory,
   addTreatmentHistory,
+  getPatientTreatmentHistoryOnDuration,
+  getAllPatientsTreatmentOnDuration,
+  getStaffJobHistory,
+  getDoctorWorkInDuration,
+  getAllDoctorsWorkInDuration,
 };

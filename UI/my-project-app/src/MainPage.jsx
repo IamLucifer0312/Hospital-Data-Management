@@ -85,9 +85,9 @@ const MainPage = () => {
           name: "Report",
           icon: <FaChartBar size={24} />,
           subOptions: [
-            "PatientTreatmentReport",
-            "StaffWorkloadReport",
-            "StaffPerformanceReport",
+            "Patient Treatment",
+            "Staff Workload",
+            "Staff Performance",
           ],
         }
       : {},
@@ -128,19 +128,19 @@ const MainPage = () => {
         return <DoctorScheduleViewer />;
       case "Book Appointment":
         return <BookAppointment />;
-      case "PatientTreatmentReport":
+      case "Patient Treatment":
         return (
           <div>
             <p>Table</p>
           </div>
         );
-      case "StaffWorkloadReport":
+      case "Staff Workload":
         return (
           <div>
             <p>Table</p>
           </div>
         );
-      case "StaffPerformanceReport":
+      case "Staff Performance":
         return (
           <div>
             <p>Table</p>

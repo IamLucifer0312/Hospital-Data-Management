@@ -85,20 +85,6 @@ CREATE TABLE Appointments (
     CHECK (AppointmentStartTime < AppointmentEndTime)
 );
 
--- Reports include Patient treatment history, Staff workload, Staff performance, Billing
-
-
--- PatientTreatmentReport
--- CREATE TABLE PatientTreatmentReport (
---     ReportID INT PRIMARY KEY AUTO_INCREMENT,
---     PatientID INT,
---     TreatmentID INT,
---     DoctorID INT,
---     FOREIGN KEY (PatientID) REFERENCES Patients(PatientID),
---     FOREIGN KEY (DoctorID) REFERENCES Staff(StaffID),
---     FOREIGN KEY (TreatmentID) REFERENCES TreatmentHistory(TreatmentID)
--- );
-
 CREATE TABLE PatientTreatmentReport AS
 SELECT 
     t.PatientID, 
@@ -114,15 +100,6 @@ WHERE
 
 ALTER TABLE PatientTreatmentReport ADD COLUMN ReportID INT AUTO_INCREMENT PRIMARY KEY;
 
--- StaffWorkloadReport
--- CREATE TABLE StaffWorkloadReport (
---     ReportID INT PRIMARY KEY AUTO_INCREMENT,
---     StaffID INT,
---     TotalTreatments INT, 
---     TotalWorkloadHours DECIMAL(5, 2), 
---     ReportDate DATE,
---     FOREIGN KEY (StaffID) REFERENCES Staff(StaffID)
--- );
 
 CREATE TABLE StaffWorkloadReport AS
 SELECT 
@@ -139,17 +116,6 @@ GROUP BY
 
 ALTER TABLE StaffWorkloadReport ADD COLUMN ReportID INT AUTO_INCREMENT PRIMARY KEY;
 
--- StaffPerformanceReport
--- CREATE TABLE StaffPerformanceReport (
---     ReportID INT PRIMARY KEY AUTO_INCREMENT,
---     StaffID INT,
---     TotalTreatments INT,
---     AverageSatisfactionScore DECIMAL(3, 2),
---     TreatmentsPerHour DECIMAL(5, 2), 
---     ReportDate DATE,
---     FOREIGN KEY (StaffID) REFERENCES Staff(StaffID)
--- );
-
 CREATE TABLE StaffPerformanceReport AS
 SELECT 
     s.StaffID, 
@@ -165,3 +131,14 @@ GROUP BY
     s.StaffID;
 
 ALTER TABLE StaffPerformanceReport ADD COLUMN ReportID INT AUTO_INCREMENT PRIMARY KEY;
+
+CREATE TABLE JobChangeHistory (
+    ChangeID INT PRIMARY KEY AUTO_INCREMENT,
+    StaffID INT NOT NULL,
+    JobType ENUM('Doctor', 'Nurse', 'Admin', 'Lab Technician', 'Surgeon') NOT NULL,
+    Salary INT,
+    DepartmentID INT NOT NULL,
+    ChangeDate DATE NOT NULL,
+    FOREIGN KEY (StaffID) REFERENCES Staff(StaffID),
+    FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID)
+);

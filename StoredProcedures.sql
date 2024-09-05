@@ -17,6 +17,8 @@ drop procedure if exists sp_delete_patient;
 drop procedure if exists sp_delete_staff_schedule;
 drop procedure if exists sp_delete_appointment;
 drop procedure if exists sp_delete_treatment;
+drop procedure if exists get_doctor_schedule;
+drop procedure if exists sp_cancel_appointment;
 DELIMITER $$
 -- add a new patient
 CREATE PROCEDURE sp_add_new_patient(IN first_name VARCHAR(50), IN last_name VARCHAR(50), IN DateOfBirth DATE,
@@ -378,3 +380,76 @@ BEGIN
 END $$
 
 DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_get_patient_treatment_history(
+    IN p_PatientID INT, 
+    IN p_StartDate DATE, 
+    IN p_EndDate DATE
+)
+BEGIN
+    SELECT t.TreatmentID, t.TreatmentDate, t.TreatmentDescription, t.DoctorID, 
+           d.FirstName AS DoctorFirstName, d.LastName AS DoctorLastName, 
+           t.BillingAmount
+    FROM Treatment t
+    JOIN Doctor d ON t.DoctorID = d.DoctorID
+    WHERE t.PatientID = p_PatientID
+      AND t.TreatmentDate BETWEEN p_StartDate AND p_EndDate;
+END;
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_get_all_patients_treatment(
+    IN p_StartDate DATE, 
+    IN p_EndDate DATE
+)
+BEGIN
+    SELECT t.TreatmentID, t.TreatmentDate, t.TreatmentDescription, t.PatientID,
+           p.FirstName AS PatientFirstName, p.LastName AS PatientLastName, 
+           t.DoctorID, d.FirstName AS DoctorFirstName, d.LastName AS DoctorLastName, 
+           t.BillingAmount
+    FROM Treatment t
+    JOIN Patient p ON t.PatientID = p.PatientID
+    JOIN Doctor d ON t.DoctorID = d.DoctorID
+    WHERE t.TreatmentDate BETWEEN p_StartDate AND p_EndDate;
+END;
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_get_staff_job_history(
+    IN p_StaffID INT
+)
+BEGIN
+    SELECT j.JobChangeID, j.ChangeDate, j.OldJobTitle, j.NewJobTitle
+    FROM JobChangeHistory j
+    WHERE j.StaffID = p_StaffID
+    ORDER BY j.ChangeDate DESC;
+END;
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_get_all_doctors_work_in_duration(
+    IN p_StartDate DATE, 
+    IN p_EndDate DATE
+)
+BEGIN
+    SELECT t.TreatmentID, t.TreatmentDate, t.PatientID, 
+           p.FirstName AS PatientFirstName, p.LastName AS PatientLastName, 
+           t.DoctorID, d.FirstName AS DoctorFirstName, d.LastName AS DoctorLastName, 
+           t.TreatmentDescription, t.BillingAmount
+    FROM Treatment t
+    JOIN Patient p ON t.PatientID = p.PatientID
+    JOIN Doctor d ON t.DoctorID = d.DoctorID
+    WHERE t.TreatmentDate BETWEEN p_StartDate AND p_EndDate;
+END;
+
+DELIMITER ;
+
+

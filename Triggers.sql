@@ -177,4 +177,16 @@ BEGIN
     and (a.AppointmentEndTime BETWEEN OLD.StartTime AND OLD.EndTime);
 END $$
 
+CREATE TRIGGER log_job_change 
+BEFORE UPDATE ON Staff 
+FOR EACH ROW
+BEGIN
+    IF OLD.JobType != NEW.JobType OR OLD.Salary != NEW.Salary OR OLD.DepartmentID != NEW.DepartmentID THEN
+        INSERT INTO JobChangeHistory (StaffID, JobType, Salary, DepartmentID, ChangeDate)
+        VALUES (OLD.StaffID, OLD.JobType, OLD.Salary, OLD.DepartmentID, CURDATE());
+    END IF;
+END$$
 DELIMITER ;
+
+DELIMITER ;
+
