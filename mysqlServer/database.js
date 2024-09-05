@@ -386,6 +386,48 @@ async function cancelAppointment(appointmentId) {
   return rows;
 }
 
+// Treatment History:
+async function getTreatmentHistory(patientId) {
+  const [rows] = await connection.query(
+    "SELECT * FROM treatmenthistory WHERE PatientID = ?",
+    [patientId]
+  );
+  return rows;
+}
+
+async function getAllTreatmentHistory() {
+  const [rows] = await connection.query("SELECT * FROM treatmenthistory");
+  console.log(rows);
+  return rows;
+}
+
+async function addTreatmentHistory(
+  patientId,
+  doctorId,
+  startDate,
+  endDate,
+  treatmentType,
+  billingAmount,
+  status,
+  details
+) {
+  const [rows] = await connection.query(
+    "CALL sp_add_new_treatment(?,?,?,?,?,?,?,?)",
+    [
+      patientId,
+      doctorId,
+      startDate,
+      endDate,
+      treatmentType,
+      billingAmount,
+      status,
+      details,
+    ]
+  );
+  const resultMessage = rows[0][0].resultMessage;
+  return resultMessage;
+}
+
 module.exports = {
   getStaff,
   addNewStaff,
@@ -415,4 +457,7 @@ module.exports = {
   getStaffScheduleGivenTime,
   bookDoctorAppointment,
   cancelAppointment,
+  getTreatmentHistory,
+  getAllTreatmentHistory,
+  addTreatmentHistory,
 };

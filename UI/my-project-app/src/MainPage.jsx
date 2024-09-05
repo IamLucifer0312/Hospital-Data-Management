@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import DoctorScheduleViewer from "./components/DoctorScheduleViewer";
 import BookAppointment from "./components/BookAppointment";
 import AppointmentTable from "./components/AppointmentTable";
+import TreatmentHistoryTable from "./components/TreatmentTable";
 
 const MainPage = () => {
   const [activeSection, setActiveSection] = useState("Staff");
@@ -100,11 +101,7 @@ const MainPage = () => {
           case "Staff":
             return <StaffTable />;
           case "Treatment History":
-            return (
-              <div>
-                <p>Table</p>
-              </div>
-            );
+            return <TreatmentHistoryTable />;
           case "Appointment":
             return <AppointmentTable />;
           default:

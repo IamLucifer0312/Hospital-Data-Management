@@ -32,33 +32,40 @@ const DropdownMenu = ({ onViewSchedule, onUpdateInfo, onDelete }) => {
       {isOpen && (
         <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
           <div className="py-1">
-            <button
-              onClick={() => {
-                onViewSchedule();
-                setIsOpen(false);
-              }}
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-            >
-              View Working Schedule
-            </button>
-            <button
-              onClick={() => {
-                onUpdateInfo();
-                setIsOpen(false);
-              }}
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-            >
-              Update Information
-            </button>
-            <button
-              onClick={() => {
-                onDelete();
-                setIsOpen(false);
-              }}
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-            >
-              Delete Staff
-            </button>
+            {onViewSchedule && (
+              <button
+                onClick={() => {
+                  onViewSchedule();
+                  setIsOpen(false);
+                }}
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+              >
+                View Working Schedule
+              </button>
+            )}
+
+            {onUpdateInfo && (
+              <button
+                onClick={() => {
+                  onUpdateInfo();
+                  setIsOpen(false);
+                }}
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+              >
+                Update Information
+              </button>
+            )}
+            {onDelete && (
+              <button
+                onClick={() => {
+                  onDelete();
+                  setIsOpen(false);
+                }}
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+              >
+                Delete
+              </button>
+            )}
           </div>
         </div>
       )}
