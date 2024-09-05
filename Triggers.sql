@@ -7,8 +7,8 @@ drop trigger if exists update_staff_schedule;
 drop trigger if exists update_staff;
 drop trigger if exists update_patients;
 drop trigger if exists update_appointments;
-drop trigger if exists del_staff;
-drop trigger if exists del_staff_schedule;
+drop trigger if exists at_del_staff;
+drop trigger if exists at_del_staff_schedule;
 
 DELIMITER $$
 CREATE TRIGGER ins_patients
@@ -60,7 +60,7 @@ BEGIN
 	elseif not exists(SELECT * FROM Staff WHERE StaffID = NEW.DoctorID) then
 		signal sqlstate '45000' set message_text = "Staff ID not found"; 
 	elseif trim(lower(staff_jobType)) != 'doctor' then
-		signal sqlstate '45000' set message_text = "Staff is not a doctor"; 
+		signal sqlstate '45000' set message_text = "Assigned staff must be a doctor"; 
     end if;
 END $$
 
@@ -139,7 +139,7 @@ BEGIN
     END IF;
 END $$
 
-CREATE TRIGGER del_staff
+CREATE TRIGGER at_del_staff
 AFTER DELETE ON Staff
 FOR EACH ROW
 BEGIN
@@ -147,7 +147,7 @@ BEGIN
     delete from Staff_Schedule ss where OLD.StaffID = ss.StaffID;
 END $$
 
-CREATE TRIGGER del_staff_schedule
+CREATE TRIGGER at_del_staff_schedule
 AFTER DELETE ON Staff_Schedule
 FOR EACH ROW
 BEGIN
