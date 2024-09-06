@@ -7,9 +7,12 @@ drop trigger if exists update_staff_schedule;
 drop trigger if exists update_staff;
 drop trigger if exists update_patients;
 drop trigger if exists update_appointments;
+drop trigger if exists at_update_staff;
+drop trigger if exists at_update_patients;
+drop trigger if exists at_update_staff_schedule;
 drop trigger if exists at_del_staff;
 drop trigger if exists at_del_staff_schedule;
-drop trigger if exists log_job_change
+drop trigger if exists log_job_change;
 
 DELIMITER $$
 CREATE TRIGGER ins_patients
@@ -158,6 +161,44 @@ BEGIN
     END IF;
 END $$
 
+CREATE TRIGGER at_update_staff
+AFTER UPDATE ON Staff
+FOR EACH ROW
+BEGIN
+	-- update MV PatientTreatmentReport
+	if NEW.FirstName != OLD.FirstName or NEW.LastName != OLD.LastName then
+		update PatientTreatmentReport ptr
+		set DoctorName = concat(NEW.FirstName, ' ', OLD.LastName) 
+        where ptr.DoctorID = NEW.StaffID;
+    end if;
+END $$
+
+CREATE TRIGGER at_update_patients
+AFTER UPDATE ON Patients
+FOR EACH ROW
+BEGIN
+	-- update MV PatientTreatmentReport
+	if NEW.FirstName != OLD.FirstName or NEW.LastName != OLD.LastName then
+		update PatientTreatmentReport ptr 
+        set PatientName= concat(NEW.FirstName, ' ', OLD.LastName) 
+        where ptr.PatientID = NEW.PatientID;
+    end if;
+END $$
+
+CREATE TRIGGER at_update_staff_schedule
+AFTER UPDATE ON Staff_Schedule
+FOR EACH ROW
+BEGIN
+	-- change appointment status associated with that old staff schedule to 'Cancelled'
+    update Appointments a set a.AppointmentStatus = 'Cancelled' 
+    where a.StaffID = OLD.StaffID
+    and DAYNAME(a.AppointmentDate) = OLD.DayOfWeek
+    and (a.AppointmentStartTime BETWEEN OLD.StartTime AND OLD.EndTime)
+    and (a.AppointmentEndTime BETWEEN OLD.StartTime AND OLD.EndTime);
+    
+    -- change
+END $$
+
 CREATE TRIGGER at_del_staff
 AFTER DELETE ON Staff
 FOR EACH ROW
@@ -187,7 +228,5 @@ BEGIN
         VALUES (OLD.StaffID, OLD.JobType, OLD.Salary, OLD.DepartmentID, CURDATE());
     END IF;
 END$$
-DELIMITER ;
 
 DELIMITER ;
-
