@@ -4,14 +4,18 @@ drop table if exists StaffPerformanceReport;
 
 CREATE TABLE PatientTreatmentReport AS
 SELECT 
-    t.PatientID, 
+    concat(p.FirstName, ' ', p.LastName) AS PatientName,
+    concat(s.FirstName, ' ', s.LastName) AS DoctorName,
     t.TreatmentID, 
-    t.DoctorID,
     t.StartDate,
     t.EndDate,
     CURDATE() AS ReportDate
 FROM 
     TreatmentHistory t
+JOIN patients p 
+ON t.PatientID = p.PatientID
+JOIN staff s
+ON t.DoctorID = s.StaffID
 WHERE 
     t.StartDate >= '2024-01-01' AND t.EndDate <= '2024-12-31';
 ALTER TABLE PatientTreatmentReport ADD COLUMN ReportID INT AUTO_INCREMENT PRIMARY KEY;
