@@ -7,6 +7,8 @@ SELECT
     concat(p.FirstName, ' ', p.LastName) AS PatientName,
     concat(s.FirstName, ' ', s.LastName) AS DoctorName,
     t.TreatmentID, 
+    t.StartDate,
+    t.EndDate,
     concat(DATE_FORMAT(t.StartDate, '%b %d, %Y'),' - ', DATE_FORMAT(t.EndDate, '%b %d, %Y')) AS Date,
     DATEDIFF(t.EndDate, t.StartDate) * 2000 AS Billing
 FROM 
@@ -14,9 +16,7 @@ FROM
 JOIN patients p 
 ON t.PatientID = p.PatientID
 JOIN staff s
-ON t.DoctorID = s.StaffID
-WHERE 
-    t.StartDate >= '2024-01-01' AND t.EndDate <= '2024-12-31';
+ON t.DoctorID = s.StaffID;
 ALTER TABLE PatientTreatmentReport ADD COLUMN ReportID INT AUTO_INCREMENT PRIMARY KEY;
 
 CREATE TABLE StaffWorkloadReport AS

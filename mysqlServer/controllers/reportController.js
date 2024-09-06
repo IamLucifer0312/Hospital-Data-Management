@@ -1,10 +1,12 @@
 const {
   getPatientTreatmentHistoryOnDuration,
   getAllPatientsTreatmentOnDuration,
+  getTreatmentReportInDuration,
   getStaffJobHistory,
   getDoctorWorkInDuration,
   getAllDoctorsWorkInDuration,
 } = require("../database");
+const { get } = require("../routes/reportRoutes");
 
 const getPatientTreatmentHistoryOnDurationController = async (req, res) => {
   const { patientID } = req.params;
@@ -30,6 +32,17 @@ const getAllPatientsTreatmentOnDurationController = async (req, res) => {
     res.status(200).json(result);
   } catch (err) {
     console.log(err);
+    res.status(500).send(err.message);
+  }
+};
+
+const getTreatmentReportInDurationController = async (req, res) => {
+  const { startDate, endDate } = req.query;
+
+  try {
+    const result = await getTreatmentReportInDuration(startDate, endDate);
+    res.status(200).json(result);
+  } catch (err) {
     res.status(500).send(err.message);
   }
 };
@@ -74,4 +87,5 @@ module.exports = {
   getJobChangeHistoryController,
   getDoctorWorkController,
   getAllDoctorsWorkController,
+  getTreatmentReportInDurationController,
 };

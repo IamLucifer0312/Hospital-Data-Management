@@ -472,6 +472,14 @@ async function getAllDoctorsWorkInDuration(startDate, endDate) {
   return rows[0];
 }
 
+async function getTreatmentReportInDuration(startDate, endDate) {
+  const [rows] = await connection.query(
+    "SELECT * FROM PatientTreatmentReport WHERE StartDate >= ? AND EndDate <= ?",
+    [startDate, endDate]
+  );
+  return rows;
+}
+
 module.exports = {
   getStaff,
   addNewStaff,
@@ -509,4 +517,5 @@ module.exports = {
   getStaffJobHistory,
   getDoctorWorkInDuration,
   getAllDoctorsWorkInDuration,
+  getTreatmentReportInDuration,
 };
