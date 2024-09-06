@@ -3,7 +3,7 @@ import React, { useState } from "react";
 const UpdatePatientInformationModal = ({ patient, closeModal, onUpdate }) => {
   const [firstName, setFirstName] = useState(patient.FirstName);
   const [lastName, setLastName] = useState(patient.LastName);
-  const [dob, setDob] = useState(patient.Dob);
+  const [dateOfBirth, setDateOfBirth] = useState(patient.DateOfBirth);
   const [gender, setGender] = useState(patient.Gender);
   const [address, setAddress] = useState(patient.Address);
   const [email, setEmail] = useState(patient.Email);
@@ -15,7 +15,7 @@ const UpdatePatientInformationModal = ({ patient, closeModal, onUpdate }) => {
     const updatedPatient = {
       firstName,
       lastName,
-      dob,
+      dateOfBirth,
       gender,
       address,
       email,
@@ -102,8 +102,8 @@ const UpdatePatientInformationModal = ({ patient, closeModal, onUpdate }) => {
             </label>
             <input
               type="date"
-              value={dob}
-              onChange={(e) => setDob(e.target.value)}
+              value={dateOfBirth}
+              onChange={(e) => setDateOfBirth(e.target.value)}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               required
             />

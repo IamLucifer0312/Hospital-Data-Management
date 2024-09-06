@@ -37,14 +37,13 @@ const PatientTable = () => {
   };
 
   const handleUpdateSuccess = (updatedPatient) => {
-    set ==
-      PatientData((prevData) =>
-        prevData.map((patient) =>
-          patient.PatientID === updatedPatient.PatientID
-            ? updatedPatient
-            : patient
-        )
-      );
+    setPatientData((prevData) =>
+      prevData.map((patient) =>
+        patient.PatientID === updatedPatient.PatientID
+          ? updatedPatient
+          : patient
+      )
+    );
     setFilteredPatientData((prevData) =>
       prevData.map((patient) =>
         patient.PatientID === updatedPatient.PatientID
