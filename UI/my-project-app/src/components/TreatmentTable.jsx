@@ -9,18 +9,12 @@ const TreatmentHistoryTable = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedTreatment, setSelectedTreatment] = useState(null);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [sortField, setSortField] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   const user = JSON.parse(localStorage.getItem("user"));
   const isAdmin = user?.role === "admin";
-
-  const handleDeleteTreatment = (treatment) => {
-    setSelectedTreatment(treatment);
-    setShowDeleteModal(true);
-  };
 
   const handleSort = (field) => {
     const isAsc = sortField === field && sortOrder === "asc";
@@ -166,7 +160,6 @@ const TreatmentHistoryTable = () => {
             <th className="py-3 px-6 text-left">Billing Amount</th>
             <th className="py-3 px-6 text-left">Status</th>
             <th className="py-3 px-6 text-left">Details</th>
-            {isAdmin && <th className="py-3 px-6 text-center">Actions</th>}
           </tr>
         </thead>
 
@@ -203,24 +196,10 @@ const TreatmentHistoryTable = () => {
               <td className="py-3 px-6 text-left whitespace-nowrap">
                 {treatment.Details}
               </td>
-              {isAdmin && (
-                <td className="py-3 px-6 text-center whitespace-nowrap">
-                  <DropDownMenu
-                    onDelete={() => handleDeleteTreatment(treatment)}
-                  />
-                </td>
-              )}
             </tr>
           ))}
         </tbody>
       </table>
-
-      {showDeleteModal && selectedTreatment && (
-        <DeleteConfirmationModal
-          onConfirm={handleDeleteConfirm}
-          onCancel={() => setShowDeleteModal(false)}
-        />
-      )}
     </div>
   );
 };
