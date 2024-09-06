@@ -198,8 +198,6 @@ BEGIN
 	END IF;	
 END $$
 
-DELIMITER $$
-
 CREATE PROCEDURE sp_update_appointment(
     IN p_AppointmentID INT, 
     IN p_AppointmentDate DATE, 
@@ -254,8 +252,6 @@ BEGIN
     END IF;
 END $$
 
-DELIMITER ;
-
 -- delete a patient
 CREATE PROCEDURE sp_delete_patient(IN PatientID INT)
 BEGIN
@@ -296,11 +292,7 @@ BEGIN
 	end if;
 END $$
 
-DELIMITER ;
-
 -- Get working schedule in given time
-DELIMITER $$
-
 CREATE PROCEDURE get_doctor_schedule(
     IN startDate DATE,
     IN endDate DATE
@@ -350,10 +342,6 @@ BEGIN
 
 END $$
 
-DELIMITER ;
-
-DELIMITER $$
-
 CREATE PROCEDURE sp_cancel_appointment(
     IN p_AppointmentID INT
 )
@@ -379,10 +367,6 @@ BEGIN
     END IF;
 END $$
 
-DELIMITER ;
-
-DELIMITER $$
-
 CREATE PROCEDURE sp_get_all_patients_treatment(
     IN p_StartDate DATE,
     IN p_EndDate DATE
@@ -398,10 +382,6 @@ BEGIN
     WHERE t.StartDate BETWEEN p_StartDate AND p_EndDate;
 END;
 
-DELIMITER ;
-
-DELIMITER $$
-
 CREATE PROCEDURE sp_get_staff_job_history(
     IN p_StaffID INT
 )
@@ -411,10 +391,6 @@ BEGIN
     WHERE j.StaffID = p_StaffID
     ORDER BY j.ChangeDate DESC;
 END;
-
-DELIMITER ;
-
-DELIMITER $$
 
 CREATE PROCEDURE sp_get_all_doctors_work_in_duration(
     IN p_StartDate DATE,
