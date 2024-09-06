@@ -19,6 +19,10 @@ drop procedure if exists sp_delete_appointment;
 drop procedure if exists sp_delete_treatment;
 drop procedure if exists get_doctor_schedule;
 drop procedure if exists sp_cancel_appointment;
+drop procedure if exists sp_get_all_patients_treatment;
+drop procedure if exists sp_get_staff_job_history;
+drop procedure if exists sp_get_all_doctors_work_in_duration;
+
 DELIMITER $$
 -- add a new patient
 CREATE PROCEDURE sp_add_new_patient(IN first_name VARCHAR(50), IN last_name VARCHAR(50), IN DateOfBirth DATE,

@@ -9,6 +9,7 @@ drop trigger if exists update_patients;
 drop trigger if exists update_appointments;
 drop trigger if exists at_del_staff;
 drop trigger if exists at_del_staff_schedule;
+drop trigger if exists log_job_change
 
 DELIMITER $$
 CREATE TRIGGER ins_patients
