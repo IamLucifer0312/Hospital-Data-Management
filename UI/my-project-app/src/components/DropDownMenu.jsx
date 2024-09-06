@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 
-const DropdownMenu = ({ onViewSchedule, onUpdateInfo, onDelete }) => {
+const DropdownMenu = ({
+  onViewSchedule,
+  onUpdateInfo,
+  onDelete,
+  onAddImage,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -64,6 +69,18 @@ const DropdownMenu = ({ onViewSchedule, onUpdateInfo, onDelete }) => {
                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
               >
                 Delete
+              </button>
+            )}
+
+            {onAddImage && (
+              <button
+                onClick={() => {
+                  onAddImage();
+                  setIsOpen(false);
+                }}
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+              >
+                Add Diagnostic Image
               </button>
             )}
           </div>

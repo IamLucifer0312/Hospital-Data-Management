@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import DropDownMenu from "./DropDownMenu";
 import UpdatePatientInformationModal from "./UpdatePatientInformationModal";
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
+import AddDiagnosticImageModal from "./AddDiagnosticImageModal";
 import { FaSearch } from "react-icons/fa";
 
 const PatientTable = () => {
@@ -13,6 +14,7 @@ const PatientTable = () => {
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showAddImageModal, setShowAddImageModal] = useState(false);
   const [sortField, setSortField] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -34,6 +36,11 @@ const PatientTable = () => {
     const isAsc = sortField === field && sortOrder === "asc";
     setSortField(field);
     setSortOrder(isAsc ? "desc" : "asc");
+  };
+
+  const handleAddImage = (patient) => {
+    setSelectedPatient(patient);
+    setShowAddImageModal(true);
   };
 
   const handleUpdateSuccess = (updatedPatient) => {
@@ -215,6 +222,7 @@ const PatientTable = () => {
                   <DropDownMenu
                     onUpdateInfo={() => handleUpdateInfo(patient)}
                     onDelete={() => handleDeletePatient(patient)}
+                    onAddImage={() => handleAddImage(patient)}
                   />
                 </td>
               )}
@@ -234,6 +242,13 @@ const PatientTable = () => {
         <DeleteConfirmationModal
           onConfirm={handleDeleteConfirm}
           onCancel={() => setShowDeleteModal(false)}
+        />
+      )}
+      {showAddImageModal && selectedPatient && (
+        <AddDiagnosticImageModal
+          patient={selectedPatient}
+          closeModal={() => setShowAddImageModal(false)}
+          onUpdate={handleUpdateSuccess}
         />
       )}
     </div>

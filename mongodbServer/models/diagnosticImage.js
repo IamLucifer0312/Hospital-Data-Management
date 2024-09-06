@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const diagnosticImageSchema = new mongoose.Schema(
   {
     PatientID: Number,
-    AppointmentID: Number,
+    StaffID: Number,
     ImageType: String,
     ImageURL: String,
     Date: Date,

@@ -71,7 +71,7 @@ const DiagnosticImageTable = () => {
               Patient ID
             </th>
             <th className="py-3 px-4 text-left border-b border-gray-300 w-1/12">
-              Appointment ID
+              Staff ID
             </th>
             <th className="py-3 px-6 text-left border-b border-gray-300">
               Image Type
@@ -100,7 +100,7 @@ const DiagnosticImageTable = () => {
                 {image.PatientID}
               </td>
               <td className="py-3 px-4 text-left whitespace-nowrap border-r border-gray-300 w-1/12">
-                {image.AppointmentID}
+                {image.StaffID}
               </td>
               <td className="py-3 px-6 text-left whitespace-nowrap border-r border-gray-300">
                 {image.ImageType}

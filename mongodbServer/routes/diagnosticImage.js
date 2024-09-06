@@ -43,7 +43,7 @@ router.post("/", upload.single("image"), async (req, res) => {
   // Create a new diagnostic image document
   const diagnosticImage = new DiagnosticImage({
     PatientID: req.body.PatientID,
-    AppointmentID: req.body.AppointmentID,
+    StaffID: req.body.StaffID,
     ImageType: req.body.ImageType,
     ImageURL: imageUrl,
     Date: req.body.Date,
@@ -71,8 +71,8 @@ router.patch("/:id", upload.single("image"), async (req, res) => {
     if (req.body.PatientID) {
       diagnosticImage.PatientID = req.body.PatientID;
     }
-    if (req.body.AppointmentID) {
-      diagnosticImage.AppointmentID = req.body.AppointmentID;
+    if (req.body.StaffID) {
+      diagnosticImage.StaffID = req.body.StaffID;
     }
     if (req.body.ImageType) {
       diagnosticImage.ImageType = req.body.ImageType;
