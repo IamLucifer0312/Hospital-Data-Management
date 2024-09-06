@@ -1,6 +1,9 @@
 CREATE DATABASE Hospital;
 use Hospital;
 
+drop table if exists PatientTreatmentReport;
+drop table if exists StaffWorkloadReport;
+drop table if exists StaffPerformanceReport;
 drop table if exists JobChangeHistory;
 drop table if exists TreatmentHistory;
 drop table if exists Appointments;
