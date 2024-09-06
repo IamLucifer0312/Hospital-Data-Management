@@ -56,7 +56,8 @@ const PatientTreatmentReport = () => {
 
     const filteredData = treatmentHistory.filter((treatment) => {
       const patientName = `${treatment.PatientName}`.toLowerCase();
-      return patientName.includes(query);
+      const doctorName = `${treatment.DoctorName}`.toLowerCase();
+      return patientName.includes(query) || doctorName.includes(query);
     });
 
     setFilteredHistory(filteredData);
@@ -94,7 +95,7 @@ const PatientTreatmentReport = () => {
           value={searchQuery}
           onChange={handleSearch}
           className="border p-2 w-full"
-          placeholder="Search by Patient Name"
+          placeholder="Search by Patient or Doctor's Name"
         />
         <FaSearch className="absolute top-3 right-3 text-gray-500" />
       </div>
