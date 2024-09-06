@@ -256,6 +256,18 @@ BEGIN
     END IF;
 END $$
 
+-- delete a staff
+CREATE PROCEDURE sp_delete_staff(IN StaffID INT)
+BEGIN
+	delete from Staff s where s.StaffID = StaffID;
+    -- no rows affected -> error msg
+	if row_count() = 0 then
+        signal sqlstate '45000' set message_text = "Staff ID not found";
+	end if;
+END $$
+
+
+
 -- delete a patient
 CREATE PROCEDURE sp_delete_patient(IN PatientID INT)
 BEGIN
@@ -379,12 +391,12 @@ BEGIN
     SELECT t.TreatmentID, t.StartDate, t.EndDate, t.Details, t.PatientID,
            p.FirstName AS PatientFirstName, p.LastName AS PatientLastName,
            t.DoctorID, d.FirstName AS DoctorFirstName, d.LastName AS DoctorLastName,
-           t.BillingAmount, t.Status,
+           t.BillingAmount, t.Status
     FROM TreatmentHistory t
     JOIN Patients p ON t.PatientID = p.PatientID
     JOIN Staff d ON t.DoctorID = d.StaffID
     WHERE t.StartDate BETWEEN p_StartDate AND p_EndDate;
-END;
+END $$
 
 CREATE PROCEDURE sp_get_staff_job_history(
     IN p_StaffID INT
@@ -394,7 +406,7 @@ BEGIN
     FROM JobChangeHistory j
     WHERE j.StaffID = p_StaffID
     ORDER BY j.ChangeDate DESC;
-END;
+END $$
 
 CREATE PROCEDURE sp_get_all_doctors_work_in_duration(
     IN p_StartDate DATE,
@@ -409,7 +421,7 @@ BEGIN
     JOIN Patients p ON t.PatientID = p.PatientID
     JOIN Staff d ON t.DoctorID = d.StaffID
     WHERE t.StartDate BETWEEN p_StartDate AND p_EndDate;
-END;
+END $$
 
 DELIMITER ;
 

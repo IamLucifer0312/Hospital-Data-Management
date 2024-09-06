@@ -105,6 +105,7 @@ const deleteStaffController = async (req, res) => {
     await deleteStaff(req.params.staffId);
     res.status(204).send();
   } catch (err) {
+    console.log(err);
     res.status(500).send(err);
   }
 };
