@@ -375,7 +375,7 @@ BEGIN
     SELECT t.TreatmentID, t.StartDate, t.EndDate, t.Details, t.PatientID,
            p.FirstName AS PatientFirstName, p.LastName AS PatientLastName,
            t.DoctorID, d.FirstName AS DoctorFirstName, d.LastName AS DoctorLastName,
-           t.BillingAmount, t.Status
+           t.BillingAmount, t.Status,
     FROM TreatmentHistory t
     JOIN Patients p ON t.PatientID = p.PatientID
     JOIN Staff d ON t.DoctorID = d.StaffID
