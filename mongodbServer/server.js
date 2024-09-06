@@ -28,6 +28,9 @@ app.use("/diagnosticImage", DiagnosticImageRouter);
 const UserRouter = require("./routes/users");
 app.use("/users", UserRouter);
 
+const LabResultsRouter = require("./routes/labResults");
+app.use("/labResults", LabResultsRouter);
+
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
 });

@@ -23,6 +23,7 @@ import TreatmentHistoryTable from "./components/TreatmentTable";
 import AddNewTreatment from "./components/AddTreatment";
 import PatientTreatmentReport from "./components/PatientTreatmentReport";
 import DoctorsWorkReport from "./components/DoctorsWorkReport";
+import LabResultsTable from "./components/LabTestResults";
 
 const MainPage = () => {
   const [activeSection, setActiveSection] = useState("Staff");
@@ -66,6 +67,7 @@ const MainPage = () => {
         "All infomation",
         "Diagnostic Images",
         ...(user?.role === "admin" ? ["Add new Patient"] : []),
+        "Lab Test Results",
       ],
     },
     {
@@ -112,6 +114,8 @@ const MainPage = () => {
         }
       case "Diagnostic Images":
         return <DiagnosticImageTable />;
+      case "Lab Test Results":
+        return <LabResultsTable />;
       case "Department":
         return <DepartmentTable />;
       case "Add new Staff":
