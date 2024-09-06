@@ -30,7 +30,7 @@ const PatientTreatmentReport = () => {
 
       try {
         const response = await fetch(
-          `http://localhost:4000/reports/all-patient-treatments?startDate=${startDate}&endDate=${endDate}`
+          `http://localhost:4000/reports/treatment-report/?startDate=${startDate}&endDate=${endDate}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch treatments.");
@@ -55,8 +55,7 @@ const PatientTreatmentReport = () => {
     setSearchQuery(query);
 
     const filteredData = treatmentHistory.filter((treatment) => {
-      const patientName =
-        `${treatment.PatientFirstName} ${treatment.PatientLastName}`.toLowerCase();
+      const patientName = `${treatment.PatientName}`.toLowerCase();
       return patientName.includes(query);
     });
 
@@ -117,14 +116,10 @@ const PatientTreatmentReport = () => {
             {filteredHistory.map((treatment) => (
               <tr key={treatment.TreatmentID}>
                 <td className="border p-2">{treatment.TreatmentID}</td>
-                <td className="border p-2">
-                  {treatment.PatientFirstName} {treatment.PatientLastName}
-                </td>
-                <td className="border p-2">
-                  {treatment.DoctorFirstName} {treatment.DoctorLastName}
-                </td>
+                <td className="border p-2">{treatment.PatientName}</td>
+                <td className="border p-2">{treatment.DoctorName}</td>
                 <td className="border p-2">{treatment.Details}</td>
-                <td className="border p-2">{treatment.BillingAmount}</td>
+                <td className="border p-2">{treatment.Billing}</td>
                 <td className="border p-2">{treatment.Status}</td>
                 <td className="border p-2">
                   {formatDate(treatment.StartDate)} -{" "}

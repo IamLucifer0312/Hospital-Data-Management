@@ -4,12 +4,15 @@ drop table if exists StaffPerformanceReport;
 
 CREATE TABLE PatientTreatmentReport AS
 SELECT 
+	t.PatientID,
+    t.DoctorID,
     concat(p.FirstName, ' ', p.LastName) AS PatientName,
     concat(s.FirstName, ' ', s.LastName) AS DoctorName,
     t.TreatmentID, 
     t.StartDate,
     t.EndDate,
-    concat(DATE_FORMAT(t.StartDate, '%b %d, %Y'),' - ', DATE_FORMAT(t.EndDate, '%b %d, %Y')) AS Date,
+    t.Details,
+    t.Status,
     DATEDIFF(t.EndDate, t.StartDate) * 2000 AS Billing
 FROM 
     TreatmentHistory t
