@@ -1,5 +1,5 @@
 drop table if exists PatientTreatmentReport;
-drop table if exists StaffWorkloadReport;
+drop table if exists StaffWorkloadGivenDurationReport;
 drop table if exists StaffPerformanceReport;
 
 CREATE TABLE PatientTreatmentReport AS
