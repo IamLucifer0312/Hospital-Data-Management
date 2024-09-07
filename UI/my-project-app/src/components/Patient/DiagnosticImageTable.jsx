@@ -64,14 +64,11 @@ const DiagnosticImageTable = () => {
       <table className="min-w-full bg-white border border-gray-300">
         <thead>
           <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-            <th className="py-3 px-4 text-left border-b border-gray-300 w-2/12">
-              ID
+            <th className="py-3 px-4 text-left border-b border-gray-300 w-1/12">
+              Patient Name
             </th>
             <th className="py-3 px-4 text-left border-b border-gray-300 w-1/12">
-              Patient ID
-            </th>
-            <th className="py-3 px-4 text-left border-b border-gray-300 w-1/12">
-              Staff ID
+              Staff In Charge
             </th>
             <th className="py-3 px-6 text-left border-b border-gray-300">
               Image Type
@@ -93,11 +90,8 @@ const DiagnosticImageTable = () => {
               key={image._id}
               className="border-b border-gray-300 hover:bg-gray-100"
             >
-              <td className="py-3 px-6 text-left whitespace-nowrap border-r border-gray-300">
-                {image._id}
-              </td>
               <td className="py-3 px-4 text-left whitespace-nowrap border-r border-gray-300 w-1/12">
-                {image.PatientID}
+                {image.PatientName}
               </td>
               <td className="py-3 px-4 text-left whitespace-nowrap border-r border-gray-300 w-1/12">
                 {image.StaffID}

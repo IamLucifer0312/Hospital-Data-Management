@@ -18,6 +18,7 @@ const AddDiagnosticImageModal = ({ patient, closeModal }) => {
 
     // Add diagnostic image data
     formData.append("PatientID", patient.PatientID);
+    formData.append("PatientName", `${patient.FirstName} ${patient.LastName}`);
     formData.append("StaffID", staffID);
     formData.append("ImageType", imageType);
     formData.append("Date", imageDate);

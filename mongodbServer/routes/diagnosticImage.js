@@ -43,6 +43,7 @@ router.post("/", upload.single("image"), async (req, res) => {
   // Create a new diagnostic image document
   const diagnosticImage = new DiagnosticImage({
     PatientID: req.body.PatientID,
+    PatientName: req.body.PatientName,
     StaffID: req.body.StaffID,
     ImageType: req.body.ImageType,
     ImageURL: imageUrl,
