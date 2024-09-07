@@ -34,6 +34,9 @@ app.use("/labResults", LabResultsRouter);
 const StaffCertificateRouter = require("./routes/staffCertificate");
 app.use("/staffCertificates", StaffCertificateRouter);
 
+const TrainingMaterialsRouter = require("./routes/trainingMaterials");
+app.use("/trainingMaterials", TrainingMaterialsRouter);
+
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
 });

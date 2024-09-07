@@ -26,6 +26,7 @@ import DoctorsWorkReport from "./components/Report/DoctorsWorkReport";
 import DoctorPerformanceReport from "./components/Report/DoctorPerformanceReport";
 import LabResultsTable from "./components/Patient/LabTestResults";
 import JobChangeHistoryReport from "./components/Report/JobChangeHistoryReport";
+import TrainingMaterials from "./components/Staff/TrainingMaterials";
 
 const MainPage = () => {
   const [activeSection, setActiveSection] = useState("Staff");
@@ -60,6 +61,7 @@ const MainPage = () => {
         "All infomation",
         "Department",
         ...(user?.role === "admin" ? ["Add new Staff"] : []),
+        "Training Materials",
       ],
     },
     {
@@ -121,6 +123,8 @@ const MainPage = () => {
         }
       case "Diagnostic Images":
         return <DiagnosticImageTable />;
+      case "Training Materials":
+        return <TrainingMaterials />;
       case "Lab Test Results":
         return <LabResultsTable />;
       case "Department":
