@@ -68,7 +68,9 @@ const MainPage = () => {
       subOptions: [
         "All infomation",
         "Diagnostic Images",
-        ...(user?.role === "admin" ? ["Add new Patient"] : []),
+        ...(user?.role === "admin" || user?.role === "receptionist"
+          ? ["Add new Patient"]
+          : []),
         "Lab Test Results",
       ],
     },
@@ -83,7 +85,9 @@ const MainPage = () => {
       subOptions: [
         "All infomation",
         "View Doctor Schedule",
-        "Book Appointment",
+        ...(user?.role === "admin" || user?.role === "receptionist"
+          ? ["Book Appointment"]
+          : []),
       ],
     },
     user?.role === "admin"
