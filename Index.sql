@@ -19,11 +19,11 @@ CREATE INDEX idx_appointment_staff ON Appointments(StaffID);
 CREATE INDEX idx_appointment_date ON Appointments(AppointmentDate);
 
 -- Report
-CREATE INDEX idx_treatment_date ON PatientTreatmentReport(StartDate, EndDate);
-CREATE INDEX idx_patient_treatment_date ON PatientTreatmentReport(PatientID, StartDate, EndDate);
+-- CREATE INDEX idx_treatment_date ON PatientTreatmentReport(StartDate, EndDate);
+-- CREATE INDEX idx_patient_treatment_date ON PatientTreatmentReport(PatientID, StartDate, EndDate);
 
-CREATE INDEX idx_performance_staff_date ON StaffPerformanceReport(StaffID, ReportDate);
-CREATE INDEX idx_performance_date ON StaffPerformanceReport(ReportDate);
+-- CREATE INDEX idx_performance_staff_date ON StaffPerformanceReport(StaffID, ReportDate);
+-- CREATE INDEX idx_performance_date ON StaffPerformanceReport(ReportDate);
 
-CREATE INDEX idx_workload_staff_date ON StaffWorkloadReport(StaffID, ReportDate);
-CREATE INDEX idx_workload_date ON StaffWorkloadReport(ReportDate);
+-- CREATE INDEX idx_workload_staff_date ON StaffWorkloadReport(StaffID, ReportDate);
+-- CREATE INDEX idx_workload_date ON StaffWorkloadReport(ReportDate);

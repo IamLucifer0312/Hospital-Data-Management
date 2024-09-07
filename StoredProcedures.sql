@@ -39,7 +39,7 @@ CREATE PROCEDURE sp_add_new_staff(IN first_name VARCHAR(50), IN last_name VARCHA
 	IN Salary INT, IN Qualification VARCHAR(100), IN DepartmentID INT, IN ManagerID INT)
 BEGIN
 	-- insert staff info
-	insert into Staff (FirstName, LastName, JobType, Salary, Qualification, DepartmentID, ManagerID)
+	insert into Staff (FirstName, LastName, JobType, StaffSalary, Qualification, DepartmentID, ManagerID)
 	values (first_name, last_name, JobType, Salary, Qualification, DepartmentID, ManagerID);
 	select * from staff where StaffID = LAST_INSERT_ID();
 END $$
@@ -138,7 +138,7 @@ CREATE PROCEDURE sp_update_staff(IN StaffID INT, IN first_name VARCHAR(50), IN l
 BEGIN
 	update Staff s
 	set s.FirstName=first_name, s.LastName=last_name, 
-	s.JobType=JobType, s.Salary=Salary, 
+	s.JobType=JobType, s.StaffSalary=Salary, 
 	s.Qualification=Qualification, s.DepartmentID=DepartmentID, s.ManagerID=ManagerID
 	where s.StaffID = StaffID;
     
@@ -396,16 +396,6 @@ BEGIN
     JOIN Patients p ON t.PatientID = p.PatientID
     JOIN Staff d ON t.DoctorID = d.StaffID
     WHERE t.StartDate BETWEEN p_StartDate AND p_EndDate;
-END $$
-
-CREATE PROCEDURE sp_get_staff_job_history(
-    IN p_StaffID INT
-)
-BEGIN
-    SELECT j.ChangeID, j.ChangeDate, j.OldJobType , j.NewJobType, j.Salary, j.DepartmentID
-    FROM JobChangeHistory j
-    WHERE j.StaffID = p_StaffID
-    ORDER BY j.ChangeDate DESC;
 END $$
 
 CREATE PROCEDURE sp_get_all_doctors_work_in_duration(
