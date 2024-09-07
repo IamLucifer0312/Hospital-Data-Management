@@ -1,7 +1,6 @@
 -- Stored Procedures
--- only check the validity of IDs (primary keys and foreign keys), and the unique characteristic of fields
--- (basically any validity check requires the data from the database)
--- other types of validity check should be done in the backend API
+-- only check the validity of ID (primary key)
+-- other types of validity check should be done in triggers
 
 drop procedure if exists sp_add_new_patient;
 drop procedure if exists sp_add_new_staff;
