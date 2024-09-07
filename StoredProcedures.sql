@@ -71,7 +71,7 @@ CREATE PROCEDURE sp_add_new_treatment(IN PatientID INT, IN DoctorID INT, IN Star
     IN TreatmentType VARCHAR(100), IN BillingAmount INT, IN SatisfactionScore DECIMAL(3, 2), IN Status VARCHAR(50), IN Details TEXT)
 BEGIN
 	insert into TreatmentHistory (PatientID,DoctorID,StartDate,EndDate,TreatmentType,BillingAmount,SatisfactionScore,Status,Details)
-	values (PatientID,DoctorID,StartDate,EndDate,TreatmentType,BillingAmount,SatisfactionScoreStatus,Details);
+	values (PatientID,DoctorID,StartDate,EndDate,TreatmentType,BillingAmount,SatisfactionScore,Status,Details);
 	select * from TreatmentHistory where TreatmentID = LAST_INSERT_ID();
 END $$
 
