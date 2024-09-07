@@ -189,9 +189,10 @@ CREATE TRIGGER at_update_staff_schedule
 AFTER UPDATE ON Staff_Schedule
 FOR EACH ROW
 BEGIN
-	-- change appointment status associated with that old staff schedule to 'Cancelled'
+	-- change appointment status associated with that old staff schedule from 'Scheduled' to 'Cancelled'
     update Appointments a set a.AppointmentStatus = 'Cancelled' 
     where a.StaffID = OLD.StaffID
+    and trim(lower(a.AppointmentStatus)) = 'scheduled'
     and DAYNAME(a.AppointmentDate) = OLD.DayOfWeek
     and (a.AppointmentStartTime BETWEEN OLD.StartTime AND OLD.EndTime)
     and (a.AppointmentEndTime BETWEEN OLD.StartTime AND OLD.EndTime);
@@ -211,9 +212,10 @@ CREATE TRIGGER at_del_staff_schedule
 AFTER DELETE ON Staff_Schedule
 FOR EACH ROW
 BEGIN
-	-- change appointment status associated with that staff schedule to 'Cancelled'
+	-- change appointment status associated with that staff schedule from 'Scheduled' to 'Cancelled'
     update Appointments a set a.AppointmentStatus = 'Cancelled' 
     where a.StaffID = OLD.StaffID
+    and trim(lower(a.AppointmentStatus)) = 'scheduled'
     and DAYNAME(a.AppointmentDate) = OLD.DayOfWeek
     and (a.AppointmentStartTime BETWEEN OLD.StartTime AND OLD.EndTime)
     and (a.AppointmentEndTime BETWEEN OLD.StartTime AND OLD.EndTime);

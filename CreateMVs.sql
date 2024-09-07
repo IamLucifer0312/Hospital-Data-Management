@@ -21,8 +21,6 @@ JOIN staff s ON t.DoctorID = s.StaffID;
 ALTER TABLE PatientTreatmentReport ADD COLUMN ReportID INT AUTO_INCREMENT PRIMARY KEY;
 
 -- Create the StaffWorkloadGivenDurationReport table
-
--- Create the StaffWorkloadGivenDurationReport table
 CREATE TABLE StaffWorkloadGivenDurationReport AS
 WITH RECURSIVE DateRange AS (
   SELECT '2024-01-01' AS DayDate  -- Replace with dynamic startDate
