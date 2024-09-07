@@ -6,7 +6,7 @@ VALUES
     ('Oncology'),
     ('Orthopedics');
 
-INSERT INTO Staff (FirstName, LastName, JobType, Salary, Qualification, DepartmentID, ManagerID)
+INSERT INTO Staff (FirstName, LastName, JobType, StaffSalary, Qualification, DepartmentID, ManagerID)
 VALUES
     ('Nguyen', 'Van Anh', 'Doctor', 120000, 'MD Cardiology', 1, NULL),
     ('Tran', 'Thi Bao', 'Nurse', 60000, 'BSN', 1, 1),

@@ -36,7 +36,7 @@ BEGIN
 	-- Check if ManagerID exists in the Staff table
 	elseif (not exists(SELECT * FROM Staff s WHERE s.StaffID = NEW.ManagerID) and NEW.ManagerID is not null) then
 		signal sqlstate '45000' set message_text = "Manager ID not found";
-	elseif getStaffSal(NEW.ManagerID) <= NEW.salary then
+	elseif getStaffSal(NEW.ManagerID) <= NEW.StaffSalary then
 		signal sqlstate '45000' set message_text = "Staff salary should be less than Manager salary";
     end if;
 END $$
@@ -118,7 +118,7 @@ BEGIN
 	-- Check if ManagerID exists in the Staff table
 	elseif (not exists(SELECT * FROM Staff s WHERE s.StaffID = NEW.ManagerID) and NEW.ManagerID is not null) then
 		signal sqlstate '45000' set message_text = "Manager ID not found";
-	elseif getStaffSal(NEW.ManagerID) <= NEW.salary then
+	elseif getStaffSal(NEW.ManagerID) <= NEW.StaffSalary then
 		signal sqlstate '45000' set message_text = "Staff salary should be less than Manager salary";
     end if;
 END $$
@@ -245,10 +245,39 @@ CREATE TRIGGER log_job_change
 BEFORE UPDATE ON Staff 
 FOR EACH ROW
 BEGIN
-    IF OLD.JobType != NEW.JobType OR OLD.Salary != NEW.Salary OR OLD.DepartmentID != NEW.DepartmentID THEN
-        INSERT INTO JobChangeHistory (StaffID, JobType, Salary, DepartmentID, ChangeDate)
-        VALUES (OLD.StaffID, OLD.JobType, OLD.Salary, OLD.DepartmentID, CURDATE());
+    IF OLD.JobType != NEW.JobType 
+        OR OLD.StaffSalary != NEW.StaffSalary 
+        OR OLD.DepartmentID != NEW.DepartmentID THEN
+        
+        INSERT INTO JobChangeHistory (
+            StaffID, 
+            OldJobType, 
+            NewJobType, 
+            OldSalary, 
+            NewSalary, 
+            OldDepartmentID, 
+            NewDepartmentID, 
+            ChangeDate,
+            Reason
+        ) 
+        VALUES (
+            OLD.StaffID, 
+            OLD.JobType, 
+            NEW.JobType, 
+            OLD.StaffSalary, 
+            NEW.StaffSalary, 
+            OLD.DepartmentID, 
+            NEW.DepartmentID, 
+            CURDATE(),
+            CASE 
+                WHEN OLD.JobType != NEW.JobType THEN 'Job Type Change'
+                WHEN OLD.StaffSalary != NEW.StaffSalary THEN 'Salary Change'
+                WHEN OLD.DepartmentID != NEW.DepartmentID THEN 'Department Change'
+                ELSE 'Other'
+            END
+        );
     END IF;
 END$$
 
 DELIMITER ;
+

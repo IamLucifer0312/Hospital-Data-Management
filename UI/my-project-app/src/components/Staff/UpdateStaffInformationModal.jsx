@@ -1,17 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const UpdateStaffInformationModal = ({ staff, closeModal, onUpdate }) => {
   const [firstName, setFirstName] = useState(staff.FirstName);
   const [lastName, setLastName] = useState(staff.LastName);
   const [jobType, setJobType] = useState(staff.JobType);
-  const [salary, setSalary] = useState(staff.Salary);
+  const [salary, setSalary] = useState(staff.StaffSalary);
   const [qualification, setQualification] = useState(staff.Qualification);
   const [departmentID, setDepartmentID] = useState(staff.DepartmentID);
   const [managerID, setManagerID] = useState(staff.ManagerID || null);
   const [successMessage, setSuccessMessage] = useState("");
 
+  const [departments, setDepartments] = useState([]);
+  const [managers, setManagers] = useState([]);
+
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const response = await fetch("http://localhost:4000/staffs/department");
+        if (!response.ok) {
+          throw new Error("Failed to fetch departments");
+        }
+        const data = await response.json();
+        setDepartments(data);
+      } catch (error) {
+        console.error("Error fetching departments:", error);
+      }
+    };
+
+    const fetchManagers = async () => {
+      try {
+        const response = await fetch("http://localhost:4000/staffs");
+        if (!response.ok) {
+          throw new Error("Failed to fetch managers");
+        }
+        const data = await response.json();
+        setManagers(data);
+      } catch (error) {
+        console.error("Error fetching managers:", error);
+      }
+    };
+
+    fetchDepartments();
+    fetchManagers();
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const updatedManagerID = managerID === "" ? null : managerID;
 
     const updatedStaff = {
       firstName,
@@ -20,7 +55,7 @@ const UpdateStaffInformationModal = ({ staff, closeModal, onUpdate }) => {
       salary,
       qualification,
       departmentID,
-      managerID,
+      managerID: updatedManagerID,
     };
 
     try {
@@ -36,7 +71,8 @@ const UpdateStaffInformationModal = ({ staff, closeModal, onUpdate }) => {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to update staff information");
+        const errorData = await response.json();
+        throw new Error(errorData.message);
       }
 
       const result = await response.json();
@@ -44,7 +80,7 @@ const UpdateStaffInformationModal = ({ staff, closeModal, onUpdate }) => {
       setSuccessMessage("Update successfully!");
     } catch (err) {
       console.error(err);
-      setSuccessMessage("Failed to update information.");
+      setSuccessMessage(err.message);
     }
   };
 
@@ -141,24 +177,37 @@ const UpdateStaffInformationModal = ({ staff, closeModal, onUpdate }) => {
             <label className="block text-gray-700 text-sm font-bold mb-2">
               Department
             </label>
-            <input
-              type="text"
+            <select
               value={departmentID}
               onChange={(e) => setDepartmentID(e.target.value)}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              required
-            />
+            >
+              {departments.map((department) => (
+                <option
+                  key={department.DepartmentID}
+                  value={department.DepartmentID}
+                >
+                  {department.DepartmentName}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">
-              Manager ID
+              Manager
             </label>
-            <input
-              type="text"
+            <select
               value={managerID}
               onChange={(e) => setManagerID(e.target.value)}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
+            >
+              <option value="">None</option>
+              {managers.map((manager) => (
+                <option key={manager.StaffID} value={manager.StaffID}>
+                  {manager.FirstName} {manager.LastName} (ID: {manager.StaffID})
+                </option>
+              ))}
+            </select>
           </div>
           <div className="flex items-center justify-center">
             <button
@@ -170,7 +219,7 @@ const UpdateStaffInformationModal = ({ staff, closeModal, onUpdate }) => {
           </div>
         </form>
         {successMessage && (
-          <p className="mt-4 uppercase font-bold  text-center text-green-600">
+          <p className="mt-4 uppercase font-bold text-center text-green-600">
             {successMessage}
           </p>
         )}
