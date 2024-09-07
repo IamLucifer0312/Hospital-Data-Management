@@ -72,8 +72,13 @@ const TreatmentHistoryTable = () => {
 
     const filteredData = treatmentData.filter((treatment) => {
       const treatmentType = treatment.TreatmentType.toLowerCase();
-      const patientID = treatment.PatientID.toString().toLowerCase();
-      return treatmentType.includes(query) || patientID.includes(query);
+      const patientName = treatment.PatientName.toLowerCase();
+      const doctorName = treatment.DoctorName.toLowerCase();
+      return (
+        treatmentType.includes(query) ||
+        patientName.includes(query) ||
+        doctorName.includes(query)
+      );
     });
 
     setFilteredTreatmentData(filteredData);
@@ -86,9 +91,30 @@ const TreatmentHistoryTable = () => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        const data = await response.json();
-        setTreatmentData(data);
-        setFilteredTreatmentData(data);
+        const treatments = await response.json();
+
+        const patientPromises = treatments.map((treatment) =>
+          fetch(`http://localhost:4000/patients/${treatment.PatientID}`).then(
+            (res) => res.json()
+          )
+        );
+        const doctorPromises = treatments.map((treatment) =>
+          fetch(`http://localhost:4000/staffs/${treatment.DoctorID}`).then(
+            (res) => res.json()
+          )
+        );
+
+        const patients = await Promise.all(patientPromises);
+        const doctors = await Promise.all(doctorPromises);
+
+        const updatedTreatments = treatments.map((treatment, index) => ({
+          ...treatment,
+          PatientName: `${patients[index].FirstName} ${patients[index].LastName}`,
+          DoctorName: `${doctors[index].FirstName} ${doctors[index].LastName}`,
+        }));
+
+        setTreatmentData(updatedTreatments);
+        setFilteredTreatmentData(updatedTreatments);
         setLoading(false);
       } catch (error) {
         console.log(error);
@@ -134,7 +160,7 @@ const TreatmentHistoryTable = () => {
           value={searchQuery}
           onChange={handleSearch}
           className="bg-white border border-gray-300 rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
-          placeholder="Search by Treatment Type or Patient ID"
+          placeholder="Search by Treatment Type, Patient Name, or Doctor Name"
         />
         <FaSearch className="absolute left-3 top-2/4 transform -translate-y-2/4 text-gray-500" />
       </div>
@@ -142,8 +168,8 @@ const TreatmentHistoryTable = () => {
         <thead>
           <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
             <th className="py-3 px-6 text-left">Treatment ID</th>
-            <th className="py-3 px-6 text-left">Patient ID</th>
-            <th className="py-3 px-6 text-left">Doctor ID</th>
+            <th className="py-3 px-6 text-left">Patient Name</th>
+            <th className="py-3 px-6 text-left">Doctor Name</th>
             <th
               className="py-3 px-6 text-left cursor-pointer text-teal-600"
               onClick={() => handleSort("StartDate")}
@@ -173,10 +199,10 @@ const TreatmentHistoryTable = () => {
                 {treatment.TreatmentID}
               </td>
               <td className="py-3 px-6 text-left whitespace-nowrap">
-                {treatment.PatientID}
+                {treatment.PatientName}
               </td>
               <td className="py-3 px-6 text-left whitespace-nowrap">
-                {treatment.DoctorID}
+                {treatment.DoctorName}
               </td>
               <td className="py-3 px-6 text-left whitespace-nowrap">
                 {new Date(treatment.StartDate).toLocaleDateString()}
