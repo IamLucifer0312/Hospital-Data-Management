@@ -7,6 +7,7 @@ drop trigger if exists update_staff_schedule;
 drop trigger if exists update_staff;
 drop trigger if exists update_patients;
 drop trigger if exists update_appointments;
+drop trigger if exists at_ins_treatment;
 drop trigger if exists at_update_staff;
 drop trigger if exists at_update_patients;
 drop trigger if exists at_update_staff_schedule;
@@ -161,15 +162,34 @@ BEGIN
     END IF;
 END $$
 
+CREATE TRIGGER at_ins_treatment
+AFTER INSERT ON TreatmentHistory
+FOR EACH ROW
+BEGIN
+	-- insert new PatientTreatmentReport
+    insert into PatientTreatmentReport values(NEW.PatientID,NEW.DoctorID,NEW.)
+END $$
+
 CREATE TRIGGER at_update_staff
 AFTER UPDATE ON Staff
 FOR EACH ROW
 BEGIN
-	-- update MV PatientTreatmentReport
+
 	if NEW.FirstName != OLD.FirstName or NEW.LastName != OLD.LastName then
+    	-- update MV PatientTreatmentReport
 		update PatientTreatmentReport ptr
-		set DoctorName = concat(NEW.FirstName, ' ', OLD.LastName) 
+		set DoctorName = concat(NEW.FirstName, ' ', NEW.LastName) 
         where ptr.DoctorID = NEW.StaffID;
+        
+		-- update MV StaffWorkloadGivenDurationReport
+		update StaffWorkloadGivenDurationReport sw
+		set StaffName = concat(NEW.FirstName, ' ', NEW.LastName) 
+        where sw.StaffID = NEW.StaffID;
+        
+		-- update MV StaffPerformanceReport
+		update StaffPerformanceReport sp
+		set DoctorName = concat(NEW.FirstName, ' ', NEW.LastName) 
+        where sp.StaffID = NEW.StaffID;
     end if;
 END $$
 
@@ -180,7 +200,7 @@ BEGIN
 	-- update MV PatientTreatmentReport
 	if NEW.FirstName != OLD.FirstName or NEW.LastName != OLD.LastName then
 		update PatientTreatmentReport ptr 
-        set PatientName= concat(NEW.FirstName, ' ', OLD.LastName) 
+        set PatientName= concat(NEW.FirstName, ' ', NEW.LastName) 
         where ptr.PatientID = NEW.PatientID;
     end if;
 END $$
