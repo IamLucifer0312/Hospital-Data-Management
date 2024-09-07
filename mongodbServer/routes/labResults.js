@@ -41,6 +41,7 @@ router.post("/", async (req, res) => {
   // Create a new lab result document
   const labResult = new LabResults({
     PatientID: req.body.PatientID,
+    PatientName: req.body.PatientName,
     StaffInCharge: req.body.StaffID,
     TestType: req.body.TestType,
     Result: req.body.Result,

@@ -47,6 +47,7 @@ const AddLabResultModal = ({ patient, closeModal }) => {
 
     const labTestData = {
       PatientID: patient.PatientID,
+      PatientName: `${patient.FirstName} ${patient.LastName}`,
       StaffID: staffID,
       TestType: testType,
       TestDate: testDate,

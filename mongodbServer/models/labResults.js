@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const labResultsSchema = new mongoose.Schema(
   {
     PatientID: Number,
+    PatientName: String,
     Result: Number,
     StaffInCharge: Number,
     TestDate: Date,

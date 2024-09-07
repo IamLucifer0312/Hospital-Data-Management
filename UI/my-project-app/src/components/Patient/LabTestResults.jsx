@@ -64,7 +64,7 @@ const LabResultsTable = () => {
         <thead>
           <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
             <th className="py-3 px-4 text-left border-b border-gray-300">
-              Patient
+              Patient Name
             </th>
             <th className="py-3 px-4 text-left border-b border-gray-300">
               Staff In Charge
@@ -93,7 +93,7 @@ const LabResultsTable = () => {
               className="border-b border-gray-300 hover:bg-gray-100"
             >
               <td className="py-3 px-4 text-left whitespace-nowrap border-r border-gray-300">
-                {result.PatientID}
+                {result.PatientName}
               </td>
               <td className="py-3 px-4 text-left whitespace-nowrap border-r border-gray-300">
                 {result.StaffInCharge}
