@@ -6,6 +6,7 @@ const DropdownMenu = ({
   onDelete,
   onAddImage,
   onAddResult,
+  onViewCertificates,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -94,6 +95,18 @@ const DropdownMenu = ({
                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
               >
                 Add Lab Result
+              </button>
+            )}
+
+            {onViewCertificates && (
+              <button
+                onClick={() => {
+                  onViewCertificates();
+                  setIsOpen(false);
+                }}
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+              >
+                View Certificate
               </button>
             )}
           </div>

@@ -3,6 +3,7 @@ import DropDownMenu from "../common/DropDownMenu";
 import StaffScheduleModal from "./StaffScheduleModal";
 import UpdateStaffInformationModal from "./UpdateStaffInformationModal";
 import DeleteConfirmationModal from "../common/DeleteConfirmationModal";
+import StaffCertificateModal from "./StaffCertificateModal";
 import { FaSearch } from "react-icons/fa";
 
 const StaffTable = () => {
@@ -15,6 +16,7 @@ const StaffTable = () => {
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showCertificatesModal, setShowCertificatesModal] = useState(false);
   const [sortField, setSortField] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -30,6 +32,11 @@ const StaffTable = () => {
   const handleUpdateInfo = (staff) => {
     setSelectedStaff(staff);
     setShowUpdateModal(true);
+  };
+
+  const handleViewCertificates = (staff) => {
+    setSelectedStaff(staff);
+    setShowCertificatesModal(true);
   };
 
   const handleDeleteStaff = (staff) => {
@@ -223,6 +230,7 @@ const StaffTable = () => {
                     onViewSchedule={() => handleViewSchedule(staff.StaffID)}
                     onUpdateInfo={() => handleUpdateInfo(staff)}
                     onDelete={() => handleDeleteStaff(staff)}
+                    onViewCertificates={() => handleViewCertificates(staff)}
                   />
                 </td>
               )}
@@ -248,6 +256,13 @@ const StaffTable = () => {
         <DeleteConfirmationModal
           onConfirm={handleDeleteConfirm}
           onCancel={() => setShowDeleteModal(false)}
+        />
+      )}
+
+      {showCertificatesModal && selectedStaff && (
+        <StaffCertificateModal
+          staff={selectedStaff}
+          closeModal={() => setShowCertificatesModal(false)}
         />
       )}
     </div>
