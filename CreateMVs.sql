@@ -23,22 +23,28 @@ ON t.DoctorID = s.StaffID;
 ALTER TABLE PatientTreatmentReport ADD COLUMN ReportID INT AUTO_INCREMENT PRIMARY KEY;
 
 CREATE TABLE StaffWorkloadReport AS
-SELECT 
-    s.StaffID, 
-    COUNT(t.TreatmentID) AS TotalTreatments, 
-    SUM(TIMESTAMPDIFF(HOUR, t.StartDate, t.EndDate)) AS TotalWorkloadHours, 
-    CURDATE() AS ReportDate
-FROM 
+SELECT
+    s.StaffID,
+    CONCAT(s.FirstName, ' ', s.LastName) AS StaffName,
+    COUNT(t.TreatmentID) AS TotalTreatments,
+    SUM(TIMESTAMPDIFF(HOUR, t.StartDate, t.EndDate)) AS TotalTreatmentHours,
+    SUM(TIMESTAMPDIFF(HOUR, ss.StartTime, ss.EndTime)) AS TotalScheduledWorkHours,
+    t.StartDate AS TreatmentStartDate,
+    t.EndDate AS TreatmentEndDate
+FROM
     Staff s
-JOIN 
+JOIN
     TreatmentHistory t ON s.StaffID = t.DoctorID
-GROUP BY 
+JOIN
+    Staff_Schedule ss ON s.StaffID = ss.StaffID
+GROUP BY
     s.StaffID;
 ALTER TABLE StaffWorkloadReport ADD COLUMN ReportID INT AUTO_INCREMENT PRIMARY KEY;
 
 CREATE TABLE StaffPerformanceReport AS
 SELECT 
     s.StaffID, 
+    concat(s.FirstName, ' ', s.LastName) AS DoctorName,
     COUNT(t.TreatmentID) AS TotalTreatments, 
     AVG(t.SatisfactionScore) AS AverageSatisfactionScore, 
     COUNT(t.TreatmentID) / SUM(TIMESTAMPDIFF(HOUR, t.StartDate, t.EndDate)) AS TreatmentsPerHour, 

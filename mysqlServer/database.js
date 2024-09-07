@@ -480,6 +480,14 @@ async function getTreatmentReportInDuration(startDate, endDate) {
   return rows;
 }
 
+async function getAllDoctorsWorkInGivenDuration(startDate, endDate) {
+  const [rows] = await connection.query(
+    "CALL sp_generate_staff_workload_report(?, ?)",
+    [startDate, endDate]
+  );
+  return rows[0];
+}
+
 module.exports = {
   getStaff,
   addNewStaff,
@@ -518,4 +526,5 @@ module.exports = {
   getDoctorWorkInDuration,
   getAllDoctorsWorkInDuration,
   getTreatmentReportInDuration,
+  getAllDoctorsWorkInGivenDuration,
 };

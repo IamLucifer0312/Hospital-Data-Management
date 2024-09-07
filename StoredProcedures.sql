@@ -423,5 +423,52 @@ BEGIN
     WHERE t.StartDate BETWEEN p_StartDate AND p_EndDate;
 END $$
 
+CREATE PROCEDURE sp_generate_staff_workload_report(
+    IN startDate DATE,
+    IN endDate DATE
+)
+BEGIN
+    -- Using Recursive CTE for date range calculation
+    WITH RECURSIVE DateRange AS (
+        SELECT startDate AS DayDate
+        UNION ALL
+        SELECT DayDate + INTERVAL 1 DAY
+        FROM DateRange
+        WHERE DayDate + INTERVAL 1 DAY <= endDate
+    )
+    SELECT
+        s.StaffID,
+        CONCAT(s.FirstName, ' ', s.LastName) AS StaffName,
+
+        SUM(TIMESTAMPDIFF(HOUR, ss.StartTime, ss.EndTime)) AS TotalScheduledWorkHours,
+
+        (SELECT COUNT(t.TreatmentID)
+         FROM TreatmentHistory t
+         WHERE t.DoctorID = s.StaffID
+           AND t.StartDate BETWEEN startDate AND endDate) AS TotalTreatments
+    FROM
+        Staff s
+    JOIN
+        Staff_Schedule ss ON s.StaffID = ss.StaffID
+    JOIN (
+        SELECT
+            DayDate,
+            CASE
+                WHEN DAYOFWEEK(DayDate) = 2 THEN 'Monday'
+                WHEN DAYOFWEEK(DayDate) = 3 THEN 'Tuesday'
+                WHEN DAYOFWEEK(DayDate) = 4 THEN 'Wednesday'
+                WHEN DAYOFWEEK(DayDate) = 5 THEN 'Thursday'
+                WHEN DAYOFWEEK(DayDate) = 6 THEN 'Friday'
+                WHEN DAYOFWEEK(DayDate) = 7 THEN 'Saturday'
+                WHEN DAYOFWEEK(DayDate) = 1 THEN 'Sunday'
+            END AS DayOfWeek
+        FROM
+            DateRange
+    ) AS dr ON ss.DayOfWeek = dr.DayOfWeek
+    WHERE dr.DayDate BETWEEN startDate AND endDate
+    GROUP BY s.StaffID;
+
+END$$
+
 DELIMITER ;
 
