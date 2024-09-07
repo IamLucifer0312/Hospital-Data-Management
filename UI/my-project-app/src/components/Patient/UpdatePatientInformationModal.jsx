@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const UpdatePatientInformationModal = ({ patient, closeModal, onUpdate }) => {
   const [firstName, setFirstName] = useState(patient.FirstName);
@@ -8,6 +8,14 @@ const UpdatePatientInformationModal = ({ patient, closeModal, onUpdate }) => {
   const [address, setAddress] = useState(patient.Address);
   const [email, setEmail] = useState(patient.Email);
   const [successMessage, setSuccessMessage] = useState("");
+
+  useEffect(() => {
+    if (patient.DateOfBirth) {
+      const dbDate = new Date(patient.DateOfBirth);
+      const formattedDate = dbDate.toISOString().split("T")[0];
+      setDateOfBirth(formattedDate);
+    }
+  }, [patient.DateOfBirth]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

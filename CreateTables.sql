@@ -56,7 +56,7 @@ CREATE TABLE Staff_Schedule (
 );
 
 CREATE TABLE TreatmentHistory (
-    TreatmentID INT AUTO_INCREMENT PRIMARY KEY,
+    TreatmentID INT PRIMARY KEY AUTO_INCREMENT,
     PatientID INT NOT NULL,
     DoctorID INT NOT NULL,
     StartDate DATE,

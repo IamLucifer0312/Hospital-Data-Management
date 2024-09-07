@@ -1,17 +1,60 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Select from "react-select";
 
 const AddNewTreatment = () => {
-  const [patientID, setPatientID] = useState("");
-  const [doctorID, setDoctorID] = useState("");
+  const [patientID, setPatientID] = useState(null);
+  const [doctorID, setDoctorID] = useState(null);
+  const [patients, setPatients] = useState([]);
+  const [doctors, setDoctors] = useState([]);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [treatmentType, setTreatmentType] = useState("");
   const [billingAmount, setBillingAmount] = useState("");
+  const [satisfactionScore, setSatisfactionScore] = useState(""); // New state for SatisfactionScore
   const [status, setStatus] = useState("");
   const [details, setDetails] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+
+  // Fetch patients and doctors when the component mounts
+  useEffect(() => {
+    const fetchPatientsAndDoctors = async () => {
+      try {
+        const [patientsResponse, doctorsResponse] = await Promise.all([
+          fetch("http://localhost:4000/patients"),
+          fetch("http://localhost:4000/staffs"),
+        ]);
+
+        if (!patientsResponse.ok || !doctorsResponse.ok) {
+          throw new Error("Failed to fetch data");
+        }
+
+        const patientsData = await patientsResponse.json();
+        const doctorsData = await doctorsResponse.json();
+
+        const filteredDoctors = doctorsData.filter(
+          (doctor) => doctor.JobType === "Doctor"
+        );
+        setPatients(
+          patientsData.map((patient) => ({
+            value: patient.PatientID,
+            label: `${patient.FirstName} ${patient.LastName} - ID: ${patient.PatientID} - Phone number: ${patient.PhoneNum}`,
+          }))
+        );
+        setDoctors(
+          filteredDoctors.map((doctor) => ({
+            value: doctor.StaffID,
+            label: `${doctor.FirstName} ${doctor.LastName} - ID: ${doctor.StaffID} - Qualification: ${doctor.Qualification}`,
+          }))
+        );
+      } catch (err) {
+        setError("Failed to fetch patients or doctors");
+      }
+    };
+
+    fetchPatientsAndDoctors();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,18 +63,18 @@ const AddNewTreatment = () => {
     setSuccess(null);
 
     const newTreatment = {
-      patientID,
-      doctorID,
+      patientID: patientID?.value, // Use selected value from react-select
+      doctorID: doctorID?.value,
       startDate,
       endDate,
       treatmentType,
       billingAmount,
+      satisfactionScore: parseFloat(satisfactionScore), // Include satisfaction score in the request
       status,
       details,
     };
 
     try {
-      console.log(newTreatment);
       const response = await fetch("http://localhost:4000/treatments", {
         method: "POST",
         headers: {
@@ -39,23 +82,22 @@ const AddNewTreatment = () => {
         },
         body: JSON.stringify(newTreatment),
       });
-      console.log(response);
 
       if (!response.ok) {
         throw new Error("Failed to add new treatment");
       }
 
       setSuccess("Treatment added successfully!");
-      setPatientID("");
-      setDoctorID("");
+      setPatientID(null);
+      setDoctorID(null);
       setStartDate("");
       setEndDate("");
       setTreatmentType("");
       setBillingAmount("");
+      setSatisfactionScore(""); // Reset satisfaction score
       setStatus("");
       setDetails("");
     } catch (err) {
-      console.log(err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -72,28 +114,28 @@ const AddNewTreatment = () => {
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">
-            Patient ID
+            Patient
           </label>
-          <input
-            type="text"
+          <Select
             value={patientID}
-            onChange={(e) => setPatientID(e.target.value)}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            placeholder="Enter patient ID"
+            onChange={(selectedOption) => setPatientID(selectedOption)}
+            options={patients}
+            placeholder="Select a patient"
+            isClearable
             required
           />
         </div>
 
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">
-            Doctor ID
+            Doctor
           </label>
-          <input
-            type="text"
+          <Select
             value={doctorID}
-            onChange={(e) => setDoctorID(e.target.value)}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            placeholder="Enter doctor ID"
+            onChange={(selectedOption) => setDoctorID(selectedOption)}
+            options={doctors}
+            placeholder="Select a doctor"
+            isClearable
             required
           />
         </div>
@@ -147,6 +189,23 @@ const AddNewTreatment = () => {
             onChange={(e) => setBillingAmount(e.target.value)}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             placeholder="Enter billing amount"
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            Satisfaction Score (0.00 - 5.00)
+          </label>
+          <input
+            type="number"
+            value={satisfactionScore}
+            onChange={(e) => setSatisfactionScore(e.target.value)}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="Enter satisfaction score"
+            min="0.00"
+            max="5.00"
+            step="0.01"
             required
           />
         </div>

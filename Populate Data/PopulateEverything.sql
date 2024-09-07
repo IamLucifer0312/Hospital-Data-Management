@@ -96,7 +96,6 @@ VALUES
     ('Ngo', 'Thien Thanh', 'Nurse', 58400, 'BSN', 5, 28);
 
 -- Treatment History
--- Treatment History
 INSERT INTO TreatmentHistory (PatientID, DoctorID, StartDate, EndDate, TreatmentType, BillingAmount, SatisfactionScore, Status, Details)
 VALUES
 (1, 1, '2024-01-10', '2024-01-20', 'Cardiac Surgery', 50000, 4.8, 'Completed', 'Performed bypass surgery successfully.'),

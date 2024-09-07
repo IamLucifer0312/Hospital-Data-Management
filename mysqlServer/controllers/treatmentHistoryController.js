@@ -9,6 +9,7 @@ const getTreatmentHistoryController = async (req, res) => {
     const result = await getTreatmentHistory(req.params.treatmentHistoryId);
     res.send(result);
   } catch (err) {
+    console.log(err);
     res.status(500).send(err);
   }
 };
@@ -31,6 +32,7 @@ const addTreatmentHistoryController = async (req, res) => {
       endDate,
       treatmentType,
       billingAmount,
+      satisfactionScore,
       status,
       details,
     } = req.body;
@@ -41,11 +43,13 @@ const addTreatmentHistoryController = async (req, res) => {
       endDate,
       treatmentType,
       billingAmount,
+      satisfactionScore,
       status,
       details
     );
     res.status(201).send(result);
   } catch (err) {
+    console.log(err);
     res.status(500).send(err);
   }
 };
