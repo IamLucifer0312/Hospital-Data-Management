@@ -35,7 +35,7 @@ BEGIN
 	declare fullName VARCHAR(101);
     
     select concat(p.FirstName, ' ', p.LastName) into fullName
-    from Patients s where s.PatientID = PatientID;
+    from Patients p where p.PatientID = PatientID;
 	
     return fullName;
 END $$
