@@ -9,6 +9,7 @@ const {
   getAllDoctorsWorkController,
   getTreatmentReportInDurationController,
   getAllDoctorsWorkInGivenDurationController,
+  getAllDoctorPerformanceController,
 } = require("../controllers/reportController");
 
 router.get(
@@ -28,5 +29,6 @@ router.get(
   "/all-doctors-work-given-duration",
   getAllDoctorsWorkInGivenDurationController
 );
+router.get("/doctor-performances", getAllDoctorPerformanceController);
 
 module.exports = router;

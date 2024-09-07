@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import DropDownMenu from "./DropDownMenu";
+import DropDownMenu from "../common/DropDownMenu";
 import StaffScheduleModal from "./StaffScheduleModal";
 import UpdateStaffInformationModal from "./UpdateStaffInformationModal";
-import DeleteConfirmationModal from "./DeleteConfirmationModal";
+import DeleteConfirmationModal from "../common/DeleteConfirmationModal";
 import { FaSearch } from "react-icons/fa";
 
 const StaffTable = () => {

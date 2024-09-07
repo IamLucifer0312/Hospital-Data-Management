@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import DropDownMenu from "./DropDownMenu";
+import DropDownMenu from "../common/DropDownMenu";
 import UpdatePatientInformationModal from "./UpdatePatientInformationModal";
-import DeleteConfirmationModal from "./DeleteConfirmationModal";
+import DeleteConfirmationModal from "../common/DeleteConfirmationModal";
 import AddDiagnosticImageModal from "./AddDiagnosticImageModal";
 import { FaSearch } from "react-icons/fa";
 

@@ -8,22 +8,23 @@ import {
   FaChevronRight,
   FaUserCircle,
 } from "react-icons/fa";
-import StaffTable from "./components/StaffTable";
-import PatientTable from "./components/PatientTable";
+import StaffTable from "./components/Staff/StaffTable";
+import PatientTable from "./components/Patient/PatientTable";
 import logo from "./assets/hospital-logo.svg";
-import DiagnosticImageTable from "./components/DiagnosticImageTable";
-import DepartmentTable from "./components/DepartmentTable";
-import AddNewStaffPage from "./components/AddNewStaffPage";
-import AddNewPatientPage from "./components/AddNewPatientPage";
+import DiagnosticImageTable from "./components/Patient/DiagnosticImageTable";
+import DepartmentTable from "./components/Staff/DepartmentTable";
+import AddNewStaffPage from "./components/Staff/AddNewStaffPage";
+import AddNewPatientPage from "./components/Patient/AddNewPatientPage";
 import { useNavigate } from "react-router-dom";
-import DoctorScheduleViewer from "./components/DoctorScheduleViewer";
-import BookAppointment from "./components/BookAppointment";
-import AppointmentTable from "./components/AppointmentTable";
-import TreatmentHistoryTable from "./components/TreatmentTable";
-import AddNewTreatment from "./components/AddTreatment";
-import PatientTreatmentReport from "./components/PatientTreatmentReport";
-import DoctorsWorkReport from "./components/DoctorsWorkReport";
-import LabResultsTable from "./components/LabTestResults";
+import DoctorScheduleViewer from "./components/Staff/DoctorScheduleViewer";
+import BookAppointment from "./components/Appointment/BookAppointment";
+import AppointmentTable from "./components/Appointment/AppointmentTable";
+import TreatmentHistoryTable from "./components/Treatment/TreatmentTable";
+import AddNewTreatment from "./components/Treatment/AddTreatment";
+import PatientTreatmentReport from "./components/Report/PatientTreatmentReport";
+import DoctorsWorkReport from "./components/Report/DoctorsWorkReport";
+import DoctorPerformanceReport from "./components/Report/DoctorPerformanceReport";
+import LabResultsTable from "./components/Patient/LabTestResults";
 
 const MainPage = () => {
   const [activeSection, setActiveSection] = useState("Staff");
@@ -91,7 +92,7 @@ const MainPage = () => {
           subOptions: [
             "Patient Treatment",
             "Staff Workload",
-            "Staff Performance",
+            "Doctor Performance",
           ],
         }
       : {},
@@ -132,12 +133,8 @@ const MainPage = () => {
         return <PatientTreatmentReport />;
       case "Staff Workload":
         return <DoctorsWorkReport />;
-      case "Staff Performance":
-        return (
-          <div>
-            <p>Table</p>
-          </div>
-        );
+      case "Doctor Performance":
+        return <DoctorPerformanceReport />;
       default:
         return null;
     }

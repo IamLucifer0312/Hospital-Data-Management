@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import AddNoteModal from "./AddNoteModal";
+import AddNoteModal from "./Appointment/AddNoteModal";
 
 const NotesTable = () => {
   const [notes, setNotes] = useState([]);

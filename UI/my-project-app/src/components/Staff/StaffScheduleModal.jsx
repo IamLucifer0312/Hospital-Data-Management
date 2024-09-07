@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import UpdateStaffScheduleModal from "./UpdateStaffScheduleModal";
-import DeleteConfirmationModal from "./DeleteConfirmationModal";
+import DeleteConfirmationModal from "../common/DeleteConfirmationModal";
 
 const StaffScheduleModal = ({ staffID, closeModal }) => {
   const [schedules, setSchedules] = useState([]);

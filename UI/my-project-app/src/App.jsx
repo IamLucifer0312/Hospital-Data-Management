@@ -2,8 +2,8 @@ import "./App.css";
 import LoginPage from "./LoginPage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MainPage from "./MainPage";
-import PrivateRoute from "./components/PrivateRoute";
-import UnauthorizedPage from "./components/UnAuthorizedPage";
+import PrivateRoute from "./components/common/PrivateRoute";
+import UnauthorizedPage from "./components/common/UnauthorizedPage";
 function App() {
   return (
     <Router>

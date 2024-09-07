@@ -488,6 +488,13 @@ async function getAllDoctorsWorkInGivenDuration(startDate, endDate) {
   return rows[0];
 }
 
+async function getAllDoctorPerformance() {
+  const [rows] = await connection.query(
+    "SELECT StaffID, DoctorName, JobType, Qualification, TotalTreatments, AverageSatisfactionScore, ReportID FROM StaffPerformanceReport"
+  );
+  return rows;
+}
+
 module.exports = {
   getStaff,
   addNewStaff,
@@ -527,4 +534,5 @@ module.exports = {
   getAllDoctorsWorkInDuration,
   getTreatmentReportInDuration,
   getAllDoctorsWorkInGivenDuration,
+  getAllDoctorPerformance,
 };

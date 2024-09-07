@@ -1,35 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
 
-const DoctorWorkReport = () => {
-  const [workReport, setWorkReport] = useState([]);
-  const [filteredWorkReport, setFilteredWorkReport] = useState([]);
+const DoctorPerformanceReport = () => {
+  const [performanceReport, setPerformanceReport] = useState([]);
+  const [filteredReport, setFilteredReport] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortField, setSortField] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
 
   useEffect(() => {
-    const fetchWorkReport = async () => {
-      if (!startDate || !endDate) return;
-
+    const fetchPerformanceReport = async () => {
       setLoading(true);
       setError(null);
 
       try {
         const response = await fetch(
-          `http://localhost:4000/reports/all-doctors-work-given-duration?startDate=${startDate}&endDate=${endDate}`
+          "http://localhost:4000/reports/doctor-performances"
         );
         if (!response.ok) {
-          throw new Error("Failed to fetch work report.");
+          throw new Error("Failed to fetch doctor performance report.");
         }
 
         const data = await response.json();
-        setWorkReport(data);
-        setFilteredWorkReport(data);
+        setPerformanceReport(data);
+        setFilteredReport(data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -37,21 +33,21 @@ const DoctorWorkReport = () => {
       }
     };
 
-    fetchWorkReport();
-  }, [startDate, endDate]);
+    fetchPerformanceReport();
+  }, []);
 
   const handleSearch = (e) => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
 
-    const filteredData = workReport.filter((work) => {
-      const staffName = `${work.StaffName}`.toLowerCase();
+    const filteredData = performanceReport.filter((doctor) => {
+      const doctorName = `${doctor.DoctorName}`.toLowerCase();
       return (
-        staffName.includes(query) || work.StaffID.toString().includes(query)
+        doctorName.includes(query) || doctor.StaffID.toString().includes(query)
       );
     });
 
-    setFilteredWorkReport(filteredData);
+    setFilteredReport(filteredData);
   };
 
   const handleSort = (field) => {
@@ -60,7 +56,7 @@ const DoctorWorkReport = () => {
     setSortOrder(isAsc ? "desc" : "asc");
   };
 
-  const sortedWorkReport = [...filteredWorkReport].sort((a, b) => {
+  const sortedReport = [...filteredReport].sort((a, b) => {
     if (!sortField) return 0;
     if (sortOrder === "asc") {
       return a[sortField] - b[sortField];
@@ -94,39 +90,19 @@ const DoctorWorkReport = () => {
           value={searchQuery}
           onChange={handleSearch}
           className="bg-white border border-gray-300 rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
-          placeholder="Search by Staff ID or Staff Name"
+          placeholder="Search by Doctor Name or Staff ID"
         />
         <FaSearch className="absolute left-3 top-2/4 transform -translate-y-2/4 text-gray-500" />
       </div>
 
-      {/* Date Filters */}
-      <div className="flex space-x-10 mb-4">
-        <div>
-          <label className="block mb-4 text-2xl">Start Date</label>
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            className="border p-2"
-          />
-        </div>
-        <div>
-          <label className="block mb-4 text-2xl">End Date</label>
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            className="border p-2"
-          />
-        </div>
-      </div>
-
-      {sortedWorkReport.length > 0 && !loading ? (
+      {sortedReport.length > 0 && !loading ? (
         <table className="min-w-full bg-white border border-gray-300">
           <thead>
-            <tr className="bg-gray-200 text-gray-600 uppercase text-lg leading-normal">
-              <th className="py-3 px-6 text-left w-2/12">Staff ID</th>
-              <th className="py-3 px-6 text-left w-4/12">Staff Name</th>
+            <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+              <th className="py-3 px-6 text-left">Staff ID</th>
+              <th className="py-3 px-6 text-left">Doctor Name</th>
+              <th className="py-3 px-6 text-left">Job Type</th>
+              <th className="py-3 px-6 text-left">Qualification</th>
               <th
                 className="py-3 px-6 text-left cursor-pointer text-teal-600"
                 onClick={() => handleSort("TotalTreatments")}
@@ -140,10 +116,10 @@ const DoctorWorkReport = () => {
               </th>
               <th
                 className="py-3 px-6 text-left cursor-pointer text-teal-600"
-                onClick={() => handleSort("TotalScheduledWorkHours")}
+                onClick={() => handleSort("AverageSatisfactionScore")}
               >
-                Total Scheduled Work Hours{" "}
-                {sortField === "TotalScheduledWorkHours"
+                Average Satisfaction Score{" "}
+                {sortField === "AverageSatisfactionScore"
                   ? sortOrder === "asc"
                     ? "▲"
                     : "▼"
@@ -153,32 +129,38 @@ const DoctorWorkReport = () => {
           </thead>
 
           <tbody className="text-gray-600 text-sm font-light">
-            {sortedWorkReport.map((work) => (
+            {sortedReport.map((doctor) => (
               <tr
-                key={work.StaffID}
-                className="border-b border-gray-200 hover:bg-gray-100 text-md"
+                key={doctor.StaffID}
+                className="border-b border-gray-200 hover:bg-gray-100"
               >
                 <td className="py-3 px-6 text-left whitespace-nowrap">
-                  {work.StaffID}
+                  {doctor.StaffID}
                 </td>
                 <td className="py-3 px-6 text-left whitespace-nowrap">
-                  {work.StaffName}
+                  {doctor.DoctorName}
                 </td>
                 <td className="py-3 px-6 text-left whitespace-nowrap">
-                  {work.TotalTreatments}
+                  {doctor.JobType}
                 </td>
                 <td className="py-3 px-6 text-left whitespace-nowrap">
-                  {work.TotalScheduledWorkHours}
+                  {doctor.Qualification}
+                </td>
+                <td className="py-3 px-6 text-left whitespace-nowrap">
+                  {doctor.TotalTreatments}
+                </td>
+                <td className="py-3 px-6 text-left whitespace-nowrap">
+                  {doctor.AverageSatisfactionScore}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       ) : (
-        !loading && <p>No data available for the selected duration.</p>
+        !loading && <p>No data available.</p>
       )}
     </div>
   );
 };
 
-export default DoctorWorkReport;
+export default DoctorPerformanceReport;

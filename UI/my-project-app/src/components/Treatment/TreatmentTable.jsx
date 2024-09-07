@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import DropDownMenu from "./DropDownMenu";
-import DeleteConfirmationModal from "./DeleteConfirmationModal";
+import DropDownMenu from "../common/DropDownMenu";
+import DeleteConfirmationModal from "../common/DeleteConfirmationModal";
 import { FaSearch } from "react-icons/fa";
 
 const TreatmentHistoryTable = () => {
