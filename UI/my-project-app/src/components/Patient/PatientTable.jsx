@@ -3,6 +3,7 @@ import DropDownMenu from "../common/DropDownMenu";
 import UpdatePatientInformationModal from "./UpdatePatientInformationModal";
 import DeleteConfirmationModal from "../common/DeleteConfirmationModal";
 import AddDiagnosticImageModal from "./AddDiagnosticImageModal";
+import AddLabResultsModal from "./AddLabResultsModal";
 import { FaSearch } from "react-icons/fa";
 
 const PatientTable = () => {
@@ -15,6 +16,7 @@ const PatientTable = () => {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showAddImageModal, setShowAddImageModal] = useState(false);
+  const [showAddResultModal, setShowAddResultModal] = useState(false);
   const [sortField, setSortField] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -41,6 +43,11 @@ const PatientTable = () => {
   const handleAddImage = (patient) => {
     setSelectedPatient(patient);
     setShowAddImageModal(true);
+  };
+
+  const handleAddResult = (patient) => {
+    setSelectedPatient(patient);
+    setShowAddResultModal(true);
   };
 
   const handleUpdateSuccess = (updatedPatient) => {
@@ -223,6 +230,7 @@ const PatientTable = () => {
                     onUpdateInfo={() => handleUpdateInfo(patient)}
                     onDelete={() => handleDeletePatient(patient)}
                     onAddImage={() => handleAddImage(patient)}
+                    onAddResult={() => handleAddResult(patient)}
                   />
                 </td>
               )}
@@ -248,6 +256,13 @@ const PatientTable = () => {
         <AddDiagnosticImageModal
           patient={selectedPatient}
           closeModal={() => setShowAddImageModal(false)}
+          onUpdate={handleUpdateSuccess}
+        />
+      )}
+      {showAddResultModal && selectedPatient && (
+        <AddLabResultsModal
+          patient={selectedPatient}
+          closeModal={() => setShowAddResultModal(false)}
           onUpdate={handleUpdateSuccess}
         />
       )}
