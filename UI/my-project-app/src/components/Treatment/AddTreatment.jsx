@@ -223,7 +223,7 @@ const AddNewTreatment = () => {
             <option value="" disabled>
               Select Status
             </option>
-            <option value="InProgress">In Progress</option>
+            <option value="In Progress">In Progress</option>
             <option value="Completed">Completed</option>
             <option value="Cancelled">Cancelled</option>
           </select>

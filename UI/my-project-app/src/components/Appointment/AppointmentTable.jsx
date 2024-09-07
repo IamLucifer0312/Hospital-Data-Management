@@ -21,6 +21,10 @@ const AppointmentTable = () => {
   const [sortOrder, setSortOrder] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const user = JSON.parse(localStorage.getItem("user"));
+  const isReceptionist =
+    user?.role === "receptionist" || user?.role === "admin";
+
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
@@ -185,7 +189,9 @@ const AppointmentTable = () => {
             <th className="py-3 px-4 text-left w-3/12">Purpose</th>
             <th className="py-3 px-4 text-left w-2/12">Patient</th>
             <th className="py-3 px-4 text-left w-2/12">Doctor</th>
-            <th className="py-3 px-4 text-center w-1/12">Actions</th>
+            {isReceptionist && (
+              <th className="py-3 px-4 text-center w-1/12">Actions</th>
+            )}
           </tr>
         </thead>
         <tbody className="text-gray-600 text-sm font-light">
@@ -226,16 +232,18 @@ const AppointmentTable = () => {
                   {appointment.DoctorQualification}
                 </span>
               </td>
-              <td className="py-3 px-3 text-center whitespace-nowrap">
-                <AppointmentDropDownMenu
-                  onCancel={() => handleCancelAppointment(appointment)}
-                  onViewNotes={() => handleViewNotes(appointment)}
-                  onAddNote={() => handleAddNote(appointment)}
-                  onUpdateAppointment={() =>
-                    handleUpdateAppointment(appointment)
-                  } // Add this line
-                />
-              </td>
+              {isReceptionist && (
+                <td className="py-3 px-3 text-center whitespace-nowrap">
+                  <AppointmentDropDownMenu
+                    onCancel={() => handleCancelAppointment(appointment)}
+                    onViewNotes={() => handleViewNotes(appointment)}
+                    onAddNote={() => handleAddNote(appointment)}
+                    onUpdateAppointment={() =>
+                      handleUpdateAppointment(appointment)
+                    }
+                  />
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

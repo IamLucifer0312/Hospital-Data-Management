@@ -184,11 +184,10 @@ const StaffTable = () => {
                 : "▲▼"}
             </th>
             <th className="py-3 px-6 text-left">Job Type</th>
-            <th className="py-3 px-6 text-left">Salary</th>
+            {isAdmin && <th className="py-3 px-6 text-left">Salary</th>}
             <th className="py-3 px-6 text-left">Qualification</th>
             <th className="py-3 px-6 text-left">Department ID</th>
             <th className="py-3 px-6 text-left">Manager ID</th>
-            {/* Conditionally render the Actions column */}
             {isAdmin && <th className="py-3 px-6 text-center">Actions</th>}
           </tr>
         </thead>
@@ -211,9 +210,11 @@ const StaffTable = () => {
               <td className="py-3 px-6 text-left whitespace-nowrap">
                 {staff.JobType}
               </td>
-              <td className="py-3 px-6 text-left whitespace-nowrap">
-                ${staff.StaffSalary.toLocaleString()}
-              </td>
+              {isAdmin && (
+                <td className="py-3 px-6 text-left whitespace-nowrap">
+                  ${staff.StaffSalary.toLocaleString()}
+                </td>
+              )}
               <td className="py-3 px-6 text-left whitespace-nowrap">
                 {staff.Qualification}
               </td>
@@ -223,7 +224,6 @@ const StaffTable = () => {
               <td className="py-3 px-6 text-left whitespace-nowrap">
                 {staff.ManagerID || "N/A"}
               </td>
-              {/* Conditionally render the DropDownMenu */}
               {isAdmin && (
                 <td className="py-3 px-6 text-center whitespace-nowrap">
                   <DropDownMenu
