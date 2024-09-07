@@ -166,8 +166,29 @@ CREATE TRIGGER at_ins_treatment
 AFTER INSERT ON TreatmentHistory
 FOR EACH ROW
 BEGIN
-	-- insert new PatientTreatmentReport
-    insert into PatientTreatmentReport values(NEW.PatientID,NEW.DoctorID,NEW.)
+	-- insert new record in MV PatientTreatmentReport
+    insert into PatientTreatmentReport values(
+		NEW.PatientID,
+        NEW.DoctorID, 
+        getPatientFullName(NEW.PatientID), 
+        getStaffFullName(NEW.DoctorID),
+        NEW.TreatmentID,
+        NEW.StartDate,
+        NEW.EndDate,
+        NEW.Details,
+        NEW.Status,
+        DATEDIFF(NEW.EndDate, NEW.StartDate) * 2000
+	);
+    
+    -- update TotalTreatments associated with staff handling the treatment in MV StaffWorkloadGivenDurationReport
+    
+    -- update TotalTreatments, AverageSatisfactionScore associated with staff handling the treatment in MV StaffPerformanceReport
+    update StaffPerformanceReport sp
+    set TotalTreatments = TotalTreatments + 1,
+    AverageSatisfactionScore = getStaffAvgSatisfactionScore(NEW.DoctorID)
+    where sp.StaffID = NEW.DoctorID;
+    
+
 END $$
 
 CREATE TRIGGER at_update_staff
@@ -176,19 +197,26 @@ FOR EACH ROW
 BEGIN
 
 	if NEW.FirstName != OLD.FirstName or NEW.LastName != OLD.LastName then
-    	-- update MV PatientTreatmentReport
+    	-- update DoctorName in MV PatientTreatmentReport
 		update PatientTreatmentReport ptr
 		set DoctorName = concat(NEW.FirstName, ' ', NEW.LastName) 
         where ptr.DoctorID = NEW.StaffID;
         
-		-- update MV StaffWorkloadGivenDurationReport
+		-- update StaffName in MV StaffWorkloadGivenDurationReport
 		update StaffWorkloadGivenDurationReport sw
 		set StaffName = concat(NEW.FirstName, ' ', NEW.LastName) 
         where sw.StaffID = NEW.StaffID;
         
-		-- update MV StaffPerformanceReport
+		-- update DoctorName in MV StaffPerformanceReport
 		update StaffPerformanceReport sp
-		set DoctorName = concat(NEW.FirstName, ' ', NEW.LastName) 
+		set DoctorName = concat(NEW.FirstName, ' ', NEW.LastName)
+        where sp.StaffID = NEW.StaffID;
+        
+	elseif NEW.JobType != OLD.JobType or NEW.Qualification != OLD.Qualification then
+		-- update jobType, qualification in MV StaffPerformanceReport
+		update StaffPerformanceReport sp
+		set JobType = NEW.JobType,
+        Qualification = NEW.Qualification
         where sp.StaffID = NEW.StaffID;
     end if;
 END $$
