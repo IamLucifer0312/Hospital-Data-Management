@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { FaDownload } from "react-icons/fa";
+import { FaDownload, FaPlus } from "react-icons/fa";
+import AddTrainingMaterial from "./AddTrainingMaterial"; // Import your AddTrainingMaterial component
 
 const TrainingMaterialPage = () => {
   const [trainingMaterials, setTrainingMaterials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   useEffect(() => {
     const fetchTrainingMaterials = async () => {
@@ -25,6 +27,11 @@ const TrainingMaterialPage = () => {
     fetchTrainingMaterials();
   }, []);
 
+  const handleAddTrainingMaterial = (newMaterial) => {
+    setTrainingMaterials((prev) => [...prev, newMaterial]);
+    setShowAddModal(false); // Close modal after adding
+  };
+
   if (loading) {
     return (
       <div className="h-screen flex items-center justify-center">
@@ -43,7 +50,18 @@ const TrainingMaterialPage = () => {
 
   return (
     <div className="w-full p-4">
-      <h2 className="text-2xl font-bold mb-4">Training Materials</h2>
+      <button
+        onClick={() => setShowAddModal(true)}
+        className="mb-4 flex items-center text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded"
+      >
+        <FaPlus className="mr-2" /> Add Training Material
+      </button>
+      {showAddModal && (
+        <AddTrainingMaterial
+          onAdd={handleAddTrainingMaterial}
+          closeModal={() => setShowAddModal(false)}
+        />
+      )}
       <table className="min-w-full bg-white border border-gray-300">
         <thead>
           <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
