@@ -25,6 +25,7 @@ import PatientTreatmentReport from "./components/Report/PatientTreatmentReport";
 import DoctorsWorkReport from "./components/Report/DoctorsWorkReport";
 import DoctorPerformanceReport from "./components/Report/DoctorPerformanceReport";
 import LabResultsTable from "./components/Patient/LabTestResults";
+import JobChangeHistoryReport from "./components/Report/JobChangeHistoryReport";
 
 const MainPage = () => {
   const [activeSection, setActiveSection] = useState("Staff");
@@ -93,6 +94,7 @@ const MainPage = () => {
             "Patient Treatment",
             "Staff Workload",
             "Doctor Performance",
+            "Job Change History",
           ],
         }
       : {},
@@ -135,6 +137,8 @@ const MainPage = () => {
         return <DoctorsWorkReport />;
       case "Doctor Performance":
         return <DoctorPerformanceReport />;
+      case "Job Change History":
+        return <JobChangeHistoryReport />;
       default:
         return null;
     }

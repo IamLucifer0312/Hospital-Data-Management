@@ -7,6 +7,7 @@ const {
   getAllDoctorsWorkInDuration,
   getAllDoctorsWorkInGivenDuration,
   getAllDoctorPerformance,
+  getAllJobChangeHistory,
 } = require("../database");
 
 const getPatientTreatmentHistoryOnDurationController = async (req, res) => {
@@ -104,6 +105,16 @@ const getAllDoctorPerformanceController = async (req, res) => {
     res.status(500).send(err.message);
   }
 };
+
+const getAllJobChangeHistoryController = async (req, res) => {
+  try {
+    const result = await getAllJobChangeHistory();
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+};
+
 module.exports = {
   getPatientTreatmentHistoryOnDurationController,
   getAllPatientsTreatmentOnDurationController,
@@ -113,4 +124,5 @@ module.exports = {
   getTreatmentReportInDurationController,
   getAllDoctorsWorkInGivenDurationController,
   getAllDoctorPerformanceController,
+  getAllJobChangeHistoryController,
 };

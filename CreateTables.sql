@@ -11,6 +11,7 @@ drop table if exists Staff_Schedule;
 drop table if exists Patients;
 drop table if exists Staff;
 drop table if exists Department;
+drop table if exists JobChangeHistory;
 
 CREATE TABLE Patients (
     PatientID INT AUTO_INCREMENT PRIMARY KEY,
@@ -94,9 +95,13 @@ CREATE TABLE JobChangeHistory (
     StaffID INT NOT NULL,
     OldJobType ENUM('Doctor', 'Nurse', 'Admin', 'Lab Technician', 'Surgeon') NOT NULL,
     NewJobType ENUM('Doctor', 'Nurse', 'Admin', 'Lab Technician', 'Surgeon') NOT NULL,
-    Salary INT,
-    DepartmentID INT NOT NULL,
+    OldSalary INT,
+    NewSalary INT,
+    OldDepartmentID INT NOT NULL,
+    NewDepartmentID INT NOT NULL,
     ChangeDate DATE NOT NULL,
+    Reason VARCHAR(255) NOT NULL,
     FOREIGN KEY (StaffID) REFERENCES Staff(StaffID),
-    FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID)
+    FOREIGN KEY (OldDepartmentID) REFERENCES Department(DepartmentID),
+    FOREIGN KEY (NewDepartmentID) REFERENCES Department(DepartmentID)
 );

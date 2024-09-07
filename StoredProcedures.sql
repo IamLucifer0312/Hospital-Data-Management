@@ -22,6 +22,7 @@ drop procedure if exists sp_cancel_appointment;
 drop procedure if exists sp_get_all_patients_treatment;
 drop procedure if exists sp_get_staff_job_history;
 drop procedure if exists sp_get_all_doctors_work_in_duration;
+drop procedure if exists sp_generate_staff_workload_report;
 
 DELIMITER $$
 -- add a new patient
@@ -428,7 +429,6 @@ CREATE PROCEDURE sp_generate_staff_workload_report(
     IN endDate DATE
 )
 BEGIN
-    -- Using Recursive CTE for date range calculation
     WITH RECURSIVE DateRange AS (
         SELECT startDate AS DayDate
         UNION ALL

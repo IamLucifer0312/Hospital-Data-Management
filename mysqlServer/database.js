@@ -495,6 +495,20 @@ async function getAllDoctorPerformance() {
   return rows;
 }
 
+const getAllJobChangeHistory = async (req, res) => {
+  const [rows] = await connection.query(
+    `SELECT j.*, s.FirstName, s.LastName, 
+            oldDept.DepartmentName AS OldDepartmentName, 
+            newDept.DepartmentName AS NewDepartmentName
+     FROM JobChangeHistory j
+     JOIN Staff s ON j.StaffID = s.StaffID
+     JOIN Department oldDept ON j.OldDepartmentID = oldDept.DepartmentID
+     JOIN Department newDept ON j.NewDepartmentID = newDept.DepartmentID
+     ORDER BY j.ChangeDate DESC`
+  );
+  return rows;
+};
+
 module.exports = {
   getStaff,
   addNewStaff,
@@ -535,4 +549,5 @@ module.exports = {
   getTreatmentReportInDuration,
   getAllDoctorsWorkInGivenDuration,
   getAllDoctorPerformance,
+  getAllJobChangeHistory,
 };

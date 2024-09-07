@@ -359,82 +359,26 @@ VALUES
 (30, 'Friday', '10:00:00', '18:00:00');
 
 -- Populating JobChangeHistory with old and new job changes for staff
-INSERT INTO JobChangeHistory (StaffID, OldJobType, NewJobType, Salary, DepartmentID, ChangeDate)
+INSERT INTO JobChangeHistory (StaffID, OldJobType, NewJobType, OldSalary, NewSalary, OldDepartmentID, NewDepartmentID, ChangeDate, Reason)
 VALUES
-    -- Nguyen Van Anh (Doctor) - Job type remains, Salary increase
-    (1, 'Doctor', 'Doctor', 110000, 1, '2022-01-15'),
-    (1, 'Doctor', 'Doctor', 120000, 1, '2023-03-10'),
-
-    -- Tran Thi Bao (Nurse to Admin) - Job type and Salary change
-    (2, 'Nurse', 'Admin', 65000, 1, '2023-02-15'),
-
-    -- Le Minh Chau (Admin) - Salary increase
-    (3, 'Admin', 'Admin', 48000, 1, '2020-11-22'),
-    (3, 'Admin', 'Admin', 50000, 1, '2022-08-12'),
-
-    -- Pham Quoc Dung (Doctor) - Salary increase
-    (4, 'Doctor', 'Doctor', 100000, 2, '2021-03-17'),
-    (4, 'Doctor', 'Doctor', 115000, 2, '2023-06-01'),
-
-    -- Hoang Tuan Kiet (Lab Technician) - Salary increase
-    (5, 'Lab Technician', 'Lab Technician', 42000, 2, '2020-12-10'),
-    (5, 'Lab Technician', 'Lab Technician', 45000, 2, '2023-04-25'),
-
-    -- Vo Phuong Linh (Nurse) - Salary increase
-    (6, 'Nurse', 'Nurse', 59000, 3, '2022-05-14'),
-    (6, 'Nurse', 'Nurse', 61000, 3, '2023-08-18'),
-
-    -- Dang Van Manh (Surgeon) - Salary increase
-    (7, 'Surgeon', 'Surgeon', 125000, 4, '2021-07-05'),
-    (7, 'Surgeon', 'Surgeon', 130000, 4, '2023-01-20'),
-
-    -- Bui Minh Hoa (Doctor) - Change in department and salary
-    (8, 'Doctor', 'Doctor', 102000, 3, '2021-09-12'),
-    (8, 'Doctor', 'Doctor', 110000, 4, '2023-03-27'),
-
-    -- Do Quoc Thang (Admin) - Salary increase
-    (9, 'Admin', 'Admin', 50000, 5, '2022-02-22'),
-    (9, 'Admin', 'Admin', 52000, 5, '2023-05-14'),
-
-    -- Ngo Thien Kim (Nurse to Admin) - Job change from Nurse to Admin and Salary increase
-    (10, 'Nurse', 'Admin', 59000, 5, '2023-07-09'),
-
-    -- Vu Van Quang (Doctor) - Salary increase
-    (11, 'Doctor', 'Doctor', 115000, 1, '2022-06-14'),
-    (11, 'Doctor', 'Doctor', 122000, 1, '2023-08-04'),
-
-    -- Dinh Thi Lan (Nurse) - Salary increase
-    (12, 'Nurse', 'Nurse', 59000, 1, '2021-11-18'),
-    (12, 'Nurse', 'Nurse', 60200, 1, '2023-03-10'),
-
-    -- Phan Minh Long (Admin) - Salary increase
-    (13, 'Admin', 'Admin', 49000, 1, '2020-12-22'),
-    (13, 'Admin', 'Admin', 50200, 1, '2022-07-30'),
-
-    -- Cao Quoc Tuan (Doctor) - Salary increase
-    (14, 'Doctor', 'Doctor', 110000, 2, '2021-02-12'),
-    (14, 'Doctor', 'Doctor', 116000, 2, '2023-05-18'),
-
-    -- Chu Tuan Anh (Lab Technician) - Salary increase
-    (15, 'Lab Technician', 'Lab Technician', 44000, 2, '2022-01-25'),
-    (15, 'Lab Technician', 'Lab Technician', 45200, 2, '2023-04-12'),
-
-    -- Ly Phuong Thao (Nurse) - Salary increase
-    (16, 'Nurse', 'Nurse', 60000, 3, '2021-05-17'),
-    (16, 'Nurse', 'Nurse', 61200, 3, '2023-08-24'),
-
-    -- Tran Van Duc (Surgeon) - Salary increase
-    (17, 'Surgeon', 'Surgeon', 126000, 4, '2021-09-14'),
-    (17, 'Surgeon', 'Surgeon', 132000, 4, '2023-02-18'),
-
-    -- Nguyen Minh Khoa (Doctor) - Change in department and salary
-    (18, 'Doctor', 'Doctor', 108000, 3, '2021-07-18'),
-    (18, 'Doctor', 'Doctor', 112000, 4, '2023-04-20'),
-
-    -- Le Quoc Huy (Admin) - Salary increase
-    (19, 'Admin', 'Admin', 51200, 5, '2022-06-09'),
-    (19, 'Admin', 'Admin', 52200, 5, '2023-06-21'),
-
-    -- Pham Thien Bao (Nurse) - Salary increase
-    (20, 'Nurse', 'Nurse', 57000, 5, '2021-12-08'),
-    (20, 'Nurse', 'Nurse', 58200, 5, '2023-07-19');
+-- StaffID 1: Change within the same department but salary increase
+(1, 'Doctor', 'Doctor', 110000, 120000, 1, 1, '2024-05-12', 'Salary increase for excellent performance'),
+-- StaffID 2: Changed from Nurse to Admin
+(2, 'Nurse', 'Admin', 60000, 65000, 1, 1, '2024-03-18', 'Changed job role from Nurse to Admin'),
+-- StaffID 3: Department change, same job role
+(3, 'Admin', 'Admin', 50000, 52000, 2, 3, '2024-04-25', 'Moved to a new department'),
+-- StaffID 4: Change within the same department, salary increase
+(4, 'Lab Technician', 'Lab Technician', 45000, 47000, 2, 2, '2024-07-01', 'Salary increase for additional qualifications'),
+-- StaffID 5: Promotion from Lab Technician to Surgeon
+(5, 'Lab Technician', 'Surgeon', 47000, 130000, 3, 4, '2024-01-19', 'Promotion from Lab Technician to Surgeon'),
+-- StaffID 6: Transfer to a new department with salary increase
+(6, 'Nurse', 'Nurse', 58000, 62000, 4, 5, '2024-02-10', 'Transferred to Orthopedics department with salary increase'),
+-- StaffID 7: Job type change and department change
+(7, 'Doctor', 'Surgeon', 115000, 135000, 2, 4, '2024-03-15', 'Changed job role from Doctor to Surgeon and moved to Oncology department'),
+-- StaffID 8: Moved to a new department, no salary change
+(8, 'Admin', 'Admin', 52000, 52000, 1, 2, '2024-06-12', 'Moved from Cardiology to Neurology with no salary change'),
+-- StaffID 9: Promotion with a department change
+(9, 'Nurse', 'Doctor', 60000, 120000, 3, 1, '2024-04-05', 'Promoted from Nurse to Doctor and moved to Cardiology'),
+-- StaffID 10: Salary increase within the same department
+(10, 'Surgeon', 'Surgeon', 130000, 140000, 5, 5, '2024-09-22', 'Salary increase due to high performance')
+;
