@@ -205,7 +205,7 @@ const StaffTable = () => {
                 {staff.JobType}
               </td>
               <td className="py-3 px-6 text-left whitespace-nowrap">
-                ${staff.Salary.toLocaleString()}
+                ${staff.StaffSalary.toLocaleString()}
               </td>
               <td className="py-3 px-6 text-left whitespace-nowrap">
                 {staff.Qualification}

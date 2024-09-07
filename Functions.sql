@@ -7,7 +7,7 @@ READS SQL DATA
 BEGIN
 	declare sal int;
     
-    select Salary into sal
+    select StaffSalary into sal
     from Staff s where s.StaffID = StaffID;
 	
     return sal;

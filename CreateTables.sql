@@ -35,7 +35,7 @@ CREATE TABLE Staff (
     FirstName VARCHAR(50) NOT NULL,
     LastName VARCHAR(50) NOT NULL,
     JobType ENUM('Doctor', 'Nurse', 'Admin', 'Lab Technician', 'Surgeon') NOT NULL,
-	Salary INT,
+	StaffSalary INT,
     Qualification VARCHAR(100),
     DepartmentID INT NOT NULL,
     ManagerID INT,
