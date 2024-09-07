@@ -4,11 +4,13 @@ import { FaSearch } from "react-icons/fa";
 const PatientTreatmentReport = () => {
   const [treatmentHistory, setTreatmentHistory] = useState([]);
   const [filteredHistory, setFilteredHistory] = useState([]);
-  const [loading, setLoading] = useState(false); // Ensure it's false initially
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [sortField, setSortField] = useState(null);
+  const [sortOrder, setSortOrder] = useState(null);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -63,6 +65,22 @@ const PatientTreatmentReport = () => {
     setFilteredHistory(filteredData);
   };
 
+  const handleSort = (field) => {
+    const isAsc = sortField === field && sortOrder === "asc";
+    setSortField(field);
+    setSortOrder(isAsc ? "desc" : "asc");
+  };
+
+  const sortedHistory = [...filteredHistory].sort((a, b) => {
+    if (!sortField) return 0;
+    if (sortOrder === "asc") {
+      return a[sortField].toString().localeCompare(b[sortField].toString());
+    } else if (sortOrder === "desc") {
+      return b[sortField].toString().localeCompare(a[sortField].toString());
+    }
+    return 0;
+  });
+
   return (
     <div className="container mx-auto">
       <div className="flex space-x-10 mb-4">
@@ -94,35 +112,70 @@ const PatientTreatmentReport = () => {
           type="text"
           value={searchQuery}
           onChange={handleSearch}
-          className="border p-2 w-full"
+          className="bg-white border border-gray-300 rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
           placeholder="Search by Patient or Doctor's Name"
         />
-        <FaSearch className="absolute top-3 right-3 text-gray-500" />
+        <FaSearch className="absolute left-3 top-2/4 transform -translate-y-2/4 text-gray-500" />
       </div>
 
-      {filteredHistory.length > 0 && !loading ? (
-        <table className="min-w-full border-collapse border border-gray-300">
+      {sortedHistory.length > 0 && !loading ? (
+        <table className="min-w-full bg-white border border-gray-300">
           <thead>
-            <tr>
-              <th className="border p-2">Treatment ID</th>
-              <th className="border p-2">Patient</th>
-              <th className="border p-2">Doctor</th>
-              <th className="border p-2">Details</th>
-              <th className="border p-2">Billing Amount</th>
-              <th className="border p-2">Status</th>
-              <th className="border p-2">Date</th>
+            <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+              <th className="py-3 px-4 text-left">Treatment ID</th>
+              <th
+                className="py-3 px-4 text-left cursor-pointer text-teal-600"
+                onClick={() => handleSort("PatientName")}
+              >
+                Patient{" "}
+                {sortField === "PatientName"
+                  ? sortOrder === "asc"
+                    ? "▲"
+                    : "▼"
+                  : "▲▼"}
+              </th>
+              <th
+                className="py-3 px-4 text-left cursor-pointer text-teal-600"
+                onClick={() => handleSort("DoctorName")}
+              >
+                Doctor{" "}
+                {sortField === "DoctorName"
+                  ? sortOrder === "asc"
+                    ? "▲"
+                    : "▼"
+                  : "▲▼"}
+              </th>
+              <th className="py-3 px-4 text-left">Details</th>
+              <th className="py-3 px-4 text-left">Billing Amount</th>
+              <th className="py-3 px-4 text-left">Status</th>
+              <th className="py-3 px-4 text-left">Date</th>
             </tr>
           </thead>
-          <tbody>
-            {filteredHistory.map((treatment) => (
-              <tr key={treatment.TreatmentID}>
-                <td className="border p-2">{treatment.TreatmentID}</td>
-                <td className="border p-2">{treatment.PatientName}</td>
-                <td className="border p-2">{treatment.DoctorName}</td>
-                <td className="border p-2">{treatment.Details}</td>
-                <td className="border p-2">{treatment.Billing}</td>
-                <td className="border p-2">{treatment.Status}</td>
-                <td className="border p-2">
+          <tbody className="text-gray-600 text-sm font-light">
+            {sortedHistory.map((treatment) => (
+              <tr
+                key={treatment.TreatmentID}
+                className="border-b border-gray-200 hover:bg-gray-100"
+              >
+                <td className="py-3 px-4 text-left whitespace-nowrap">
+                  {treatment.TreatmentID}
+                </td>
+                <td className="py-3 px-4 text-left whitespace-nowrap">
+                  {treatment.PatientName}
+                </td>
+                <td className="py-3 px-4 text-left whitespace-nowrap">
+                  {treatment.DoctorName}
+                </td>
+                <td className="py-3 px-4 text-left whitespace-nowrap">
+                  {treatment.Details}
+                </td>
+                <td className="py-3 px-4 text-left whitespace-nowrap">
+                  ${treatment.Billing.toLocaleString()}
+                </td>
+                <td className="py-3 px-4 text-left whitespace-nowrap">
+                  {treatment.Status}
+                </td>
+                <td className="py-3 px-4 text-left whitespace-nowrap">
                   {formatDate(treatment.StartDate)} -{" "}
                   {formatDate(treatment.EndDate)}
                 </td>
