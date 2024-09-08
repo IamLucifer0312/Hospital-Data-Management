@@ -14,6 +14,7 @@
 	drop trigger if exists at_del_staff;
 	drop trigger if exists at_del_staff_schedule;
 	drop trigger if exists log_job_change;
+    drop trigger if exists SetBillingAmountBeforeInsert;
 
 	DELIMITER $$
 	CREATE TRIGGER ins_patients
