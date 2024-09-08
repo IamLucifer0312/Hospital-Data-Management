@@ -153,54 +153,57 @@ END $$
 
 -- update staff schedule
 CREATE PROCEDURE sp_update_staff_schedule(
-	IN p_ScheduleID INT, 
-	IN p_StaffID INT,
-	IN p_DayOfWeek ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'),
-	IN p_StartTime TIME, 
-	IN p_EndTime TIME)
+    IN p_ScheduleID INT, 
+    IN p_StaffID INT,
+    IN p_DayOfWeek ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'),
+    IN p_StartTime TIME, 
+    IN p_EndTime TIME)
 BEGIN
-	DECLARE conflict_count INT DEFAULT 0;
+    DECLARE conflict_count INT DEFAULT 0;
+    
+    -- Start transaction
+    START TRANSACTION;
+    
+    -- Check for conflicts with existing appointments
+    SELECT COUNT(*) INTO conflict_count
+    FROM Appointments a
+    WHERE a.StaffID = p_StaffID
+      AND a.AppointmentStatus = 'Scheduled'
+      AND a.AppointmentDate = (SELECT CURDATE() + INTERVAL (
+            CASE p_DayOfWeek
+                WHEN 'Monday' THEN 0
+                WHEN 'Tuesday' THEN 1
+                WHEN 'Wednesday' THEN 2
+                WHEN 'Thursday' THEN 3
+                WHEN 'Friday' THEN 4
+                WHEN 'Saturday' THEN 5
+                WHEN 'Sunday' THEN 6
+            END		
+        ) DAY)
+      AND (
+        (a.AppointmentStartTime BETWEEN p_StartTime AND p_EndTime)
+        OR (a.AppointmentEndTime BETWEEN p_StartTime AND p_EndTime)
+        OR (a.AppointmentStartTime <= p_StartTime AND a.AppointmentEndTime >= p_EndTime)
+      );
 
-	-- Start transaction
-	START TRANSACTION;
-	-- Check for conflicts with exisiting appointments
-	SELECT COUNT(*) INTO conflict_count
-	FROM Appointments a
-	WHERE a.StaffID = p_StaffID
-		AND a.AppointmentStatus = 'Scheduled'
-		AND a.AppointmentDate = (SELECT CURDATE() + INTERVAL (
-				CASE p_DayOfWeek
-					WHEN 'Monday' THEN 0
-					WHEN 'Tuesday' THEN 1
-					WHEN 'Wednesday' THEN 2
-					WHEN 'Thursday' THEN 3
-					WHEN 'Friday' THEN 4
-					WHEN 'Saturday' THEN 5
-					WHEN 'Sunday' THEN 6	
-				END		
-			) DAY)
-		AND ((a.AppointmentStartTime BETWEEN p_StartTime AND p_EndTime)
-			OR (a.AppointmentEndTime BETWEEN p_StartTime AND p_EndTime)
-			OR (a.AppointmentStartTime <= p_StartTime AND a.AppointmentEndTime >= p_EndTime));
+    IF conflict_count = 0 THEN
+        UPDATE Staff_Schedule ss
+        SET ss.StaffID = p_StaffID, ss.DayOfWeek = p_DayOfWeek, ss.StartTime = p_StartTime, ss.EndTime = p_EndTime
+        WHERE ss.ScheduleID = p_ScheduleID;
 
-	-- If there are no conflicts, update the schedule
-	IF conflict_count = 0  THEN
-		UPDATE Staff_Schedule ss
-		SET ss.StaffID = p_StaffID, ss.DayOfWeek = p_DayOfWeek, ss.StartTime = p_StartTime, ss.EndTime = p_EndTime
-		WHERE ss.ScheduleID = p_ScheduleID;
-		COMMIT;
-		-- no rows affected after update -> schedule ID not found
-		if row_count() = 0 then
-			signal sqlstate '45000' set message_text = "Schedule ID not found";
-		else
-			select * from Staff_Schedule where ScheduleID = p_ScheduleID;
-		end if;
-
-	-- If there is a conflict, rollback
-	ELSE	
-		ROLLBACK;
-		signal sqlstate '45000' set message_text = "The new schedule conflicts with existing scheduled appointments";
-	END IF;	
+        IF ROW_COUNT() = 0 THEN
+            ROLLBACK;
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Schedule ID not found or no changes were made';
+        ELSE
+            COMMIT;
+            SELECT * FROM Staff_Schedule WHERE ScheduleID = p_ScheduleID;
+        END IF;
+    
+    ELSE
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'The new schedule conflicts with existing scheduled appointments';
+    END IF;
+    
 END $$
 
 CREATE PROCEDURE sp_update_appointment(
