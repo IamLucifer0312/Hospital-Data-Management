@@ -15,9 +15,7 @@ CREATE INDEX idx_staffid_dayofweek_staff_schedule ON Staff_Schedule(StaffID, Day
 
 
 -- Treatment table
-CREATE INDEX idx_treatment_patient ON TreatmentHistory(PatientID);
-CREATE INDEX idx_treatment_doctor ON TreatmentHistory(DoctorID);
-CREATE INDEX idx_startdate_treatmenthistory ON TreatmentHistory(StartDate);
+CREATE INDEX idx_treatment_startdate_patient_doctor ON TreatmentHistory (StartDate, PatientID, DoctorID);
 CREATE INDEX idx_enddate_treatmenthistory ON TreatmentHistory(EndDate);
 CREATE INDEX idx_status_treatmenthistory ON TreatmentHistory(Status);
 
