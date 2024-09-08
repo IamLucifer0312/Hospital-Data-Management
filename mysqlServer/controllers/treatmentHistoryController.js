@@ -31,7 +31,6 @@ const addTreatmentHistoryController = async (req, res) => {
       startDate,
       endDate,
       treatmentType,
-      billingAmount,
       satisfactionScore,
       status,
       details,
@@ -42,7 +41,6 @@ const addTreatmentHistoryController = async (req, res) => {
       startDate,
       endDate,
       treatmentType,
-      billingAmount,
       satisfactionScore,
       status,
       details

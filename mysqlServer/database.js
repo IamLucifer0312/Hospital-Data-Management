@@ -407,20 +407,18 @@ async function addTreatmentHistory(
   startDate,
   endDate,
   treatmentType,
-  billingAmount,
   satisfactionScore,
   status,
   details
 ) {
   const [rows] = await connection.query(
-    "CALL sp_add_new_treatment(?,?,?,?,?,?,?,?,?)",
+    "CALL sp_add_new_treatment(?,?,?,?,?,?,?,?)",
     [
       patientID,
       doctorID,
       startDate,
       endDate,
       treatmentType,
-      billingAmount,
       satisfactionScore,
       status,
       details,

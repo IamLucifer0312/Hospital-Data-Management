@@ -229,6 +229,17 @@
 			where sp.StaffID = NEW.StaffID;
 		end if;
 	END $$
+    
+    CREATE TRIGGER SetBillingAmountBeforeInsert
+	BEFORE INSERT ON TreatmentHistory
+	FOR EACH ROW
+	BEGIN
+	  IF NEW.StartDate IS NOT NULL AND NEW.EndDate IS NOT NULL THEN
+		SET NEW.BillingAmount = DATEDIFF(NEW.EndDate, NEW.StartDate) * 2000;
+	  ELSE
+		SET NEW.BillingAmount = 0; -- Default value if dates are missing
+	  END IF;
+	END $$
 
 	CREATE TRIGGER at_update_patients
 	AFTER UPDATE ON Patients
