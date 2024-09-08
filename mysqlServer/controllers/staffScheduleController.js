@@ -43,7 +43,6 @@ const addStaffScheduleController = async (req, res) => {
 
 const updateStaffScheduleController = async (req, res) => {
   const { dayOfWeek, startTime, endTime } = req.body;
-
   try {
     const result = await updateStaffSchedule(
       req.params.scheduleId,
@@ -54,6 +53,7 @@ const updateStaffScheduleController = async (req, res) => {
     );
     res.status(200).send(result);
   } catch (err) {
+    console.log(err);
     res.status(500).send(err);
   }
 };
@@ -63,6 +63,7 @@ const deleteStaffScheduleController = async (req, res) => {
     await deleteStaffSchedule(req.params.scheduleId);
     res.status(204).send();
   } catch (err) {
+    console.log(err);
     res.status(500).send(err);
   }
 };
