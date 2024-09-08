@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import DropDownMenu from "../common/DropDownMenu";
-import DeleteConfirmationModal from "../common/DeleteConfirmationModal";
 import { FaSearch } from "react-icons/fa";
 
 const TreatmentHistoryTable = () => {
@@ -14,7 +12,6 @@ const TreatmentHistoryTable = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const user = JSON.parse(localStorage.getItem("user"));
-  const isAdmin = user?.role === "admin";
 
   const handleSort = (field) => {
     const isAsc = sortField === field && sortOrder === "asc";
@@ -37,33 +34,6 @@ const TreatmentHistoryTable = () => {
           : treatment
       )
     );
-  };
-
-  const handleDeleteConfirm = async () => {
-    try {
-      const response = await fetch(
-        `http://localhost:4000/treatmentHistories/${selectedTreatment.TreatmentID}`,
-        {
-          method: "DELETE",
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to delete treatment.");
-      }
-      setTreatmentData(
-        treatmentData.filter(
-          (t) => t.TreatmentID !== selectedTreatment.TreatmentID
-        )
-      );
-      setFilteredTreatmentData(
-        filteredTreatmentData.filter(
-          (t) => t.TreatmentID !== selectedTreatment.TreatmentID
-        )
-      );
-      setShowDeleteModal(false);
-    } catch (err) {
-      setError(err.message);
-    }
   };
 
   const handleSearch = (e) => {
@@ -183,7 +153,6 @@ const TreatmentHistoryTable = () => {
             </th>
             <th className="py-3 px-6 text-left">End Date</th>
             <th className="py-3 px-6 text-left">Treatment Type</th>
-            <th className="py-3 px-6 text-left">Billing Amount</th>
             <th className="py-3 px-6 text-left">Status</th>
             <th className="py-3 px-6 text-left">Details</th>
           </tr>
@@ -212,9 +181,6 @@ const TreatmentHistoryTable = () => {
               </td>
               <td className="py-3 px-6 text-left whitespace-nowrap">
                 {treatment.TreatmentType}
-              </td>
-              <td className="py-3 px-6 text-left whitespace-nowrap">
-                ${treatment.BillingAmount.toLocaleString()}
               </td>
               <td className="py-3 px-6 text-left whitespace-nowrap">
                 {treatment.Status}

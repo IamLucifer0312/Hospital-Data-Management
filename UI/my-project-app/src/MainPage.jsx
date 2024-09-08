@@ -158,17 +158,19 @@ const MainPage = () => {
         <div className="mb-8 rounded-lg">
           <img src={logo} alt="Logo" className="h-20 w-20" />
         </div>
-        {sections.map((section) => (
-          <div
-            key={section.name}
-            className={`cursor-pointer p-2 rounded-lg flex justify-center items-center ${
-              activeSection === section.name ? "bg-blue-400 text-white" : ""
-            }`}
-            onClick={() => setActiveSection(section.name)}
-          >
-            {section.icon}
-          </div>
-        ))}
+        {sections
+          .filter((section) => section.name)
+          .map((section) => (
+            <div
+              key={section.name}
+              className={`cursor-pointer p-2 rounded-lg flex justify-center items-center ${
+                activeSection === section.name ? "bg-blue-400 text-white" : ""
+              }`}
+              onClick={() => setActiveSection(section.name)}
+            >
+              {section.icon}
+            </div>
+          ))}
       </div>
 
       <div className="w-52 bg-gray-100 text-gray-800 flex flex-col py-8 px-6 h-full">
