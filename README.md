@@ -7,9 +7,23 @@ Group 9:
 
     Nguyen Tran Khang Duy (s3836280)
 
-    Nguyen Manh Khang
+    Nguyen Manh Khang (s3864131)
 
-    Hoang Hua Hiep
+    Hoang Hua Hiep (s3979137)
+
+Total Contribution: 5 x 4 = 20
+
+    Nguyen Trong Tien (s3978616): 5
+
+    Nguyen Tran Khang Duy (s3836280): 5
+
+    Nguyen Manh Khang (s3864131): 5
+
+    Hoang Hua Hiep (s3979137): 5
+
+Presentation Video Link: https://youtu.be/Um_94qivo6Y
+
+Instruction to run the application:
 
 Before running the application, firstly run the mySQL code in your local in this order to populate data:
 1 Run the CreateTables.sql file
