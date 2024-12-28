@@ -1,7 +1,6 @@
-# DBA-ASM2
+This is a sample localhost web-application replicating a data management system of a hospital
 
 Team members:
-Group 9:
 
     Nguyen Trong Tien (s3978616)
 
